@@ -20,8 +20,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # version 指定を削除（package.json から自動読み込み）
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -52,8 +51,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # version 指定を削除
 
       - name: Setup Node
         uses: actions/setup-node@v4
