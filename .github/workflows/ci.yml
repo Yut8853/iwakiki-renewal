@@ -6,52 +6,43 @@ on:
   pull_request:
     branches: [main, develop]
 
-jobs: # すべてのジョブはこの配下にインデントする必要があります
+jobs:
   frontend:
     name: Frontend (Astro)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-          # ここもワイルドカードにしておくと安全です
           cache-dependency-path: '**/pnpm-lock.yaml'
-
       - name: Install dependencies
         run: pnpm install
-
       - name: Type check
         run: pnpm run astro check
-
       - name: Build
         run: pnpm run build
 
-  cms: # ここを jobs の直下（frontendと同じ列）にインデントしました
+  cms:
     name: CMS (Next.js)
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cms
+        working-directory: cms # ここで「cmsフォルダ内で実行する」と決めているので...
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -60,7 +51,7 @@ jobs: # すべてのジョブはこの配下にインデントする必要があ
           cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install dependencies
-        run: pnpm install --prefix cms
+        run: pnpm install # 余計な --prefix などは付けない
 
       - name: Build
-        run: pnpm --filter cms build
+        run: pnpm run build # 余計な --filter などは付けない
