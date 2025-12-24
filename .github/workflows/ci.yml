@@ -19,11 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ★ 先に pnpm を入れる
+      # ★ pnpm を先にセットアップ
       - name: Setup pnpm
-  uses: pnpm/action-setup@v4
-  with:
-    version: 10.24.0
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.24.0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -52,11 +52,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ★ 先に pnpm
+      # ★ pnpm を先にセットアップ
       - name: Setup pnpm
-  uses: pnpm/action-setup@v4
-  with:
-    version: 10.24.0
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.24.0
 
       - name: Setup Node
         uses: actions/setup-node@v4
