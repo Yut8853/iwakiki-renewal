@@ -34,7 +34,7 @@ jobs:
         run: pnpm install
 
       - name: Type check
-        run: pnpm astro check
+        run: pnpm run astro check
 
       - name: Build
         run: pnpm build
@@ -66,4 +66,4 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: pnpm run build
