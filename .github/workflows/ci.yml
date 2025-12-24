@@ -10,6 +10,9 @@ jobs:
   frontend:
     name: Frontend (Astro)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
 
     steps:
       - name: Checkout
@@ -18,31 +21,30 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.24.0
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: |
-          cd frontend
-          pnpm install
+        run: pnpm install
 
       - name: Type check
-        run: |
-          cd frontend
-          pnpm run astro check
+        run: pnpm run astro check
 
       - name: Build
-        run: |
-          cd frontend
-          pnpm run build
+        run: pnpm run build
 
   cms:
     name: CMS (Next.js)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cms
 
     steps:
       - name: Checkout
@@ -51,19 +53,17 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.24.0
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: cms/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: |
-          cd cms
-          pnpm install
+        run: pnpm install
 
       - name: Build
-        run: |
-          cd cms
-          pnpm run build
+        run: pnpm run build
