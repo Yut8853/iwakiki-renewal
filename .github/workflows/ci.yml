@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, develop]
 
-jobs:
+jobs: # すべてのジョブはこの配下にインデントする必要があります
   frontend:
     name: Frontend (Astro)
     runs-on: ubuntu-latest
@@ -20,14 +20,14 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        # version 指定を削除（package.json から自動読み込み）
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          # ここもワイルドカードにしておくと安全です
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -38,7 +38,7 @@ jobs:
       - name: Build
         run: pnpm run build
 
-  cms:
+  cms: # ここを jobs の直下（frontendと同じ列）にインデントしました
     name: CMS (Next.js)
     runs-on: ubuntu-latest
     defaults:
@@ -51,14 +51,13 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        # version 指定を削除
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: cms/pnpm-lock.yaml
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
