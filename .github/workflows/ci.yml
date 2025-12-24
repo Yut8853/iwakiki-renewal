@@ -10,9 +10,6 @@ jobs:
   frontend:
     name: Frontend (Astro)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,20 +21,18 @@ jobs:
           node-version: 20
           cache: 'pnpm'
           cache-dependency-path: '**/pnpm-lock.yaml'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Type check
-        run: pnpm run astro check
-      - name: Build
-        run: pnpm run build
+
+      - name: Install & Build
+        # ディレクトリ移動とコマンドを1つのステップで確実に実行
+        run: |
+          cd frontend
+          pnpm install
+          pnpm run astro check
+          pnpm run build
 
   cms:
     name: CMS (Next.js)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: cms # ここで「cmsフォルダ内で実行する」と決めているので...
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,8 +45,10 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: '**/pnpm-lock.yaml'
 
-      - name: Install dependencies
-        run: pnpm install # 余計な --prefix などは付けない
-
-      - name: Build
-        run: pnpm run build # 余計な --filter などは付けない
+      - name: Install & Build
+        # cmsディレクトリに確実に移動してから実行
+        run: |
+          cd cms
+          ls -la # ここでファイル一覧を強制的にログに出します
+          pnpm install
+          pnpm run build
