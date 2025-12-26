@@ -1,0 +1,51 @@
+---
+import styles from './Header.module.scss';
+import ContactButton from './ContactButton.tsx';
+---
+
+<header class={styles.header}>
+  <div class={styles.inner}>
+    <div class={styles.left}>
+      <a href="/" class={styles.logo}>
+        <img
+          src="/images/logo.png"
+          alt="サイトロゴ"
+          width="120"
+          height="29"
+        />
+      </a>
+
+      <nav>
+        <ul class={styles.navList}>
+          <li><a href="/about">iwakikiについて</a></li>
+          <li><a href="/shop">最新物件</a></li>
+          <li><a href="/shop">成約物件</a></li>
+          <li><a href="/blog">お知らせ</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class={styles.right}>
+      <a
+        href="https://www.instagram.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class={styles.insta}
+      >
+        <img
+          src="/images/instagram.gif"
+          alt="Instagram"
+          width="29"
+          height="29"
+        />
+      </a>
+
+      <a href="tel:0246-60-8875" class={styles.phone}>
+        0246-60-8875
+      </a>
+
+      <!-- ★ React Island -->
+      <ContactButton client:load />
+    </div>
+  </div>
+</header>
