@@ -23,8 +23,6 @@ export function useModalLogic({
         e.preventDefault();
         onClose();
       }
-
-      // （必要ならここにフォーカストラップ処理を追加）
     };
 
     document.addEventListener('keydown', handleKeyDown);

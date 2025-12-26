@@ -7,7 +7,10 @@ export default function ContactButton() {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className={styles.contactButton}>
+      <button
+        onClick={() => setIsOpen(true)}
+        className={`${styles.contactButton} ${styles.slide}`}
+      >
         お問い合わせ
       </button>
 

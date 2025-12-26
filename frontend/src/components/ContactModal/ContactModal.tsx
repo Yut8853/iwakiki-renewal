@@ -6,7 +6,6 @@ import { useModalLogic } from '../../hooks/useModalLogic';
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   useModalLogic({ isOpen, onClose, modalRef });
 

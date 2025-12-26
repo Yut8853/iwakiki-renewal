@@ -1,0 +1,23 @@
+---
+import styles from './Hero.module.scss';
+import HeroVideo from './HeroVideo.tsx';
+---
+
+<section class={styles.hero}>
+  <HeroVideo client:load />
+  <div class={styles.blurLayer} />
+</section>
+
+<div class={styles.heroTextContainer}>
+  <div class={styles.heroTextInner}>
+    <p class={styles.heroText}>RealEstate</p>
+    <p class={styles.heroText} aria-hidden="true">RealEstate</p>
+  </div>
+</div>
+
+<div class="l-container--news">
+  <div class={styles.newsWrapper}>
+    <p class={styles.infomation}>information</p>
+
+  </div>
+</div>
