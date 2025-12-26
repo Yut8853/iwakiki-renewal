@@ -1,0 +1,63 @@
+/* 1) 全要素を border-box に */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2) 余計な margin を消す */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* 3) リストのデフォルトスタイルを消す（必要なところだけ個別指定） */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 4) 画像系は横幅オーバーしないように */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 5) フォームはフォントを揃える */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 6) body の基本設定 */
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

@@ -1,0 +1,107 @@
+/* =========================
+   オーバーレイ全体
+   ========================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  /* 中央基準を overlay に持たせない（重要） */
+  pointer-events: auto;
+}
+
+/* =========================
+   半透明の背景
+   ========================= */
+.bg {
+  position: fixed; /* ← absolute ではなく fixed */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+
+/* =========================
+   モーダル本体
+   ========================= */
+.modal {
+  position: absolute; /* ← viewport基準 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: min(90vw, 560px);
+  max-height: 90vh;
+  overflow-y: auto;
+
+  border-radius: 16px;
+  padding: 24px 24px 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(25px);
+
+  z-index: 1001; /* bg より上 */
+}
+
+/* =========================
+   閉じるボタン
+   ========================= */
+.close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* =========================
+   見出し
+   ========================= */
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--color-secondary);
+}
+
+/* =========================
+   フォーム
+   ========================= */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.field span {
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+.field input,
+.field textarea {
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.submit {
+  margin-top: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
