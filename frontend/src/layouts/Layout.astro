@@ -1,22 +1,36 @@
 ---
 import "../styles/global.scss";
 import Header from "../components/Header/Header.astro";
+import Hero from "../components/Hero/Hero.astro";
+import ProjectionGrid from "../components/WebGL/ProjectionGrid.tsx";
+import HeroText from "../components/Contents/HeroText.astro";
 ---
 
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>My Site</title>
+    <title>Iwaki Renewal - WebGL Projection</title>
   </head>
 
   <body>
     <Header />
-
-
     <main>
-      <slot />
+      <section class="webgl-section">
+        <ProjectionGrid client:load />
+        <slot />
+      <Hero />
+      </section>
+      <HeroText  />
     </main>
 
+    <style>
+.webgl-section {
+        position: relative;
+        width: 100%;
+        height: 100vh; /* 表示したい高さを指定 */
+        overflow: hidden;
+      }
+    </style>
   </body>
 </html>

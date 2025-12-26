@@ -1,0 +1,61 @@
+---
+import styles from "./HeroText.module.scss";
+type TextItem = 
+  | { id: string; type: 'h1'; content: string }
+  | { id: string; type: 'p'; lines: string[] };
+// データの定義
+const INTERACTIVE_TEXTS: TextItem[] = [
+  {
+    id: 'title-1',
+    type: 'h1',
+    content: '幸せを感じる不動産との縁結び',
+  },
+  {
+    id: 'body-1',
+    type: 'p',
+    lines: [
+      '福島県いわき市を中心に、皆さまの夢の実現をお手伝いします。',
+      '私たちは、お客様一人ひとりのニーズに応じた最適な物件をご紹介し、心から満足いただける住まいを提供いたします。',
+      '家族の未来を見据えた安全で快適な生活環境を、私たちと一緒に見つけませんか？',
+      'あなたの幸せを第一に考え、誠実なサポートをお約束します。',
+    ],
+  },
+  {
+    id: 'title-2',
+    type: 'h1',
+    content: 'お客様とのご縁を大切に末永いお付き合いを',
+  },
+  {
+    id: 'body-2',
+    type: 'p',
+    lines: [
+      '埼玉県で生まれ育ち28歳で東京の不動産の門を叩き、都心を中心に不動産業、測量業を合わせて約22年間ファミリー向け物件、収益物件など数多くのお客様のお手伝いをさせて頂きました。',
+      'その間多くの人とのご縁、そして運に恵まれ、今日に至っております。',
+      'お世話になったお客様の喜んで頂いたお声を大切に、真心を込めたサービスを提供し、末永くお付合いをさせて頂くことを信念にしております。',
+      '結婚を経て、趣味のサーフィンがきっかけで、海・山があり自然豊かな妻の地元のいわき市の魅力にのめり込み、移住してまいりました。',
+      'これまでの経験を活かし、今後も東京での総合不動産業と、いわき市の活性化やＵＩＪターン(移住者)・関東への移住の架け橋、高齢者サポートを通し、地域の皆様の暮らしが豊かになるようにお手伝いをさせていただきたいと考えております。',
+      'これから皆様に気軽にお声をかけていただける会社を目指し、努めてまいります。',
+    ],
+  },
+];
+
+import { TextAnimationController } from "./TextAnimationController";
+---
+
+<div class={styles["main-content"]}> <TextAnimationController client:load>
+    <div class={styles["sliced-container"]}>
+      {INTERACTIVE_TEXTS.map((item) => (
+        <div class={styles["text-row"]} data-row-id={item.id}>
+          {item.type === 'h1' ? (
+            <h1 class={`${styles["text-content"]} ${styles["is-title"]}`}>{item.content}</h1>
+          ) : (
+            item.lines.map((line) => (
+              <p class={`${styles["text-content"]} ${styles["is-body"]}`}>{line}</p>
+            ))
+          )}
+        </div>
+      ))}
+    </div>
+  </TextAnimationController>
+</div>
+
