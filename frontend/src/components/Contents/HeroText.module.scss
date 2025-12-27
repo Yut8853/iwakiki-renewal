@@ -1,45 +1,188 @@
-.main-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+/* HeroText.module.scss */
+
+// AWWWARDS級の滑らかさを生むイージング
+$ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+$duration: 1.8s;
+
+.about {
+  background: #fff;
+  overflow: hidden;
+  perspective: 2000px; // 3D効果の深み
 }
 
-.sliced-container {
-  max-width: 1200px;
-  width: 100%;
+.inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: clamp(100px, 15vw, 200px) 5%;
 }
 
-.text-row {
+// JSで制御するグローバルなアニメーション定義
+:global {
+  .js-observe {
+    opacity: 0;
+    // 歪み、ぼかし、移動を初期値に
+    transform: translateY(120px) skewY(6deg) scale(0.95);
+    filter: blur(20px);
+    transition: opacity $duration $ease-out-expo,
+      transform $duration $ease-out-expo, filter 1.6s $ease-out-expo;
+    will-change: transform, opacity, filter;
+
+    &.is-visible {
+      opacity: 1;
+      transform: translateY(0) skewY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  // スタッガー（時間差）演出
+  .delay-1 {
+    transition-delay: 0.15s;
+  }
+  .delay-2 {
+    transition-delay: 0.3s;
+  }
+  .delay-3 {
+    transition-delay: 0.45s;
+  }
+}
+
+.header {
+  margin-bottom: clamp(60px, 10vw, 120px);
+}
+
+.eyebrow {
+  font-size: 18px;
+  letter-spacing: 0.5em;
+  font-weight: 800;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 40px;
+  line-height: 1.4;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+  margin-block: 24px;
+}
+
+.lead,
+.text {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.6;
+  max-width: 35em;
+  color: var(--font-color-base);
+}
+
+.text2 {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.6;
+  color: var(--font-color-base);
+  margin-bottom: 16px;
+}
+
+.section {
+  padding: clamp(80px, 10vw, 120px) 0;
   position: relative;
-  margin-bottom: 24px;
 
-  &:last-child {
-    margin-bottom: 0;
+  // 先進的な区切り線の描画
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #eee;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 1.5s $ease-out-expo 0.5s;
+  }
+
+  &:global(.is-visible)::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }
 
-.text-content {
-  display: flex;
-  flex-wrap: wrap;
-  line-height: 1.5;
-
-  &.is-title {
-    font-family: serif;
-    color: var(--primary-color);
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-
-  &.is-body {
-    font-family: sans-serif;
-    color: var(--font-color-base);
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    font-weight: normal;
-    margin-bottom: 12px;
-  }
+.heading {
+  font-size: 40px;
+  line-height: 1.4;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+  margin-block: 24px;
 }
 
+.list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.item {
+  padding: 50px 40px;
+  background: #fcfcfc;
+  border: 1px solid #eee;
+  transition: all 0.6s $ease-out-expo;
+  border-radius: 10px;
+}
+
+.key {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 18px;
+  color: var(--color-primary);
+}
+
+.cta {
+  margin-top: 100px;
+  padding: 140px 5%;
+  text-align: center;
+}
+
+.ctaText {
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.4;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.contactButton {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.contactButton.slide {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+.contactButton.slide::after {
+  background-color: var(--color-primary);
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 100%;
+  transform: scale(0, 1);
+  transform-origin: left top;
+  transition: 0.2s cubic-bezier(0.45, 0, 0.55, 1);
+  z-index: -1;
+}
+.contactButton.slide:hover {
+  color: #fff;
+}
+.contactButton.slide:hover::after {
+  transform: scale(1, 1);
+}

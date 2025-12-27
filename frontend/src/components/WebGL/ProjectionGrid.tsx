@@ -20,6 +20,15 @@ const GRIDS_CONFIG = [
   },
 ];
 
+// メッシュにカスタムプロパティを保持させるための型拡張
+interface ProjectileMesh extends THREE.Mesh {
+  userData: {
+    originPos: THREE.Vector3;
+    direction: THREE.Vector3;
+    rotateSpeed: THREE.Vector3;
+  };
+}
+
 export default function ProjectionGrid() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -27,6 +36,7 @@ export default function ProjectionGrid() {
   const videos = useRef<HTMLVideoElement[]>([]);
   const currentIndex = useRef(0);
   const isTransitioning = useRef(false);
+  const scrollProgress = useRef(0);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -38,7 +48,7 @@ export default function ProjectionGrid() {
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.z = 6; // 少し引き気味に設定（拡散が見えやすくするため）
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -51,7 +61,18 @@ export default function ProjectionGrid() {
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // --- 同期切り替えアニメーション ---
+    // スクロールイベントの監視
+    const handleScroll = () => {
+      const h = document.documentElement;
+      const b = document.body;
+      const st = 'scrollTop';
+      const sh = 'scrollHeight';
+      // スクロール率 0.0 ~ 1.0
+      scrollProgress.current =
+        (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight);
+    };
+    window.addEventListener('scroll', handleScroll);
+
     const rotateGrids = () => {
       if (isTransitioning.current) return;
       isTransitioning.current = true;
@@ -61,7 +82,6 @@ export default function ProjectionGrid() {
       const nextGrid = grids.current[nextIndex];
       const nextVideo = videos.current[nextIndex];
 
-      // 次の動画を0秒から再生準備
       nextVideo.currentTime = 0;
       nextVideo.play().catch(() => {});
 
@@ -72,7 +92,6 @@ export default function ProjectionGrid() {
         },
       });
 
-      // 現在のグリッドを消す (Stagger時間を短くしてキレを良くする)
       tl.to(
         currentGrid.children.map(c => c.scale),
         {
@@ -85,7 +104,6 @@ export default function ProjectionGrid() {
         }
       );
 
-      // 次のグリッドを出す (0.2秒かぶせる)
       tl.to(
         nextGrid.children.map(c => c.scale),
         {
@@ -111,7 +129,7 @@ export default function ProjectionGrid() {
         video.crossOrigin = 'anonymous';
         video.muted = true;
         video.playsInline = true;
-        video.loop = true; // ループさせてラグを排除
+        video.loop = true;
 
         const videoTexture = new THREE.VideoTexture(video);
         const material = new THREE.MeshBasicMaterial({
@@ -126,7 +144,7 @@ export default function ProjectionGrid() {
           img.onerror = rej;
         });
 
-        const gridSize = 40;
+        const gridSize = 50;
         const spacing = 0.25;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d')!;
@@ -140,17 +158,38 @@ export default function ProjectionGrid() {
             const pixelIndex = ((gridSize - 1 - y) * gridSize + x) * 4;
             if (imageData[pixelIndex] < 128) {
               const geometry = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+
+              // UVマッピングの調整
               const uvAttr = geometry.attributes.uv;
               for (let i = 0; i < uvAttr.array.length; i += 2) {
                 uvAttr.array[i] = (x + uvAttr.array[i]) / gridSize;
                 uvAttr.array[i + 1] = (y + uvAttr.array[i + 1]) / gridSize;
               }
-              const mesh = new THREE.Mesh(geometry, material);
-              mesh.position.set(
-                (x - gridSize / 2) * spacing,
-                (y - gridSize / 2) * spacing,
-                0
-              );
+
+              const mesh = new THREE.Mesh(geometry, material) as ProjectileMesh;
+
+              // 初期位置の設定
+              const posX = (x - gridSize / 2) * spacing;
+              const posY = (y - gridSize / 2) * spacing;
+              const posZ = 0;
+              mesh.position.set(posX, posY, posZ);
+
+              // 放射状の動きのためのデータをuserDataに保存
+              mesh.userData = {
+                originPos: new THREE.Vector3(posX, posY, posZ),
+                // 中心から外側に向かうベクトルにランダムなバラつきを加える
+                direction: new THREE.Vector3(
+                  posX + (Math.random() - 0.5) * 10,
+                  posY + (Math.random() - 0.5) * 10,
+                  (Math.random() - 0.5) * 20 // 奥・手前への広がり
+                ).normalize(),
+                rotateSpeed: new THREE.Vector3(
+                  Math.random() * 0.1,
+                  Math.random() * 0.1,
+                  Math.random() * 0.1
+                ),
+              };
+
               mesh.scale.setScalar(index === 0 ? 1 : 0);
               gridGroup.add(mesh);
             }
@@ -181,44 +220,69 @@ export default function ProjectionGrid() {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // --- ビデオの再生時間を監視 ---
+      // ビデオ切り替えロジック
       const activeVideo = videos.current[currentIndex.current];
       if (activeVideo && !isTransitioning.current) {
-        // ビデオが終わる 0.5秒前になったら切り替え開始
         const timeLeft = activeVideo.duration - activeVideo.currentTime;
         if (timeLeft < 0.5 && activeVideo.duration > 0) {
           rotateGrids();
         }
       }
 
+      // 放射状拡散アニメーションの更新
+      const explosionStrength = 60; // 飛び散る距離の強さ
+      const progress = scrollProgress.current;
+
       grids.current.forEach(group => {
         if (!group) return;
         group.children.forEach((child, i) => {
-          child.position.z = Math.sin(Date.now() * 0.002 + i * 0.1) * 0.15;
+          const mesh = child as ProjectileMesh;
+          const { originPos, direction, rotateSpeed } = mesh.userData;
+
+          if (progress > 0) {
+            // スクロールしている時：放射状に移動
+            mesh.position.x =
+              originPos.x + direction.x * progress * explosionStrength;
+            mesh.position.y =
+              originPos.y + direction.y * progress * explosionStrength;
+            mesh.position.z =
+              originPos.z + direction.z * progress * explosionStrength;
+
+            // 回転も加える
+            mesh.rotation.x += rotateSpeed.x;
+            mesh.rotation.y += rotateSpeed.y;
+          } else {
+            // スクロールがトップの時：元の波打つアニメーション
+            mesh.position.x = originPos.x;
+            mesh.position.y = originPos.y;
+            mesh.position.z = Math.sin(Date.now() * 0.002 + i * 0.1) * 0.15;
+            mesh.rotation.set(0, 0, 0);
+          }
         });
       });
+
       renderer.render(scene, camera);
     };
     animate();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
       renderer.dispose();
     };
   }, []);
 
-  // ProjectionGrid.tsx の return 部分を修正
   return (
     <div
       ref={containerRef}
       style={{
-        position: 'absolute', // fixed から absolute に変更
+        position: 'fixed', // スクロール中も画面に固定するために fixed に戻す
         top: 0,
         left: 0,
         width: '100%',
-        height: '100%',
+        height: '100vh',
         pointerEvents: 'none',
-        zIndex: 3, // 背面に送る場合は 1、手前なら 10
+        zIndex: 3,
         overflow: 'hidden',
       }}
     >

@@ -1,0 +1,40 @@
+/* AboutBackground.module.scss */
+.about-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  min-height: 100%;
+
+  &__item {
+    position: absolute;
+    width: clamp(240px, 18vw, 380px);
+    height: auto;
+    transform: rotate(var(--rotate));
+    will-change: transform;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      filter: blur(15px);
+      opacity: 0.6;
+    }
+
+    &.is-left {
+      left: 2%;
+    }
+
+    &.is-right {
+      right: 2%;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .about-bg {
+    display: none;
+  }
+}

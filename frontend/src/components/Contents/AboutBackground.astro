@@ -1,0 +1,54 @@
+---
+// AboutBackground.astro
+// 左に2枚、右に3枚の構成
+const images = [
+  // 左側
+  { src: '/bg/001_1_11zon_1_11zon.webp', alt: '', side: 'left',  top: '10%', rotate: '-5deg', speed: '0.1' },
+  { src: '/bg/002_9_11zon_3_11zon.webp', alt: '', side: 'left',  top: '60%', rotate: '8deg',  speed: '0.2' },
+  // 右側
+  { src: '/bg/003_8_11zon_4_11zon.webp', alt: '', side: 'right', top: '5%',  rotate: '4deg',  speed: '0.15' },
+  { src: '/bg/004_7_11zon_5_11zon.webp', alt: '', side: 'right', top: '40%', rotate: '-6deg', speed: '0.05' },
+  { src: '/bg/005_6_11zon_6_11zon.webp', alt: '', side: 'right', top: '80%', rotate: '3deg',  speed: '0.25' },
+];
+---
+
+<div class="about-bg" aria-hidden="true">
+  {images.map((img) => (
+    <div 
+      class={`about-bg__item is-${img.side}`}
+      style={`top: ${img.top}; --rotate: ${img.rotate}; --speed: ${img.speed};`}
+      data-parallax
+    >
+      <img src={img.src} alt={img.alt} loading="lazy" />
+    </div>
+  ))}
+</div>
+
+<script>
+  // 型を明確にするために HTMLElement として取得
+  const items = document.querySelectorAll<HTMLElement>('[data-parallax]');
+  
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    
+    items.forEach((item) => {
+      // style属性が存在しない、または--speedが含まれない場合の安全策
+      const style = item.getAttribute('style');
+      if (!style) return;
+
+      const match = style.match(/--speed:\s*([\d.]+)/);
+      if (match && match[1]) {
+        const speed = parseFloat(match[1]);
+        const yPos = -(scrolled * speed);
+        
+        // item.style で直接操作することで rotate(var(--rotate)) を保持
+        // 型エラーを避けるため、transform プロパティを更新
+        item.style.transform = `translateY(${yPos}px) rotate(var(--rotate))`;
+      }
+    });
+  }, { passive: true }); // パフォーマンス向上のため passive オプションを追加
+</script>
+
+<style lang="scss">
+  @import './AboutBackground.module.scss';
+</style>
