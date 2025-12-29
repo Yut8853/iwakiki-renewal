@@ -48,7 +48,7 @@ export default function ProjectionGrid() {
       0.1,
       1000
     );
-    camera.position.z = 6; // 少し引き気味に設定（拡散が見えやすくするため）
+    camera.position.z = 3.5; // 少し引き気味に設定（拡散が見えやすくするため）
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -145,7 +145,7 @@ export default function ProjectionGrid() {
         });
 
         const gridSize = 50;
-        const spacing = 0.25;
+        const spacing = 0.15;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d')!;
         canvas.width = gridSize;
@@ -230,7 +230,7 @@ export default function ProjectionGrid() {
       }
 
       // 放射状拡散アニメーションの更新
-      const explosionStrength = 60; // 飛び散る距離の強さ
+      const explosionStrength = 160; // 飛び散る距離の強さ
       const progress = scrollProgress.current;
 
       grids.current.forEach(group => {

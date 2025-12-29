@@ -3,6 +3,13 @@ import styles from './HeroText.module.scss';
 ---
 
 <section class={styles.about} aria-labelledby="about-title">
+  <div class={styles.videoBg} id="hover-video-container">
+    <div class={styles.videoOverlay}></div>
+    <video id="hover-video" muted loop playsinline>
+      <source src="/videos/section01.mp4" type="video/mp4" />
+    </video>
+  </div>
+
   <div class={styles.inner}>
     <header class={`${styles.header} js-observe`}>
       <p class={styles.eyebrow}>幸せを感じる不動産との縁結び</p>
@@ -33,7 +40,7 @@ import styles from './HeroText.module.scss';
     <section class={`${styles.section} js-observe`} aria-labelledby="about-strengths">
       <h2 id="about-strengths" class={styles.heading}>私たちが大切にしていること</h2>
       <ul class={styles.list}>
-        <li class={`${styles.item} js-observe delay-1`}>
+        <li class={`${styles.item} js-observe js-video-trigger delay-1`}>
           <strong class={styles.key}>ご要望の深掘り：</strong>
           暮らし方・将来設計まで伺い、条件の優先順位を一緒に整理します。
         </li>
@@ -58,9 +65,9 @@ import styles from './HeroText.module.scss';
         <p class={styles.text2}>
           多くのご縁に恵まれ、真心を込めたサービスを信念としております。
         </p>
-                <p class={styles.text2}>
-これまでの経験を活かし、今後も東京での総合不動産業と、いわき市の活性化やＵＩＪターン(移住者)・関東への移住の架け橋、高齢者サポートを通し、地域の皆様の暮らしが豊かになるようにお手伝いをさせていただきたいと考えております。<br><br>
-これから皆様に気軽にお声をかけていただける会社を目指し、努めてまいります。
+        <p class={styles.text2}>
+          これまでの経験を活かし、今後も東京での総合不動産業と、いわき市の活性化やＵＩＪターン(移住者)・関東への移住の架け橋、高齢者サポートを通し、地域の皆様の暮らしが豊かになるようにお手伝いをさせていただきたいと考えております。<br><br>
+          これから皆様に気軽にお声をかけていただける会社を目指し、努めてまいります。
         </p>
       </div>
     </section>
@@ -70,45 +77,58 @@ import styles from './HeroText.module.scss';
         住まい探し・ご相談は、お気軽にお問い合わせください。
       </p>
       <div class={styles.ctaButtons}>
-              <button
-        class={`${styles.contactButton} ${styles.slide}`}
-      >
-        お問い合わせ
-      </button>
-              <button
-  
-        class={`${styles.contactButton} ${styles.slide}`}
-      >
-        物件を見る
-      </button>
+        <button class={`${styles.contactButton} ${styles.slide}`}>
+          お問い合わせ
+        </button>
+        <button class={`${styles.contactButton} ${styles.slide}`}>
+          物件を見る
+        </button>
       </div>
     </section>
   </div>
 </section>
 
 <script>
-  const setupScrollObserve = () => {
+  const setupEffects = () => {
+    // 1. スクロール監視
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            // AWWWARDS標準: 戻ったときも演出を再生したい場合は unobserve を削除
             observer.unobserve(entry.target);
           }
         });
       },
-      {
-        rootMargin: '0px 0px -15% 0px',
-        threshold: 0.1,
-      }
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.1 }
     );
-
     document.querySelectorAll('.js-observe').forEach((el) => observer.observe(el));
+
+    // 2. ホバー動画制御
+    const videoContainer = document.getElementById('hover-video-container');
+    const videoElement = document.getElementById('hover-video');
+    const triggers = document.querySelectorAll('.js-video-trigger');
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener('mouseenter', () => {
+        if (videoContainer && videoElement) {
+          // CSS Modulesのクラス名をJSから直接参照できないため、classList.addで制御
+          // (SCSS側で .videoBg.isActive として定義)
+          videoContainer.style.opacity = '1';
+          videoContainer.style.visibility = 'visible';
+          videoElement.play();
+        }
+      });
+      trigger.addEventListener('mouseleave', () => {
+        if (videoContainer && videoElement) {
+          videoContainer.style.opacity = '0';
+          videoContainer.style.visibility = 'hidden';
+          videoElement.pause();
+        }
+      });
+    });
   };
 
-  // AstroのView Transitionsに対応
-  document.addEventListener('astro:page-load', setupScrollObserve);
-  // 初回ロード用
-  document.addEventListener('DOMContentLoaded', setupScrollObserve);
+  document.addEventListener('astro:page-load', setupEffects);
+  document.addEventListener('DOMContentLoaded', setupEffects);
 </script>

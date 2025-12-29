@@ -6,7 +6,7 @@ import ContactButton from './ContactButton.tsx';
 <header class={styles.header}>
   <div class={styles.inner}>
     <div class={styles.left}>
-      <a href="/" class={styles.logo}>
+      <a href="/" class={styles.logo} data-tooltip="Home">
         <img
           src="/images/logo.png"
           alt="サイトロゴ"
@@ -17,34 +17,36 @@ import ContactButton from './ContactButton.tsx';
 
       <nav>
         <ul class={styles.navList}>
-          <li><a href="/about">iwakikiについて</a></li>
-          <li><a href="/shop">最新 / 成約物件</a></li>
-          <li><a href="/blog">お知らせ</a></li>
+          <li><a href="/about" data-tooltip="About Us">iwakikiについて</a></li>
+          <li><a href="/shop" data-tooltip="Properties">最新 / 成約物件</a></li>
+          <li><a href="/blog" data-tooltip="News">お知らせ</a></li>
         </ul>
       </nav>
     </div>
 
     <div class={styles.right}>
+      <a href="tel:0246-60-8875" class={styles.phone} data-tooltip="Call Us">
+        0246-60-8875
+      </a>
+
+      <div class={styles.contactWrapper} data-tooltip="Contact Us">
+        <ContactButton client:load />
+      </div>
+
       <a
-        href="https://www.instagram.com/"
+        href="https://www.instagram.com/iwakiki.vacation.homes/"
         target="_blank"
         rel="noopener noreferrer"
         class={styles.insta}
+        data-tooltip="iwakiki vacation homes"
       >
         <img
           src="/images/instagram.gif"
           alt="Instagram"
-          width="29"
-          height="29"
+          width="24"
+          height="24"
         />
       </a>
-
-      <a href="tel:0246-60-8875" class={styles.phone}>
-        0246-60-8875
-      </a>
-
-      <!-- ★ React Island -->
-      <ContactButton client:load />
     </div>
   </div>
 </header>
