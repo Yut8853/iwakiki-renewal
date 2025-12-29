@@ -31,7 +31,7 @@ const { logoUrl } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.5); /* 背後を少し透かす */
+    background-color: rgba(255, 255, 255, 1.0); /* 背後を少し透かす */
     backdrop-filter: blur(20px); /* 最初のブラー強度 */
     transition: backdrop-filter 0.8s ease-out, opacity 0.8s ease-out;
     /* 操作を完全にロック */
@@ -41,7 +41,7 @@ const { logoUrl } = Astro.props;
 
   .loader-content {
     text-align: center;
-    width: 300px;
+    width: 100vw;
   }
 
   .logo-wrapper {
@@ -54,15 +54,12 @@ const { logoUrl } = Astro.props;
   .loader-logo {
     width: 80px;
     margin-bottom: 2rem;
-    animation: pulse 2s infinite ease-in-out;
-
   }
 
-  /* バーのデザイン：細く、モダンに */
   .progress-bar-wrapper {
     width: 100%;
     height: 2px;
-    background: var(--color-primary);
+    background: #fff;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 10px;
@@ -82,11 +79,6 @@ const { logoUrl } = Astro.props;
     font-size: 1.5rem;
     letter-spacing: 0.1em;
     color: var(--color-primary);
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.05); opacity: 1; }
   }
 
   /* 完了時のクラス */
@@ -118,7 +110,6 @@ function startLoader() {
       progressFill.style.width = `${progress}%`;
       progressText.innerText = progress.toString();
 
-      // 数値に連動してブラーを弱め、彩度を上げる (40px -> 0px / 0% -> 100%)
       const blurVal = 40 - (progress * 0.4);
       const saturateVal = progress;
       loader.style.backdropFilter = `blur(${blurVal}px) saturate(${saturateVal}%)`;
@@ -126,7 +117,6 @@ function startLoader() {
       if (progress >= 100) {
         clearInterval(interval);
         
-        // 少し余韻を残して解除
         setTimeout(() => {
           loader.classList.add('loader-hidden');
           document.body.style.overflow = '';

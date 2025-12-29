@@ -1,0 +1,73 @@
+---
+import styles from './SidePanel.module.scss';
+---
+
+<div class={styles.panelWrapper} id="side-panel-wrapper">
+  <button class={styles.triggerTab} id="panel-trigger">
+    <span class={styles.tabText}>売却依頼</span>
+  </button>
+
+  <div class={styles.contentOverlay} id="panel-overlay">
+    <button class={styles.closeButton} id="panel-close">×</button>
+    <div class={styles.inner}>
+      <div class={styles.scrollArea}>
+        <h2 class={styles.panelTitle}>Property Sale Support</h2>
+        <div class={styles.featureList}>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>01</span>
+            <h3>無料査定のご依頼</h3>
+            <p>プロフェッショナルな宅地建物取引士が、最新の市場動向に基づいた正確な査定を秘密厳守にて無料で提供します。お気軽にご相談ください。</p>
+          </div>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>02</span>
+            <h3>売却計画のご提案</h3>
+            <p>売却の目的やご希望の売却時期に合わせた、最適な売却プランを提案します。</p>
+          </div>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>03</span>
+            <h3>広告・プロモーション</h3>
+            <p>多彩な広告手法と独自のネットワークを活用し、物件の魅力を最大限に引き出します。</p>
+          </div>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>04</span>
+            <h3>価格交渉のアドバイス</h3>
+            <p>適正な価格設定と交渉のアドバイスを行い、売却価格の最大化を図ります。</p>
+          </div>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>05</span>
+            <h3>売却手続きのサポート</h3>
+            <p>税理士や弁護士との連携も可能。契約から引渡しまで丁寧にサポートします。</p>
+          </div>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>06</span>
+            <h3>アフターサービス</h3>
+            <p>売却後のフォローアップも万全です。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ isOpenClass: styles.isOpen }}>
+  const setupPanel = () => {
+    const wrapper = document.getElementById('side-panel-wrapper');
+    const trigger = document.getElementById('panel-trigger');
+    const close = document.getElementById('panel-close');
+
+    if (!wrapper || !trigger || !close) return;
+
+    trigger.addEventListener('click', () => {
+      wrapper.classList.add(isOpenClass);
+      document.body.style.overflow = 'hidden';
+    });
+
+    close.addEventListener('click', () => {
+      wrapper.classList.remove(isOpenClass);
+      document.body.style.overflow = '';
+    });
+  };
+
+  document.addEventListener('astro:page-load', setupPanel);
+  document.addEventListener('DOMContentLoaded', setupPanel);
+</script>
