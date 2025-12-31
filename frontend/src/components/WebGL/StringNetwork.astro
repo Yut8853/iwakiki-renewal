@@ -1,0 +1,104 @@
+<div id="string-canvas-container" class="webgl-container"></div>
+
+<style>
+  .webgl-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: transparent;
+  }
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+
+  class SilkSimulation {
+    constructor() {
+      this.container = document.getElementById('string-canvas-container');
+      if (!this.container || this.container.querySelector('canvas')) return;
+
+      this.scene = new THREE.Scene();
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      // カメラ位置を調整（右端から左へ伸びる様子が見えるように）
+      this.camera.position.set(-14, 0, 15); 
+
+      this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      this.renderer.setClearColor(0x000000, 0); 
+      this.renderer.setPixelRatio(window.devicePixelRatio);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.container.appendChild(this.renderer.domElement);
+
+      this.init();
+      this.animate();
+      window.addEventListener('resize', () => this.onResize());
+    }
+
+    init() {
+      const segmentCount = 200; 
+      const points = [];
+      for (let j = 0; j <= segmentCount; j++) {
+        points.push(new THREE.Vector3(0, 0, 0));
+      }
+
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({
+        color: 0x06756d,
+        transparent: true,
+        opacity: 0.8
+      });
+
+      this.line = new THREE.Line(geometry, material);
+      this.scene.add(this.line);
+    }
+
+    animate() {
+      requestAnimationFrame(() => this.animate());
+      const time = Date.now() * 0.00085;
+
+      const pos = this.line.geometry.attributes.position.array;
+      const count = pos.length / 3;
+
+      for (let j = 0; j < count; j++) {
+        // 右端を起点(0)にして、左(マイナス方向)へ伸ばす
+        const ratio = j / count; // 0 (右端) ~ 1 (左端)
+        const x = -ratio * 35;   // 35は糸の長さ
+
+        /**
+         * 減衰（Damping）の計算
+         * 右端(ratio=0)では 0、左に行くほど 1 に近づく係数。
+         * これにより右端の起点がピタッと固定されます。
+         */
+        const damping = Math.pow(ratio, 1.5); 
+
+        const wave1 = Math.sin(x * 0.3 + time) * 2.5 * damping;
+        const wave2 = Math.sin(x * 0.2 - time * 2.0) * 0.5 * damping;
+        const wave3 = Math.cos(x * 0.1 + time * 0.5) * 1.5 * damping;
+
+        pos[j * 3] = x;
+        pos[j * 3 + 1] = wave1 + wave2; 
+        pos[j * 3 + 2] = wave3;         
+      }
+      
+      this.line.geometry.attributes.position.needsUpdate = true;
+      this.renderer.render(this.scene, this.camera);
+    }
+
+    onResize() {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => new SilkSimulation());
+  document.addEventListener('DOMContentLoaded', () => new SilkSimulation());
+</script>
