@@ -1,4 +1,5 @@
 $ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+$color-accent: #c5a059;
 
 .panelWrapper {
   position: fixed;
@@ -6,19 +7,44 @@ $ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
   right: 0;
   width: 100%;
   height: 100vh;
-  z-index: 99;
+  z-index: 999;
   pointer-events: none;
 
-  // 開いた時の状態
   &.isOpen {
     pointer-events: auto;
+
+    .triggerTab {
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      right: 0;
+      transform: translateY(0);
+      border-radius: 0;
+      background-color: transparent;
+      opacity: 0; // 開いている間はタブ自体を消す
+      transition: opacity 0.4s ease, width 0s, height 0s; // パッと消して背景を見せる
+
+      .triggerInner {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .visualBackground {
+      opacity: 1;
+      transition: opacity 0.8s ease 0.1s;
+    }
+
     .contentOverlay {
       transform: translateX(0);
       visibility: visible;
+      opacity: 1;
+      transition: transform 0.8s $ease-expo 0.2s, opacity 0.8s ease 0.2s;
     }
-    .triggerTab {
-      opacity: 0;
-      transform: translateY(-50%) translateX(100%);
+
+    .featureItem {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -28,127 +54,241 @@ $ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
   position: absolute;
   top: 50%;
   right: 0;
+  width: 65px;
+  height: 350px;
   transform: translateY(-50%);
-  color: var(--color-primary);
-  background-color: var(--color-secondary);
-  padding: 16px;
+  color: #fff;
+  background-color: var(--color-primary);
   border: none;
-  padding: 40px 16px;
   cursor: pointer;
-  transition: all 0.6s $ease-expo;
-  border-radius: 12px 0 0 12px;
-  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px 0 0 20px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  // 閉じる時: ふわっと戻る
+  transition: opacity 0.6s ease 0.4s;
 
   &:hover {
-    color: var(--color-secondary);
-    padding-right: 25px;
-    background: var(--color-primary);
+    width: 80px;
+    background-color: $color-accent;
   }
 }
 
-.tabText {
+.triggerInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  transition: opacity 0.3s ease;
+}
+
+.tabArrow {
+  font-size: 14px;
+  color: #fff;
+  animation: bounce-x 2s infinite;
+}
+
+@keyframes bounce-x {
+  0% {
+    transform: translateX(8px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-8px);
+  }
+}
+
+.tabTextJa {
   writing-mode: vertical-rl;
   text-orientation: upright;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.2em;
   font-weight: 800;
   font-size: 16px;
-  display: block;
+}
+
+.visualBackground {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.95) 40%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  pointer-events: none;
+  opacity: 0;
+  // 閉じる時: その場でふわっと消える
+  transition: opacity 0.6s ease;
 }
 
 .contentOverlay {
   position: absolute;
   top: 0;
   right: 0;
-  width: 90%;
-  max-width: 450px;
+  width: 100%;
   height: 100%;
-  background: #ffffff;
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
-  // 右側に隠しておく
-  transform: translateX(100%);
+  z-index: 2;
+  opacity: 0;
   visibility: hidden;
-  transition: transform 0.8s $ease-expo, visibility 0.8s;
-  display: flex;
-  flex-direction: column;
-}
-
-.closeButton {
-  position: absolute;
-  top: 25px;
-  right: 25px; // 右上に変更して押しやすく
-  font-size: 32px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #000;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-  &:hover {
-    transform: scale(1.2) rotate(90deg);
-  }
+  transform: translateX(20px); // 移動距離を短くして「ふわっと感」を強調
+  // 閉じる時: その場で消えるように設定
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
 }
 
 .inner {
-  padding: 80px 40px;
   height: 100%;
-  overflow: hidden; // scrollAreaで制御
+  width: 35%;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 }
 
 .scrollArea {
-  height: 100%;
+  flex: 1;
   overflow-y: auto;
-  padding-right: 15px;
-
+  padding: 100px 60px;
   &::-webkit-scrollbar {
     width: 4px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #ddd;
+    background: $color-accent;
     border-radius: 10px;
   }
 }
 
+.closeButton {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s $ease-expo, opacity 0.3s ease;
+  &:hover {
+    transform: rotate(90deg) scale(1.1);
+  }
+  .closeLine {
+    position: absolute;
+    width: 24px;
+    height: 1px;
+    background: #fff;
+    &:nth-child(1) {
+      transform: rotate(45deg);
+    }
+    &:nth-child(2) {
+      transform: rotate(-45deg);
+    }
+  }
+}
+
 .panelTitle {
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: #aaa;
-  margin-bottom: 40px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
+  color: $color-accent;
+  font-weight: bold;
+  margin-bottom: 36px;
+}
+
+.leadText {
+  margin-bottom: 80px;
+  p {
+    font-size: clamp(24px, 2.5vw, 36px);
+    line-height: 1.6;
+    color: var(--color-primary);
+    font-weight: 800;
+  }
 }
 
 .featureList {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 80px;
 }
 
 .featureItem {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      transition-delay: #{$i * 0.08 + 0.4}s;
+    }
+  }
   .number {
     font-size: 11px;
-    font-weight: 900;
-    color: #c5a059; // アクセントカラー（いわきのリニューアル感）
-    margin-bottom: 8px;
+    font-weight: bold;
+    color: $color-accent;
     display: block;
+    margin-bottom: 15px;
   }
-
   h3 {
-    font-size: 19px;
+    font-size: 22px;
     font-weight: 900;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     color: #1a1a1a;
-    line-height: 1.4;
+    border-bottom: 2px solid #000;
+    display: inline-block;
   }
-
   p {
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 15px;
+    line-height: 2;
     color: #444;
-    text-align: justify;
+  }
+}
+
+.ctaArea {
+  margin: 120px 0 80px;
+  padding: 0 40px;
+}
+
+.ctaCard {
+  position: relative;
+  padding: 60px 40px;
+  text-align: center;
+  border: 1px solid rgba($color-accent, 0.3);
+  background: #fff;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 20px 40px;
+  text-decoration: none;
+  font-weight: 800;
+  transition: all 0.3s ease;
+  &:hover {
+    background: $color-accent;
+  }
+}
+
+.ctaTel {
+  margin-top: 30px;
+  font-size: 11px;
+  span {
+    display: block;
+    font-size: 28px;
+    font-weight: 900;
   }
 }
