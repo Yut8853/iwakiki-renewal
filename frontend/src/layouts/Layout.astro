@@ -2,7 +2,8 @@
 import "../styles/global.scss";
 import Header from "../components/Header/Header.astro";
 import Hero from "../components/Hero/Hero.astro";
-import ProjectionGrid from "../components/WebGL/ProjectionGrid.tsx";
+import { ProjectionGridCanvas } from "../components/WebGL/ProjectionGridCanvas";
+
 import HeroText from "../components/Contents/HeroText.astro";
 import SidePanel from "../components/SidePanel.astro";
 ---
@@ -18,7 +19,7 @@ import SidePanel from "../components/SidePanel.astro";
     <Header />
     <main>
       <section class="webgl-section">
-        <ProjectionGrid client:load />
+        <ProjectionGridCanvas client:load />
         <slot />
       <Hero />
       </section>
