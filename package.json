@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.24.0",
   "scripts": {
     "dev:cms": "pnpm -C cms dev",
     "dev:front": "pnpm -C frontend dev",
