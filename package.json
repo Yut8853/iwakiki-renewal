@@ -1,13 +1,10 @@
 {
-  "name": "iwakiki-renewal",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "packageManager": "pnpm@10.24.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.24.0"
+    "dev:cms": "pnpm -C cms dev",
+    "dev:front": "pnpm -C frontend dev",
+    "build:cms": "pnpm -C cms build",
+    "build:front": "pnpm -C frontend build"
+  }
 }
