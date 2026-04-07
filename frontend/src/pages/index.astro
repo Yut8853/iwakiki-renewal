@@ -1,9 +1,23 @@
 ---
-
 import Layout from '../layouts/Layout.astro';
-import ModernLoader from '../components/ModernLoader.astro';
+import Hero from '../components/Hero/Hero.astro';
+import { ProjectionGridCanvas } from '../components/WebGL/ProjectionGridCanvas';
+import HeroText from '../components/Contents/HeroText.astro';
+import { getLatestPosts } from '../data/blog';
+import { BlogCard } from '../components/Blog/BlogCard';
+
+const posts = getLatestPosts(3);
 ---
 
 <Layout>
-<ModernLoader logoUrl="/images/logo.png" />
+  <section class="webgl-section">
+    <ProjectionGridCanvas client:load />
+    <Hero />
+  </section>
+
+  <HeroText />
+
+  {posts.map((post, i) => (
+    <BlogCard client:load key={post.slug} post={post} index={i} />
+  ))}
 </Layout>

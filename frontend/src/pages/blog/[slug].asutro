@@ -1,0 +1,90 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { BlogCard } from '../../components/Blog';
+import { blogPosts, blogCategories, getRelatedPosts, formatDate } from '../../data/blog';
+import styles from '../../components/Blog/Blog.module.scss';
+
+export function getStaticPaths() {
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const categoryInfo = blogCategories[post.category];
+const relatedPosts = getRelatedPosts(post, 3);
+---
+
+<Layout title={`${post.title} | 福縁西不動産`} description={post.excerpt}>
+  <main class={styles.blogDetail}>
+    <header class={styles.detailHeader}>
+      <div class={styles.container}>
+        <nav class={styles.detailBreadcrumb}>
+          <a href="/">ホーム</a>
+          <span>/</span>
+          <a href="/blog">ブログ</a>
+          <span>/</span>
+          <span>{post.title}</span>
+        </nav>
+
+        <div class={styles.detailMeta}>
+          <span
+            class={styles.cardCategory}
+            style={`--category-color: ${categoryInfo.color}`}
+          >
+            {categoryInfo.label}
+          </span>
+          <span class={styles.cardDate}>{formatDate(post.publishedAt)}</span>
+          <span class={styles.readTime}>{post.readingTime}分で読める</span>
+        </div>
+
+        <h1 class={styles.detailTitle}>{post.title}</h1>
+
+        <div class={styles.authorInfo}>
+          <div class={styles.authorAvatar}>{post.author.name.charAt(0)}</div>
+          <div>
+            <span class={styles.authorName}>{post.author.name}</span>
+            {post.author.role && (
+              <span class={styles.authorRole}> / {post.author.role}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class={styles.detailContent}>
+      <div class={styles.container}>
+        <article class={styles.articleBody} set:html={post.content} />
+
+        <footer class={styles.articleFooter}>
+          <div class={styles.articleTags}>
+            {post.tags.map((tag) => (
+              <a href={`/blog?tag=${tag}`} class={styles.articleTag}>
+                #{tag}
+              </a>
+            ))}
+          </div>
+
+          {relatedPosts.length > 0 && (
+            <div class={styles.relatedPosts}>
+              <h3>関連記事</h3>
+              <div class={styles.relatedGrid}>
+                {relatedPosts.map((relatedPost, index) => (
+                  <BlogCard client:load post={relatedPost} index={index} variant="default" />
+                ))}
+              </div>
+            </div>
+          )}
+        </footer>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .authorRole {
+    color: #999;
+    font-size: 13px;
+  }
+</style>
