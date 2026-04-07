@@ -10,45 +10,53 @@ jobs:
   frontend:
     name: Frontend (Astro)
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'
 
-      - name: Install & Build
-        # ディレクトリ移動とコマンドを1つのステップで確実に実行
-        run: |
-          cd frontend
-          pnpm install
-          pnpm run astro check
-          pnpm run build
+      - name: Install
+        run: pnpm install
+        working-directory: ./frontend
+
+      - name: Type Check
+        run: pnpm run astro check
+        working-directory: ./frontend
+
+      - name: Build
+        run: pnpm build
+        working-directory: ./frontend
 
   cms:
     name: CMS (Next.js)
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml'
+          cache-dependency-path: 'cms/pnpm-lock.yaml'
 
-      - name: Install & Build
-        # cmsディレクトリに確実に移動してから実行
-        run: |
-          cd cms
-          ls -la # ここでファイル一覧を強制的にログに出します
-          pnpm install
-          pnpm run build
+      - name: Install
+        run: pnpm install
+        working-directory: ./cms
+
+      - name: Build
+        run: pnpm build
+        working-directory: ./cms
