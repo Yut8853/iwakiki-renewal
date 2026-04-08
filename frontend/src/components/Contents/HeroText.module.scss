@@ -29,7 +29,14 @@ $duration-extra-slow: 1.8s;
 // MIXINS
 // ============================================
 @mixin fluid-type($min-size, $max-size) {
-  font-size: clamp(#{$min-size}px, calc(#{$min-size}px + (#{$max-size} - #{$min-size}) * ((100vw - 375px) / (1400 - 375))), #{$max-size}px);
+  font-size: clamp(
+    #{$min-size}px,
+    calc(
+      #{$min-size}px + (#{$max-size} - #{$min-size}) *
+        ((100vw - 375px) / (1400 - 375))
+    ),
+    #{$max-size}px
+  );
 }
 
 @mixin section-padding {
@@ -66,9 +73,10 @@ $duration-extra-slow: 1.8s;
   height: 48px;
   border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  transition: width $duration-fast $ease-out-expo,
-              height $duration-fast $ease-out-expo,
-              border-color $duration-fast $ease-out-expo;
+  transition:
+    width $duration-fast $ease-out-expo,
+    height $duration-fast $ease-out-expo,
+    border-color $duration-fast $ease-out-expo;
 
   &:global(.is-expanded) {
     width: 80px;
@@ -81,7 +89,11 @@ $duration-extra-slow: 1.8s;
   position: absolute;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba($color-primary, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba($color-primary, 0.1) 0%,
+    transparent 70%
+  );
   border-radius: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.5;
@@ -108,19 +120,31 @@ $duration-extra-slow: 1.8s;
 .heroGrid {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba($color-border, 0.3) 1px, transparent 1px),
     linear-gradient(90deg, rgba($color-border, 0.3) 1px, transparent 1px);
   background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+  mask-image: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    black 20%,
+    transparent 70%
+  );
 }
 
 .heroGradient {
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(ellipse 100% 100% at 0% 0%, rgba($color-primary, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 80% at 100% 100%, rgba($color-primary, 0.05) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      ellipse 100% 100% at 0% 0%,
+      rgba($color-primary, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 80% 80% at 100% 100%,
+      rgba($color-primary, 0.05) 0%,
+      transparent 50%
+    );
 }
 
 .heroOrb {
@@ -129,7 +153,7 @@ $duration-extra-slow: 1.8s;
   filter: blur(80px);
   animation: orbFloat 20s ease-in-out infinite;
 
-  &[data-orb="1"] {
+  &[data-orb='1'] {
     width: 600px;
     height: 600px;
     top: -200px;
@@ -138,7 +162,7 @@ $duration-extra-slow: 1.8s;
     animation-delay: 0s;
   }
 
-  &[data-orb="2"] {
+  &[data-orb='2'] {
     width: 400px;
     height: 400px;
     bottom: -100px;
@@ -149,9 +173,16 @@ $duration-extra-slow: 1.8s;
 }
 
 @keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -30px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
 }
 
 .heroContent {
@@ -212,17 +243,24 @@ $duration-extra-slow: 1.8s;
   overflow: hidden;
   opacity: 0;
   transform: translateY(100%);
-  transition: opacity $duration-slow $ease-out-expo,
-              transform $duration-slow $ease-out-expo;
+  transition:
+    opacity $duration-slow $ease-out-expo,
+    transform $duration-slow $ease-out-expo;
 
   &:global(.is-visible) {
     opacity: 1;
     transform: translateY(0);
   }
 
-  &:nth-child(1):global(.is-visible) { transition-delay: 0.1s; }
-  &:nth-child(2):global(.is-visible) { transition-delay: 0.2s; }
-  &:nth-child(3):global(.is-visible) { transition-delay: 0.3s; }
+  &:nth-child(1):global(.is-visible) {
+    transition-delay: 0.1s;
+  }
+  &:nth-child(2):global(.is-visible) {
+    transition-delay: 0.2s;
+  }
+  &:nth-child(3):global(.is-visible) {
+    transition-delay: 0.3s;
+  }
 }
 
 .titleInner {
@@ -305,8 +343,9 @@ $duration-extra-slow: 1.8s;
   border-radius: 100px;
   text-decoration: none;
   overflow: hidden;
-  transition: transform $duration-fast $ease-out-expo,
-              box-shadow $duration-fast $ease-out-expo;
+  transition:
+    transform $duration-fast $ease-out-expo,
+    box-shadow $duration-fast $ease-out-expo;
 
   &:hover {
     transform: translateY(-2px);
@@ -343,7 +382,11 @@ $duration-extra-slow: 1.8s;
 .ctaGlow {
   position: absolute;
   inset: -2px;
-  background: linear-gradient(135deg, $color-primary-light, $color-primary-dark);
+  background: linear-gradient(
+    135deg,
+    $color-primary-light,
+    $color-primary-dark
+  );
   border-radius: inherit;
   opacity: 0;
   z-index: 0;
@@ -483,7 +526,7 @@ $duration-extra-slow: 1.8s;
   border-style: solid;
   border-width: 0;
 
-  &[data-corner="tl"] {
+  &[data-corner='tl'] {
     top: -1px;
     left: -1px;
     border-top-width: 3px;
@@ -491,7 +534,7 @@ $duration-extra-slow: 1.8s;
     border-top-left-radius: 24px;
   }
 
-  &[data-corner="tr"] {
+  &[data-corner='tr'] {
     top: -1px;
     right: -1px;
     border-top-width: 3px;
@@ -499,7 +542,7 @@ $duration-extra-slow: 1.8s;
     border-top-right-radius: 24px;
   }
 
-  &[data-corner="bl"] {
+  &[data-corner='bl'] {
     bottom: -1px;
     left: -1px;
     border-bottom-width: 3px;
@@ -507,7 +550,7 @@ $duration-extra-slow: 1.8s;
     border-bottom-left-radius: 24px;
   }
 
-  &[data-corner="br"] {
+  &[data-corner='br'] {
     bottom: -1px;
     right: -1px;
     border-bottom-width: 3px;
@@ -530,8 +573,13 @@ $duration-extra-slow: 1.8s;
 }
 
 @keyframes floatCard {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .floatCard {
@@ -620,10 +668,20 @@ $duration-extra-slow: 1.8s;
 }
 
 @keyframes scrollThumb {
-  0% { top: -20px; opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { top: 60px; opacity: 0; }
+  0% {
+    top: -20px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 60px;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeUp {
@@ -732,7 +790,11 @@ $duration-extra-slow: 1.8s;
 .aboutPattern {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 2px 2px, rgba($color-primary, 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba($color-primary, 0.03) 1px,
+    transparent 1px
+  );
   background-size: 40px 40px;
 }
 
@@ -752,8 +814,9 @@ $duration-extra-slow: 1.8s;
   background: $color-bg;
   border-radius: 24px;
   overflow: hidden;
-  transition: transform $duration-fast $ease-out-expo,
-              box-shadow $duration-fast $ease-out-expo;
+  transition:
+    transform $duration-fast $ease-out-expo,
+    box-shadow $duration-fast $ease-out-expo;
 
   &:hover {
     box-shadow: 0 30px 80px rgba($color-primary, 0.15);
@@ -795,7 +858,11 @@ $duration-extra-slow: 1.8s;
   right: -100px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba($color-primary, 0.3) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba($color-primary, 0.3) 0%,
+    transparent 70%
+  );
   opacity: 0;
   transition: opacity $duration-fast $ease-out-expo;
   pointer-events: none;
@@ -813,7 +880,11 @@ $duration-extra-slow: 1.8s;
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+    background: linear-gradient(
+      135deg,
+      $color-primary 0%,
+      $color-primary-dark 100%
+    );
     transform: translateY(100%);
     transition: transform $duration-medium $ease-out-expo;
     z-index: -1;
@@ -898,7 +969,13 @@ $duration-extra-slow: 1.8s;
 .servicesMarquee {
   margin: clamp(48px, 8vw, 80px) 0;
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
 }
 
 .marqueeInner {
@@ -913,8 +990,12 @@ $duration-extra-slow: 1.8s;
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .marqueeItem {
@@ -947,8 +1028,9 @@ $duration-extra-slow: 1.8s;
   overflow: hidden;
   opacity: 0;
   transform: translateY(60px);
-  transition: all $duration-slow $ease-out-expo,
-              box-shadow $duration-fast $ease-out-expo;
+  transition:
+    all $duration-slow $ease-out-expo,
+    box-shadow $duration-fast $ease-out-expo;
 
   &:global(.is-visible) {
     opacity: 1;
@@ -980,7 +1062,11 @@ $duration-extra-slow: 1.8s;
   position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  background: linear-gradient(
+    135deg,
+    $color-primary 0%,
+    $color-primary-dark 100%
+  );
 }
 
 .serviceIcon {
@@ -1069,7 +1155,11 @@ $duration-extra-slow: 1.8s;
   transform: translate(-50%, -50%);
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba($color-primary, 0.15) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba($color-primary, 0.15) 0%,
+    transparent 60%
+  );
   pointer-events: none;
 }
 
@@ -1087,7 +1177,8 @@ $duration-extra-slow: 1.8s;
 
 .storyContent {
   .sectionLabel {
-    .labelNum, .labelName {
+    .labelNum,
+    .labelName {
       color: rgba(255, 255, 255, 0.5);
     }
 
@@ -1372,15 +1463,27 @@ $duration-extra-slow: 1.8s;
 .ctaBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  background: linear-gradient(
+    135deg,
+    $color-primary 0%,
+    $color-primary-dark 100%
+  );
 }
 
 .ctaPattern {
   position: absolute;
   inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  background-image:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%
+    );
 }
 
 .ctaGlow {
@@ -1390,13 +1493,24 @@ $duration-extra-slow: 1.8s;
   transform: translate(-50%, -50%);
   width: 1000px;
   height: 1000px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%
+  );
   animation: ctaPulse 8s ease-in-out infinite;
 }
 
 @keyframes ctaPulse {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 .ctaContent {
@@ -1518,4 +1632,28 @@ $duration-extra-slow: 1.8s;
     height: 20px;
     opacity: 0.7;
   }
+}
+
+.sliderTrack {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.testimonialCard {
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+/* dots */
+.dot {
+  background: #ccc;
+  opacity: 0.4;
+  transition: 0.3s;
+}
+
+.dot:global(.is-active) {
+  background: #06756d;
+  opacity: 1;
+  transform: scale(1.2);
 }

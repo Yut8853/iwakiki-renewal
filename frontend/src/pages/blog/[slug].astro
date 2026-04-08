@@ -1,0 +1,188 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+// Named Import ではなく Default Import に変更（コンポーネント側の変更に合わせるため）
+import BlogCard from '../../components/Blog/BlogCard';
+
+/**
+ * getStaticPaths: 
+ * src/content/blog/ 内の Markdown ファイルに基づいて動的にページパスを生成します。
+ */
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+// Markdown コンテンツをレンダリングするためのコンポーネントを取得
+const { Content } = await entry.render();
+const post = entry.data;
+
+// カテゴリー情報の定義
+const blogCategories = {
+  news: { label: 'お知らせ', color: '#06756d' },
+  column: { label: 'コラム', color: '#e67e22' },
+  property: { label: '物件情報', color: '#3498db' },
+  lifestyle: { label: '暮らし', color: '#9b59b6' },
+} as const;
+
+// 安全なカテゴリー情報の取得
+const categoryKey = post.category as keyof typeof blogCategories;
+const categoryInfo = blogCategories[categoryKey] || { label: 'その他', color: '#666' };
+
+// 関連記事の取得（同じカテゴリーの他記事を最大3件）
+const allPosts = await getCollection('blog');
+const relatedPosts = allPosts
+  .filter(p => p.slug !== entry.slug && p.data.category === post.category)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+
+// 画像パスの解決
+const featuredImage = `/blog/${entry.slug}/${post.image || 'thumbnail.jpg'}`;
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+---
+
+<Layout title={`${post.title} | iwakiki`} description={post.excerpt}>
+  <main class="blog-detail-root">
+    <header class="detail-header">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/">Home</a> <span>/</span> 
+          <a href="/blog">Blog</a> <span>/</span> 
+          <span class="current">{post.title}</span>
+        </nav>
+        
+        <div class="meta-info">
+          <span class="category-badge" style={`background-color: ${categoryInfo.color}15; color: ${categoryInfo.color}; border: 1px solid ${categoryInfo.color}30;`}>
+            {categoryInfo.label}
+          </span>
+          <time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>
+        </div>
+        
+        <h1 class="main-title">{post.title}</h1>
+        
+        <div class="author-profile">
+          <div class="avatar" style={`background-color: ${categoryInfo.color}`}>{post.author.name.charAt(0)}</div>
+          <div class="info">
+            <span class="name">{post.author.name}</span>
+            {post.author.role && <span class="role">{post.author.role}</span>}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="featured-media container">
+      <div class="aspect-wrapper">
+        <img src={featuredImage} alt={post.title} onerror="this.src='/blog/default-thumbnail.jpg'" />
+      </div>
+    </div>
+
+    <section class="article-body container">
+      <article class="prose-content">
+        <Content />
+      </article>
+      
+      {post.tags && post.tags.length > 0 && (
+        <div class="tag-list">
+          {post.tags.map(tag => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
+      )}
+    </section>
+
+    {relatedPosts.length > 0 && (
+      <section class="related-section">
+        <div class="container">
+          <h2 class="section-label">Related Stories</h2>
+          <div class="related-grid">
+            {relatedPosts.map((p, i) => (
+              <BlogCard client:load post={{...p.data, slug: p.slug}} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+  </main>
+</Layout>
+
+<style lang="scss">
+  .blog-detail-root { background: #fff; min-height: 100vh; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  
+  .detail-header {
+    padding: 160px 0 80px;
+    text-align: center;
+    
+    .breadcrumb {
+      font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 40px; font-weight: 700;
+      a { color: inherit; text-decoration: none; transition: color 0.3s; &:hover { color: #06756d; } }
+      span { margin: 0 10px; color: #eee; }
+      .current { color: #888; }
+    }
+    
+    .meta-info {
+      display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 32px;
+      .category-badge { padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+      time { font-size: 14px; color: #999; font-weight: 500; font-family: var(--font-mono, monospace); }
+    }
+    
+    .main-title { font-size: clamp(32px, 6vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 48px; color: #111; letter-spacing: -0.03em; }
+    
+    .author-profile {
+      display: inline-flex; align-items: center; gap: 16px; padding: 10px 24px; background: #fcfcfc; border: 1px solid #f0f0f0; border-radius: 100px;
+      .avatar { width: 40px; height: 40px; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; }
+      .info { text-align: left; display: flex; flex-direction: column; line-height: 1.2;
+        .name { font-size: 14px; font-weight: 700; color: #222; }
+        .role { font-size: 11px; color: #aaa; font-weight: 500; }
+      }
+    }
+  }
+
+  .featured-media {
+    margin-bottom: 80px;
+    .aspect-wrapper {
+      aspect-ratio: 16/9; border-radius: 40px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.12);
+      img { width: 100%; height: 100%; object-fit: cover; }
+    }
+  }
+
+  .article-body {
+    padding-bottom: 120px;
+    .prose-content {
+      max-width: 760px; margin: 0 auto; font-size: 18px; line-height: 2.2; color: #333;
+      :global(h2) { font-size: clamp(28px, 4vw, 36px); font-weight: 800; margin: 80px 0 32px; color: #111; padding-bottom: 20px; border-bottom: 2px solid #f8f8f8; line-height: 1.3; }
+      :global(h3) { font-size: 24px; font-weight: 800; margin: 48px 0 24px; color: #222; }
+      :global(p) { margin-bottom: 32px; }
+      :global(ul), :global(ol) { margin-bottom: 40px; padding-left: 24px; }
+      :global(li) { margin-bottom: 12px; }
+      :global(blockquote) { border-left: 4px solid #06756d; padding: 10px 32px; margin: 48px 0; font-style: italic; color: #555; background: #f9f9f9; border-radius: 0 16px 16px 0; }
+      :global(img) { width: 100%; border-radius: 24px; margin: 48px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+    }
+    
+    .tag-list {
+      max-width: 760px; margin: 60px auto 0; display: flex; flex-wrap: wrap; gap: 12px; padding-top: 40px; border-top: 1px solid #f0f0f0;
+      .tag { font-size: 13px; font-weight: 600; color: #aaa; transition: color 0.3s; &:hover { color: #06756d; cursor: pointer; } }
+    }
+  }
+
+  .related-section {
+    background: #f9f9f9; padding: 120px 0; border-top: 1px solid #f0f0f0;
+    .container { max-width: 1200px; }
+    .section-label { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 64px; color: #111; letter-spacing: -0.02em; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+  }
+
+  @media (max-width: 768px) {
+    .detail-header { padding: 120px 0 40px; .main-title { font-size: 36px; } }
+    .featured-media { margin-bottom: 40px; .aspect-wrapper { border-radius: 24px; } }
+    .article-body { padding-bottom: 80px; .prose-content { font-size: 16px; :global(h2) { font-size: 24px; margin: 60px 0 24px; } } }
+    .related-section { padding: 80px 0; .section-label { margin-bottom: 40px; } }
+  }
+</style>

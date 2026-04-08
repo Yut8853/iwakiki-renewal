@@ -1,12 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero/Hero.astro';
 import { ProjectionGridCanvas } from '../components/WebGL/ProjectionGridCanvas';
 import HeroText from '../components/Contents/HeroText.astro';
-import { getLatestPosts } from '../data/blog';
 import { BlogCard } from '../components/Blog/BlogCard';
+import styles from '../components/Blog/Blog.module.scss';
 
-const posts = getLatestPosts(3);
+// 1. Markdown記事を取得し、日付順にソートして最新6件を抽出
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 6);
 ---
 
 <Layout>
@@ -17,7 +22,86 @@ const posts = getLatestPosts(3);
 
   <HeroText />
 
-  {posts.map((post, i) => (
-    <BlogCard client:load key={post.slug} post={post} index={i} />
-  ))}
+  <section class={styles.latestPosts || 'latest-posts'}>
+    <div class={styles.container || 'container'}>
+      <div class="section-header">
+        <div>
+          <span class="label">Update</span>
+          <h2>iwakikiからのお知らせ</h2>
+        </div>
+        <a href="/blog" class="view-all">View All posts →</a>
+      </div>
+
+      <div class="posts-grid">
+        {posts.map((post, i) => (
+          <BlogCard 
+            client:load 
+            key={post.slug} 
+            post={{...post.data, slug: post.slug}} 
+            index={i} 
+          />
+        ))}
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style lang="scss">
+  .webgl-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    padding: 0 20px;
+
+    .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #06756d;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+
+    .view-all {
+      color: #666;
+      font-size: 14px;
+      text-decoration: none;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: #06756d;
+        border-color: #06756d;
+        transform: translateX(5px);
+      }
+    }
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    padding: 0 20px;
+  }
+
+  .latest-posts {
+    padding: 100px 0;
+  }
+</style>

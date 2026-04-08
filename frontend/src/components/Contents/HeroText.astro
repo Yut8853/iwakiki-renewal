@@ -485,11 +485,11 @@ import styles from './HeroText.module.scss';
             <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2"/>
           </svg>
         </button>
-        <div class={styles.sliderDots} id="slider-dots">
-          <button class={`${styles.dot} ${styles.active}`} aria-label="スライド1"></button>
-          <button class={styles.dot} aria-label="スライド2"></button>
-          <button class={styles.dot} aria-label="スライド3"></button>
-        </div>
+<div class={styles.sliderDots} id="slider-dots">
+  <button class={styles.dot} data-dot></button>
+  <button class={styles.dot} data-dot></button>
+  <button class={styles.dot} data-dot></button>
+</div>
         <button class={styles.sliderBtn} id="slider-next" aria-label="次へ">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"/>
@@ -557,58 +557,53 @@ import styles from './HeroText.module.scss';
 
 <script>
   const initAnimations = () => {
-    // Custom Cursor
+
+    // =========================
+    // Custom Cursor（そのまま）
+    // =========================
     const cursor = document.getElementById('custom-cursor');
-    const cursorDot = cursor?.querySelector('.cursorDot') as HTMLElement;
-    const cursorRing = cursor?.querySelector('.cursorRing') as HTMLElement;
-    
+    const cursorDot = cursor?.querySelector('.cursorDot');
+    const cursorRing = cursor?.querySelector('.cursorRing');
+
     let cursorX = 0, cursorY = 0;
     let dotX = 0, dotY = 0;
     let ringX = 0, ringY = 0;
-    
+
     const updateCursor = () => {
       const dotSpeed = 0.35;
       const ringSpeed = 0.15;
-      
+
       dotX += (cursorX - dotX) * dotSpeed;
       dotY += (cursorY - dotY) * dotSpeed;
       ringX += (cursorX - ringX) * ringSpeed;
       ringY += (cursorY - ringY) * ringSpeed;
-      
+
       if (cursorDot && cursorRing) {
         cursorDot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
         cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
       }
-      
+
       requestAnimationFrame(updateCursor);
     };
-    
+
     if (window.matchMedia('(hover: hover)').matches && cursor) {
       document.addEventListener('mousemove', (e) => {
         cursorX = e.clientX;
         cursorY = e.clientY;
       });
-      
+
       updateCursor();
-      
-      // Magnetic effect
-      document.querySelectorAll('[data-magnetic]').forEach((el) => {
-        el.addEventListener('mouseenter', () => {
-          cursorRing?.classList.add('is-expanded');
-        });
-        el.addEventListener('mouseleave', () => {
-          cursorRing?.classList.remove('is-expanded');
-        });
-      });
     }
-    
-    // Intersection Observer for reveals
+
+    // =========================
+    // Intersection Observer
+    // =========================
     const observerOptions = {
       root: null,
       rootMargin: '0px 0px -10% 0px',
       threshold: 0.1
     };
-    
+
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -620,101 +615,67 @@ import styles from './HeroText.module.scss';
         }
       });
     }, observerOptions);
-    
+
     document.querySelectorAll('.js-fade-up, .js-reveal, .js-line-reveal, .js-split-lines').forEach((el) => {
       revealObserver.observe(el);
     });
-    
-    // Count up animation
-    const countObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          const target = parseInt(el.dataset.count || '0');
-          const duration = 2000;
-          const start = performance.now();
-          
-          const animate = (now: number) => {
-            const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 4);
-            el.textContent = Math.floor(target * eased).toLocaleString();
-            
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-          
-          requestAnimationFrame(animate);
-          countObserver.unobserve(el);
-        }
-      });
-    }, observerOptions);
-    
-    document.querySelectorAll('[data-count]').forEach((el) => {
-      countObserver.observe(el);
-    });
-    
-    // Tilt effect
-    document.querySelectorAll('.js-tilt').forEach((card) => {
-      card.addEventListener('mousemove', (e: Event) => {
-        const event = e as MouseEvent;
-        const rect = (card as HTMLElement).getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-        
-        (card as HTMLElement).style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-      });
-      
-      card.addEventListener('mouseleave', () => {
-        (card as HTMLElement).style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-      });
-    });
-    
-    // Testimonial Slider
+
+    // =========================
+    // 🔥 スライダー（完全修正版）
+    // =========================
+
     const sliderTrack = document.getElementById('slider-track');
+    const slides = document.querySelectorAll('#slider-track > article');
     const prevBtn = document.getElementById('slider-prev');
     const nextBtn = document.getElementById('slider-next');
-    const dots = document.querySelectorAll('#slider-dots .dot');
-    let currentSlide = 0;
-    const totalSlides = 3;
-    
+    const dots = document.querySelectorAll('[data-dot]');
+
+    if (!sliderTrack || slides.length === 0) return;
+
+    let current = 0;
+    const total = slides.length;
+
     const updateSlider = () => {
-      if (sliderTrack) {
-        sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-      }
+      sliderTrack.style.transform = `translateX(-${current * 100}%)`;
+
       dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentSlide);
+        dot.classList.toggle('is-active', i === current);
       });
     };
-    
-    prevBtn?.addEventListener('click', () => {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+
+    const next = () => {
+      current = (current + 1) % total;
       updateSlider();
-    });
-    
-    nextBtn?.addEventListener('click', () => {
-      currentSlide = (currentSlide + 1) % totalSlides;
+    };
+
+    const prev = () => {
+      current = (current - 1 + total) % total;
       updateSlider();
-    });
-    
+    };
+
+    prevBtn?.addEventListener('click', prev);
+    nextBtn?.addEventListener('click', next);
+
     dots.forEach((dot, i) => {
       dot.addEventListener('click', () => {
-        currentSlide = i;
+        current = i;
         updateSlider();
       });
     });
-    
-    // Auto-play slider
-    setInterval(() => {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      updateSlider();
-    }, 6000);
-    
-    // Scroll indicator hide
+
+    // autoplay
+    let auto = setInterval(next, 6000);
+
+    sliderTrack.addEventListener('mouseenter', () => clearInterval(auto));
+    sliderTrack.addEventListener('mouseleave', () => {
+      auto = setInterval(next, 6000);
+    });
+
+    updateSlider();
+
+    // =========================
+    // scroll cue
+    // =========================
     const scrollCue = document.getElementById('scroll-cue');
     window.addEventListener('scroll', () => {
       if (scrollCue) {
@@ -722,7 +683,7 @@ import styles from './HeroText.module.scss';
       }
     });
   };
-  
+
   document.addEventListener('astro:page-load', initAnimations);
   document.addEventListener('DOMContentLoaded', initAnimations);
 </script>

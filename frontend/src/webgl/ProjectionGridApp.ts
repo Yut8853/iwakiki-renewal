@@ -48,6 +48,8 @@ export class ProjectionGridApp {
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.handleResize);
 
+    this.handleScroll();
+
     await Promise.all(
       GRIDS_CONFIG.map((cfg, i) => this.createSingleGrid(cfg, i))
     );
