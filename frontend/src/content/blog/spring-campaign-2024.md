@@ -2,7 +2,7 @@
 title: '春の新生活応援キャンペーン開催中！'
 publishedAt: 2024-03-10
 category: 'news'
-image: 'thumbnail.jpg'
+image: '/blog/gw-holiday-notice.jpg'
 excerpt: '4月末まで、賃貸物件の仲介手数料が半額に。新生活をお得にスタートしましょう。'
 author:
   name: '佐藤 花子'

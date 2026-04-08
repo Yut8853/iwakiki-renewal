@@ -2,7 +2,7 @@
 title: 'いわき市で暮らす魅力 | 移住者が語るリアルな声'
 publishedAt: 2024-03-05
 category: 'lifestyle'
-image: 'thumbnail.jpg'
+image: '/blog/gw-holiday-notice.jpg'
 excerpt: '東京からいわき市へ移住した3家族にインタビュー。暮らしやすさ、子育て環境、地域コミュニティの魅力をお伝えします。'
 author:
   name: '鈴木 一郎'

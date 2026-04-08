@@ -6,14 +6,20 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
-    publishedAt: z.date(), // 文字列ではなくDateオブジェクトとして扱える
-    category: z.string(),
-    image: z.string().default('thumbnail.jpg'), // 画像ファイル名
+    excerpt: z.string().optional(),
+
+    publishedAt: z.date(),
+
+    category: z.enum(['news', 'column', 'property', 'lifestyle']),
+
+    image: z.string().default('thumbnail.jpg'),
+
     author: z.object({
       name: z.string(),
       role: z.string().optional(),
       avatar: z.string().optional(),
     }),
+
     tags: z.array(z.string()).default([]),
     readingTime: z.number().default(5),
   }),

@@ -36,7 +36,6 @@ const posts = allPosts
         {posts.map((post, i) => (
           <BlogCard 
             client:load 
-            key={post.slug} 
             post={{...post.data, slug: post.slug}} 
             index={i} 
           />

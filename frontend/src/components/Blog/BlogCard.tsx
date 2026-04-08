@@ -63,7 +63,7 @@ export const BlogCard = ({
 
   const info = CATS[post.category] || { l: 'その他', c: '#666' };
   const date = fmt(post.publishedAt);
-  const img = `/blog/${post.slug}/${post.image || 'thumbnail.jpg'}`;
+  const img = post.image || '/blog/default.jpg';
 
   return (
     <>

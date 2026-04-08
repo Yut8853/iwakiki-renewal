@@ -559,11 +559,11 @@ import styles from './HeroText.module.scss';
   const initAnimations = () => {
 
     // =========================
-    // Custom Cursor（そのまま）
+    // Custom Cursor
     // =========================
     const cursor = document.getElementById('custom-cursor');
-    const cursorDot = cursor?.querySelector('.cursorDot');
-    const cursorRing = cursor?.querySelector('.cursorRing');
+    const cursorDot = cursor?.querySelector<HTMLElement>('.cursorDot');
+    const cursorRing = cursor?.querySelector<HTMLElement>('.cursorRing');
 
     let cursorX = 0, cursorY = 0;
     let dotX = 0, dotY = 0;
@@ -616,19 +616,20 @@ import styles from './HeroText.module.scss';
       });
     }, observerOptions);
 
-    document.querySelectorAll('.js-fade-up, .js-reveal, .js-line-reveal, .js-split-lines').forEach((el) => {
-      revealObserver.observe(el);
-    });
+    document
+      .querySelectorAll<HTMLElement>('.js-fade-up, .js-reveal, .js-line-reveal, .js-split-lines')
+      .forEach((el) => {
+        revealObserver.observe(el);
+      });
 
     // =========================
-    // 🔥 スライダー（完全修正版）
+    // 🔥 スライダー（型安全版）
     // =========================
-
-    const sliderTrack = document.getElementById('slider-track');
-    const slides = document.querySelectorAll('#slider-track > article');
-    const prevBtn = document.getElementById('slider-prev');
-    const nextBtn = document.getElementById('slider-next');
-    const dots = document.querySelectorAll('[data-dot]');
+    const sliderTrack = document.querySelector<HTMLElement>('#slider-track');
+    const slides = document.querySelectorAll<HTMLElement>('#slider-track > article');
+    const prevBtn = document.getElementById('slider-prev') as HTMLButtonElement | null;
+    const nextBtn = document.getElementById('slider-next') as HTMLButtonElement | null;
+    const dots = document.querySelectorAll<HTMLElement>('[data-dot]');
 
     if (!sliderTrack || slides.length === 0) return;
 
@@ -677,8 +678,9 @@ import styles from './HeroText.module.scss';
     // scroll cue
     // =========================
     const scrollCue = document.getElementById('scroll-cue');
+
     window.addEventListener('scroll', () => {
-      if (scrollCue) {
+      if (scrollCue instanceof HTMLElement) {
         scrollCue.style.opacity = window.scrollY > 100 ? '0' : '1';
       }
     });

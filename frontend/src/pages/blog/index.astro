@@ -1,25 +1,29 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { BlogCard } from '../../components/Blog/BlogCard';
+import BlogCard from '../../components/Blog/BlogCard';
+import BlogSidebar from '../../components/Blog/BlogSidebar';
 
-// コレクションから記事を取得
 const allPosts = await getCollection('blog');
+
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );
 
-// カテゴリー情報の定義
 const blogCategories = {
   news: { label: 'お知らせ', color: '#06756d' },
   column: { label: 'コラム', color: '#e67e22' },
   property: { label: '物件情報', color: '#3498db' },
   lifestyle: { label: '暮らし', color: '#9b59b6' },
-};
+} as const;
 ---
 
 <Layout title="Blog & News | iwakiki">
   <main class="blog-page-root">
+    
+    <!-- =========================
+        HEADER
+    ========================= -->
     <header class="blog-header">
       <div class="container">
         <span class="sub-title">Journal</span>
@@ -27,8 +31,13 @@ const blogCategories = {
       </div>
     </header>
 
+    <!-- =========================
+        CONTENT
+    ========================= -->
     <section class="blog-content">
       <div class="container">
+
+        <!-- FILTER -->
         <div class="filter-bar">
           <button class="filter-btn active" data-filter="all">All posts</button>
           {Object.entries(blogCategories).map(([key, value]) => (
@@ -38,20 +47,35 @@ const blogCategories = {
           ))}
         </div>
 
-        <div class="blog-grid" id="blog-grid">
-          {sortedPosts.map((post, index) => (
-            <div class="grid-item" data-category={post.data.category}>
-              <BlogCard client:load post={{...post.data, slug: post.slug}} index={index} />
+        <!-- 🔥 ここが新レイアウト -->
+        <div class="blog-layout">
+
+          <!-- LEFT（記事） -->
+          <div class="main">
+            <div class="blog-grid" id="blog-grid">
+              {sortedPosts.map((post, index) => (
+                <div class="grid-item" data-category={post.data.category}>
+                  <BlogCard
+                    client:load
+                    post={{ ...post.data, slug: post.slug }}
+                    index={index}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <!-- RIGHT（サイドバー） -->
+         <BlogSidebar client:load posts={sortedPosts} categories={blogCategories} />
+
         </div>
       </div>
     </section>
+
   </main>
 </Layout>
 
 <script>
-  // フィルタリング機能のセットアップ
   const setupFilters = () => {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const items = document.querySelectorAll('.grid-item');
@@ -60,68 +84,183 @@ const blogCategories = {
       btn.addEventListener('click', () => {
         const filter = btn.getAttribute('data-filter');
 
-        // ボタンのスタイル切り替え
         filterBtns.forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // カードの表示・非表示
         items.forEach((item) => {
           const category = item.getAttribute('data-category');
-          // 'as any' などの TypeScript 構文を使用せず、標準的な JavaScript で記述します
-          if (filter === 'all' || category === filter) {
-            item.style.display = 'block';
-          } else {
-            item.style.display = 'none';
+
+          if (item instanceof HTMLElement) {
+            if (filter === 'all' || category === filter) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
           }
         });
       });
     });
   };
 
-  // 初期化
   setupFilters();
-  // Astro のページ遷移（View Transitions 等）がある場合の対応
   document.addEventListener('astro:after-swap', setupFilters);
 </script>
 
 <style lang="scss">
-  .blog-page-root { background: #fff; min-height: 100vh; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-  .blog-header { 
-    padding: 160px 0 80px; 
-    text-align: center; 
-    .sub-title { font-size: 12px; color: #06756d; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; } 
-    .main-title { font-size: clamp(40px, 8vw, 64px); font-weight: 800; margin-top: 16px; letter-spacing: -0.02em; } 
+.blog-page-root { background: #fff; min-height: 100vh; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* HEADER */
+.blog-header {
+  padding: 160px 0 80px;
+  text-align: center;
+
+  .sub-title {
+    font-size: 12px;
+    color: #06756d;
+    letter-spacing: 0.2em;
+    font-weight: 700;
   }
-  .filter-bar { 
-    display: flex; 
-    justify-content: center; 
-    gap: 12px; 
-    margin-bottom: 60px; 
-    padding-bottom: 40px; 
-    border-bottom: 1px solid #f0f0f0; 
+
+  .main-title {
+    font-size: clamp(40px, 8vw, 64px);
+    font-weight: 800;
+    margin-top: 16px;
   }
-  .filter-btn { 
-    padding: 10px 24px; 
-    border-radius: 100px; 
-    font-weight: 600; 
-    color: #888; 
-    cursor: pointer; 
-    background: #f8f8f8; 
-    border: none; 
-    transition: all 0.3s ease; 
-    &.active { background: #111; color: #fff; }
-    &:hover:not(.active) { background: #eee; }
+}
+
+/* FILTER */
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-btn {
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-weight: 700;
+  color: #888;
+  cursor: pointer;
+  background: #f8f8f8;
+  border: none;
+
+  &.active { background: #111; color: #fff; }
+}
+
+/* 🔥 レイアウト追加 */
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 60px;
+}
+
+/* LEFT */
+.main {
+  min-width: 0;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 48px 32px;
+}
+
+/* RIGHT */
+.sidebar {
+  position: sticky;
+  top: 120px;
+}
+
+.sidebar-section {
+  margin-bottom: 40px;
+
+  h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
   }
-  .blog-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-    gap: 48px 32px; 
-    padding-bottom: 120px; 
+
+  a {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+
+    &:hover { color: #111; }
   }
-  @media (max-width: 768px) {
-    .blog-header { padding: 120px 0 60px; }
-    .filter-bar { justify-content: flex-start; overflow-x: auto; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
-    .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* SP */
+@media (max-width: 768px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
   }
+
+  .sidebar {
+    display: none;
+  }
+
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 60px;
+}
+
+.main {
+  min-width: 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 120px;
+
+  .sidebar-section {
+    margin-bottom: 40px;
+
+    h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: #666;
+      text-decoration: none;
+      font-size: 14px;
+
+      &:hover {
+        color: #111;
+      }
+    }
+  }
+}
+
+/* SP */
+@media (max-width: 768px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
 </style>

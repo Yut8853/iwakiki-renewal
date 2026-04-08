@@ -2,7 +2,7 @@
 title: '【新着】いわき駅徒歩5分！新築マンション販売開始'
 publishedAt: 2024-03-01
 category: 'property'
-image: 'thumbnail.jpg'
+image: '/blog/gw-holiday-notice.jpg'
 excerpt: '駅近の好立地に誕生する全36戸の新築マンション。最新設備と充実の共用施設で、快適な暮らしを。'
 author:
   name: '田中 健太'

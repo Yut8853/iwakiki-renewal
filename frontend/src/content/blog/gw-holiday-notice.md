@@ -2,7 +2,7 @@
 title: 'GW期間の営業日のお知らせ'
 publishedAt: 2024-02-20
 category: 'news'
-image: 'thumbnail.jpg'
+image: '/blog/gw-holiday-notice.jpg'
 excerpt: 'ゴールデンウィーク期間中の営業日をご案内いたします。'
 author:
   name: '福縁西不動産'

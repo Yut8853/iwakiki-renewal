@@ -2,7 +2,7 @@
 title: '中古物件×リノベーションで理想の住まいを実現'
 publishedAt: 2024-02-25
 category: 'news'
-image: 'thumbnail.jpg'
+image: '/blog/gw-holiday-notice.jpg'
 excerpt: '新築より自由度が高い中古+リノベという選択肢。費用感やメリット・デメリット、成功のポイントを解説。'
 author:
   name: '山田 太郎'
