@@ -26,10 +26,24 @@ import SilkNetwork from './WebGL/StringNetwork.astro';
         <div class={styles.header}>
           <h2 class={styles.panelTitle}>Management / Support</h2>
         </div>
-        
+
+                <div class={styles.ctaArea}>
+          <div class={styles.ctaCard}>
+            <p class={styles.ctaNotice}>最短24時間以内に査定結果を回答</p>
+            <a href="/contact" class={styles.ctaButton}>
+              <span>無料で査定・相談を申し込む</span>
+              <span class={styles.buttonArrow}>→</span>
+            </a>
+            <div class={styles.ctaTel}>
+              お電話でも受付中
+              <span>0246-60-8875</span>
+            </div>
+          </div>
+        </div>
+
         <div class={styles.leadText}>
-          <p>いくらで売れる？--
-            <br>住み替えのタイミングは？--<br>
+          <p>いくらで売れる？
+            <br>住み替えのタイミングは？<br>
           不動産売却の不安を、プロの知見で安心に変えます。</p>
         </div>
 
@@ -71,19 +85,7 @@ import SilkNetwork from './WebGL/StringNetwork.astro';
           </div>
         </div>
 
-        <div class={styles.ctaArea}>
-          <div class={styles.ctaCard}>
-            <p class={styles.ctaNotice}>最短24時間以内に査定結果を回答</p>
-            <a href="/contact" class={styles.ctaButton}>
-              <span>無料で査定・相談を申し込む</span>
-              <span class={styles.buttonArrow}>→</span>
-            </a>
-            <div class={styles.ctaTel}>
-              お電話でも受付中
-              <span>0246-60-8875</span>
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -91,23 +93,29 @@ import SilkNetwork from './WebGL/StringNetwork.astro';
 
 <script define:vars={{ isOpenClass: styles.isOpen }}>
   const setupPanel = () => {
+    console.log('setupPanel動いた'); // ←確認用
+
     const wrapper = document.getElementById('side-panel-wrapper');
     const trigger = document.getElementById('panel-trigger');
     const close = document.getElementById('panel-close');
 
-    if (!wrapper || !trigger || !close) return;
+    if (!wrapper || !trigger || !close) {
+      console.log('要素取れてない');
+      return;
+    }
 
     trigger.addEventListener('click', () => {
+      console.log('開くクリック');
       wrapper.classList.add(isOpenClass);
       document.body.style.overflow = 'hidden';
     });
 
     close.addEventListener('click', () => {
+      console.log('閉じるクリック');
       wrapper.classList.remove(isOpenClass);
       document.body.style.overflow = '';
     });
   };
 
-  document.addEventListener('astro:page-load', setupPanel);
-  document.addEventListener('DOMContentLoaded', setupPanel);
+  window.addEventListener('load', setupPanel);
 </script>

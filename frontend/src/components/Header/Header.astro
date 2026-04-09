@@ -1,6 +1,7 @@
 ---
 const navItems = [
   { href: '/about', label: 'About', labelJp: '私たちについて' },
+  { href: '/services', label: 'Services', labelJp: 'サービス' },
   { href: '/blog', label: 'Blog', labelJp: 'ブログ' },
 ];
 ---
@@ -10,7 +11,7 @@ const navItems = [
     <!-- Logo -->
     <a href="/" class="header__logo" data-logo>
       <span class="header__logo-text">
-        <img src="images/logo.png" alt="" srcset="">
+        <img src="/images/logo.png" alt="" srcset="">
       </span>
       <span class="header__logo-tagline">vacation homes</span>
     </a>
@@ -21,8 +22,8 @@ const navItems = [
         {navItems.map((item, index) => (
           <li class="header__nav-item" style={`--item-index: ${index}`}>
             <a href={item.href} class="header__nav-link" data-nav-link>
-              <span class="header__nav-label">{item.label}</span>
               <span class="header__nav-label-jp">{item.labelJp}</span>
+              <span class="header__nav-label">{item.label}</span>
               <span class="header__nav-line"></span>
             </a>
           </li>
@@ -227,14 +228,20 @@ const navItems = [
 
   .header__nav-label-jp {
     position: absolute;
-    bottom: -0.2rem;
+    bottom: -0.6rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
     font-size: 0.6rem;
     color: var(--color-stone);
     letter-spacing: 0.05em;
+    white-space: nowrap;
     opacity: 0;
-    transform: translateY(5px);
     transition: opacity 0.4s var(--ease-out-expo), 
                 transform 0.4s var(--ease-out-expo);
+  }
+
+  .header__nav-link:hover .header__nav-label-jp {
+    transform: translateX(-50%) translateY(0);
   }
 
   .header__nav-line {
@@ -254,7 +261,6 @@ const navItems = [
 
   .header__nav-link:hover .header__nav-label-jp {
     opacity: 1;
-    transform: translateY(0);
   }
 
   .header__nav-link:hover .header__nav-line {

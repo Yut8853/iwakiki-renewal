@@ -1,5 +1,6 @@
 ---
 import styles from './HeroText.module.scss';
+import Footer from '../Footer/Footer.astro';
 ---
 
 <!-- Custom Cursor -->
@@ -272,7 +273,7 @@ import styles from './HeroText.module.scss';
         <div class={styles.serviceBody}>
           <h3>売買仲介</h3>
           <p>お客様のライフプランに合わせた物件探しから、契約・引き渡しまでトータルサポート。住宅ローンのご相談も承ります。</p>
-          <a href="#" class={styles.serviceLink}>
+          <a href="/services#sale" class={styles.serviceLink}>
             <span>詳しく見る</span>
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"/>
@@ -297,7 +298,7 @@ import styles from './HeroText.module.scss';
         <div class={styles.serviceBody}>
           <h3>賃貸仲介</h3>
           <p>単身からファミリー向けまで、豊富な物件をご用意。入居審査から鍵のお渡しまでスムーズに対応いたします。</p>
-          <a href="#" class={styles.serviceLink}>
+          <a href="/services#rent" class={styles.serviceLink}>
             <span>詳しく見る</span>
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"/>
@@ -321,7 +322,7 @@ import styles from './HeroText.module.scss';
         <div class={styles.serviceBody}>
           <h3>物件管理</h3>
           <p>オーナー様の大切な資産を責任を持って管理。入居者対応から建物メンテナンスまで一括でお任せください。</p>
-          <a href="#" class={styles.serviceLink}>
+          <a href="/services#management" class={styles.serviceLink}>
             <span>詳しく見る</span>
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"/>
@@ -343,11 +344,11 @@ import styles from './HeroText.module.scss';
   <div class={styles.container}>
     <div class={styles.storyLayout}>
       <div class={styles.storyContent}>
-        <div class={styles.sectionLabel}>
-          <span class={styles.labelNum}>03</span>
-          <span class={styles.labelDash}></span>
-          <span class={styles.labelName}>OUR STORY</span>
-        </div>
+<div class={styles.sectionLabel}>
+  <span class={styles.textWhite01}>03</span>
+  <span class={styles.bgWhite01}></span>
+  <span class={styles.textWhite02}>OUR STORY</span>
+</div>
         <h2 class={`${styles.sectionTitle} ${styles.storyTitle} js-split-lines`}>
           これまでと、これから
         </h2>
@@ -365,7 +366,7 @@ import styles from './HeroText.module.scss';
             高齢者サポートを通し、地域の皆様の暮らしが豊かになるようにお手伝いをさせていただきたいと考えております。
           </p>
           <blockquote class={styles.storyQuote}>
-            これから皆様に気軽にお声をかけていただける会社を目指し、努めてまいります。
+            これから皆様に気軽にお声をか��ていただける会社を目指し、努めてまいります。
           </blockquote>
         </div>
       </div>
@@ -410,7 +411,7 @@ import styles from './HeroText.module.scss';
   <div class={styles.container}>
     <div class={styles.sectionHeader}>
       <div class={styles.sectionLabel}>
-        <span class={styles.labelNum}>04</span>
+        <span class={styles.labelNum}>03</span>
         <span class={styles.labelDash}></span>
         <span class={styles.labelName}>VOICE</span>
       </div>
@@ -501,59 +502,8 @@ import styles from './HeroText.module.scss';
 </section>
 
 <!-- CTA Section -->
-<section class={styles.cta} data-scroll-section id="contact">
-  <div class={styles.ctaBg}>
-    <div class={styles.ctaPattern}></div>
-    <div class={styles.ctaGlow}></div>
-  </div>
-  
-  <div class={styles.container}>
-    <div class={`${styles.ctaContent} js-fade-up`}>
-      <h2 class={styles.ctaTitle}>
-        住まい探しのパートナーとして、<br />
-        あなたの夢を叶えます。
-      </h2>
-      <p class={styles.ctaLead}>
-        ご相談・お問い合わせはお気軽にどうぞ。<br />
-        専門スタッフが丁寧に対応いたします。
-      </p>
-      
-      <div class={styles.ctaActions}>
-        <a href="tel:0246-00-0000" class={styles.ctaPhone} data-magnetic>
-          <span class={styles.phoneIcon}>
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </span>
-          <span class={styles.phoneNumber}>0246-00-0000</span>
-        </a>
-        <a href="#contact-form" class={styles.ctaForm} data-magnetic>
-          <span>お問い合わせフォーム</span>
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </a>
-      </div>
-      
-      <div class={styles.ctaInfo}>
-        <div class={styles.infoItem}>
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-          <span>営業時間: 9:00 - 18:00（水曜定休）</span>
-        </div>
-        <div class={styles.infoItem}>
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-          <span>〒970-0000 福島県いわき市○○町1-2-3</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
+  <Footer />
 
 <script>
   const initAnimations = () => {
