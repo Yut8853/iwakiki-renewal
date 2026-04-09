@@ -46,58 +46,58 @@ $duration-extra-slow: 1.8s;
 // ============================================
 // CUSTOM CURSOR
 // ============================================
-.cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
+// .cursor {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   pointer-events: none;
+//   z-index: 9999;
+//   mix-blend-mode: difference;
 
-  @media (hover: none) {
-    display: none;
-  }
-}
+//   @media (hover: none) {
+//     display: none;
+//   }
+// }
 
-.cursorDot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #fff;
-  border-radius: 50%;
-}
+// .cursorDot {
+//   position: absolute;
+//   width: 8px;
+//   height: 8px;
+//   background: #fff;
+//   border-radius: 50%;
+// }
 
-.cursorRing {
-  position: absolute;
-  width: 48px;
-  height: 48px;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  transition:
-    width $duration-fast $ease-out-expo,
-    height $duration-fast $ease-out-expo,
-    border-color $duration-fast $ease-out-expo;
+// .cursorRing {
+//   position: absolute;
+//   width: 48px;
+//   height: 48px;
+//   border: 1.5px solid rgba(255, 255, 255, 0.6);
+//   border-radius: 50%;
+//   transition:
+//     width $duration-fast $ease-out-expo,
+//     height $duration-fast $ease-out-expo,
+//     border-color $duration-fast $ease-out-expo;
 
-  &:global(.is-expanded) {
-    width: 80px;
-    height: 80px;
-    border-color: $color-primary;
-  }
-}
+//   &:global(.is-expanded) {
+//     width: 80px;
+//     height: 80px;
+//     border-color: $color-primary;
+//   }
+// }
 
-.cursorTrail {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(
-    circle,
-    rgba($color-primary, 0.1) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.5;
-}
+// .cursorTrail {
+//   position: absolute;
+//   width: 120px;
+//   height: 120px;
+//   background: radial-gradient(
+//     circle,
+//     rgba($color-primary, 0.1) 0%,
+//     transparent 70%
+//   );
+//   border-radius: 50%;
+//   transform: translate(-50%, -50%);
+//   opacity: 0.5;
+// }
 
 // ============================================
 // HERO SECTION

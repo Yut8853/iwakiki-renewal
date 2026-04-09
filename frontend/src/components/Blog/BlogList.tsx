@@ -6,11 +6,7 @@ export default function BlogList({ posts }: { posts: any[] }) {
     <div className="blog-grid">
       {posts.map((post, index) => (
         <div className="grid-item" data-category={post.data.category}>
-          <BlogCard
-            client:load
-            post={{ ...post.data, slug: post.slug }}
-            index={index}
-          />
+          <BlogCard post={{ ...post.data, slug: post.slug }} index={index} />
         </div>
       ))}
     </div>
