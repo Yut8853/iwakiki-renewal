@@ -227,14 +227,20 @@ const navItems = [
 
   .header__nav-label-jp {
     position: absolute;
-    bottom: -0.2rem;
+    bottom: -0.6rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
     font-size: 0.6rem;
     color: var(--color-stone);
     letter-spacing: 0.05em;
+    white-space: nowrap;
     opacity: 0;
-    transform: translateY(5px);
     transition: opacity 0.4s var(--ease-out-expo), 
                 transform 0.4s var(--ease-out-expo);
+  }
+
+  .header__nav-link:hover .header__nav-label-jp {
+    transform: translateX(-50%) translateY(0);
   }
 
   .header__nav-line {
@@ -254,7 +260,6 @@ const navItems = [
 
   .header__nav-link:hover .header__nav-label-jp {
     opacity: 1;
-    transform: translateY(0);
   }
 
   .header__nav-link:hover .header__nav-line {

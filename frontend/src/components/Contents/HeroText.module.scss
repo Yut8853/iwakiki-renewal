@@ -1322,6 +1322,7 @@ $duration-extra-slow: 1.8s;
   position: relative;
   max-width: 900px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .sliderTrack {
@@ -1331,10 +1332,11 @@ $duration-extra-slow: 1.8s;
 
 .testimonialCard {
   flex: 0 0 100%;
-  padding: clamp(32px, 5vw, 60px);
+  padding: clamp(40px, 6vw, 72px);
   background: $color-bg;
   border-radius: 24px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .quoteIcon {
@@ -1354,7 +1356,7 @@ $duration-extra-slow: 1.8s;
   @include fluid-type(18, 24);
   line-height: 1.8;
   color: $color-dark;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   font-weight: 500;
 }
 

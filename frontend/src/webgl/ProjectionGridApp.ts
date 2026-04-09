@@ -223,8 +223,9 @@ export class ProjectionGridApp {
       }
     }
 
-    const explosionStrength = 160;
-    const p = this.scrollProgress;
+    const explosionStrength = 200;
+    // Amplify scroll progress so explosion starts earlier and cubes shrink faster
+    const p = Math.min(this.scrollProgress * 2.5, 1);
 
     this.grids.forEach(group => {
       group.children.forEach((child, i) => {
