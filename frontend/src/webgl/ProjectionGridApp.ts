@@ -3,7 +3,15 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 
 import { GRIDS_CONFIG } from './projectionGrid.config';
-import type { ProjectileMesh } from './projectionGrid.types';
+
+/* =========================
+   型定義
+========================= */
+type ProjectileUserData = {
+  originPos: THREE.Vector3;
+  direction: THREE.Vector3;
+  rotateSpeed: THREE.Vector3;
+};
 
 export class ProjectionGridApp {
   private scene!: THREE.Scene;
@@ -48,6 +56,8 @@ export class ProjectionGridApp {
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.handleResize);
 
+    this.handleScroll();
+
     await Promise.all(
       GRIDS_CONFIG.map((cfg, i) => this.createSingleGrid(cfg, i))
     );
@@ -59,6 +69,7 @@ export class ProjectionGridApp {
   private handleScroll = () => {
     const h = document.documentElement;
     const b = document.body;
+
     this.scrollProgress =
       (h.scrollTop || b.scrollTop) /
       ((h.scrollHeight || b.scrollHeight) - h.clientHeight);
@@ -70,7 +81,7 @@ export class ProjectionGridApp {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   };
 
-  /* ---------- grid logic ---------- */
+  /* ---------- grid transition ---------- */
   private rotateGrids() {
     if (this.isTransitioning) return;
     this.isTransitioning = true;
@@ -115,6 +126,7 @@ export class ProjectionGridApp {
       );
   }
 
+  /* ---------- grid生成 ---------- */
   private async createSingleGrid(config: any, index: number) {
     const group = new THREE.Group();
 
@@ -125,6 +137,7 @@ export class ProjectionGridApp {
     video.loop = true;
 
     const texture = new THREE.VideoTexture(video);
+
     const material = new THREE.MeshBasicMaterial({
       map: texture,
       side: THREE.DoubleSide,
@@ -136,16 +149,19 @@ export class ProjectionGridApp {
 
     const size = 50;
     const spacing = 0.15;
+
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
     canvas.width = size;
     canvas.height = size;
+
     ctx.drawImage(img, 0, 0, size, size);
     const data = ctx.getImageData(0, 0, size, size).data;
 
     for (let x = 0; x < size; x++) {
       for (let y = 0; y < size; y++) {
         const i = ((size - 1 - y) * size + x) * 4;
+
         if (data[i] < 128) {
           const geo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
 
@@ -156,13 +172,16 @@ export class ProjectionGridApp {
           }
           uvAttr.needsUpdate = true;
 
-          const mesh = new THREE.Mesh(geo, material) as ProjectileMesh;
+          // 👇 型キャストしない
+          const mesh = new THREE.Mesh(geo, material);
 
           const px = (x - size / 2) * spacing;
           const py = (y - size / 2) * spacing;
 
           mesh.position.set(px, py, 0);
-          mesh.userData = {
+
+          // 👇 userDataだけ型付け
+          (mesh.userData as ProjectileUserData) = {
             originPos: new THREE.Vector3(px, py, 0),
             direction: new THREE.Vector3(
               px + (Math.random() - 0.5) * 10,
@@ -177,6 +196,7 @@ export class ProjectionGridApp {
           };
 
           mesh.scale.setScalar(index === 0 ? 1 : 0);
+
           group.add(mesh);
         }
       }
@@ -194,8 +214,10 @@ export class ProjectionGridApp {
     this.rafId = requestAnimationFrame(this.animate);
 
     const activeVideo = this.videos[this.currentIndex];
+
     if (activeVideo && !this.isTransitioning) {
       const timeLeft = activeVideo.duration - activeVideo.currentTime;
+
       if (timeLeft < 0.5 && activeVideo.duration > 0) {
         this.rotateGrids();
       }
@@ -206,8 +228,11 @@ export class ProjectionGridApp {
 
     this.grids.forEach(group => {
       group.children.forEach((child, i) => {
-        const mesh = child as ProjectileMesh;
-        const { originPos, direction, rotateSpeed } = mesh.userData;
+        const mesh = child as THREE.Mesh;
+
+        // 👇 ここで型安全に取り出す
+        const data = mesh.userData as ProjectileUserData;
+        const { originPos, direction, rotateSpeed } = data;
 
         if (p > 0) {
           mesh.position.copy(
@@ -215,6 +240,7 @@ export class ProjectionGridApp {
               .clone()
               .add(direction.clone().multiplyScalar(p * explosionStrength))
           );
+
           mesh.rotation.x += rotateSpeed.x;
           mesh.rotation.y += rotateSpeed.y;
         } else {
@@ -223,6 +249,7 @@ export class ProjectionGridApp {
             originPos.y,
             Math.sin(Date.now() * 0.002 + i * 0.1) * 0.15
           );
+
           mesh.rotation.set(0, 0, 0);
         }
       });

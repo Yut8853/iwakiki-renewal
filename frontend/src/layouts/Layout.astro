@@ -1,10 +1,6 @@
 ---
 import "../styles/global.scss";
 import Header from "../components/Header/Header.astro";
-import Hero from "../components/Hero/Hero.astro";
-import { ProjectionGridCanvas } from "../components/WebGL/ProjectionGridCanvas";
-
-import HeroText from "../components/Contents/HeroText.astro";
 import SidePanel from "../components/SidePanel.astro";
 ---
 
@@ -12,27 +8,16 @@ import SidePanel from "../components/SidePanel.astro";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Iwaki Renewal - WebGL Projection</title>
+    <title>Iwaki Renewal</title>
   </head>
 
   <body>
     <Header />
+
     <main>
-      <section class="webgl-section">
-        <ProjectionGridCanvas client:load />
-        <slot />
-      <Hero />
-      </section>
-      <HeroText  />
+      <slot />
     </main>
+
     <SidePanel />
-    <style>
-.webgl-section {
-        position: relative;
-        width: 100%;
-        height: 100vh; /* 表示したい高さを指定 */
-        overflow: hidden;
-      }
-    </style>
   </body>
 </html>
