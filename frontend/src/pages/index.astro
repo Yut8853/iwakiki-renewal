@@ -11,7 +11,7 @@ import styles from '../components/Blog/Blog.module.scss';
 const allPosts = await getCollection('blog');
 const posts = allPosts
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
-  .slice(0, 6);
+  .slice(0, 3);
 ---
 
 <Layout>
@@ -20,8 +20,6 @@ const posts = allPosts
     <Hero />
   </section>
 
-  <HeroText />
-
   <section class={styles.latestPosts || 'latest-posts'}>
     <div class={styles.container || 'container'}>
       <div class="section-header">
@@ -29,7 +27,7 @@ const posts = allPosts
           <span class="label">Update</span>
           <h2>iwakikiからのお知らせ</h2>
         </div>
-        <a href="/blog" class="view-all">View All posts →</a>
+        <a href="/blog" class="view-all">View All posts</a>
       </div>
 
       <div class="posts-grid">
@@ -43,6 +41,8 @@ const posts = allPosts
       </div>
     </div>
   </section>
+
+  <HeroText />
 </Layout>
 
 <style lang="scss">
@@ -51,6 +51,7 @@ const posts = allPosts
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    margin-bottom: clamp(80px, 15vh, 150px);
   }
 
   .section-header {
