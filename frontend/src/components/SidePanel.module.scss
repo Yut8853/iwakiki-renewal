@@ -86,6 +86,12 @@ $color-hover: #c5a059;
     width: 80px;
     background-color: $color-accent;
   }
+
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 200px;
+    border-radius: 16px 0 0 16px;
+  }
 }
 
 .triggerInner {
@@ -120,6 +126,11 @@ $color-hover: #c5a059;
   letter-spacing: 0.2em;
   font-weight: 800;
   font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+  }
 }
 
 .visualBackground {
@@ -180,6 +191,10 @@ $color-hover: #c5a059;
     background: $color-accent;
     border-radius: 10px;
   }
+
+  @media (max-width: 768px) {
+    padding: 80px 24px;
+  }
 }
 
 .closeButton {
@@ -214,6 +229,17 @@ $color-hover: #c5a059;
       transform: rotate(-45deg);
     }
   }
+
+  @media (max-width: 768px) {
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+
+    .closeLine {
+      width: 20px;
+    }
+  }
 }
 
 .panelTitle {
@@ -232,12 +258,23 @@ $color-hover: #c5a059;
     color: var(--color-primary);
     font-weight: 800;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 50px;
+    p {
+      font-size: clamp(20px, 5vw, 28px);
+    }
+  }
 }
 
 .featureList {
   display: flex;
   flex-direction: column;
   gap: 80px;
+
+  @media (max-width: 768px) {
+    gap: 50px;
+  }
 }
 
 .featureItem {
@@ -265,17 +302,32 @@ $color-hover: #c5a059;
     color: #1a1a1a;
     border-bottom: 2px solid #000;
     display: inline-block;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
   }
   p {
     font-size: 15px;
     line-height: 2;
     color: #444;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+      line-height: 1.8;
+    }
   }
 }
 
 .ctaArea {
   margin: 120px 0 80px;
   padding: 0 40px;
+
+  @media (max-width: 768px) {
+    margin: 60px 0 40px;
+    padding: 0;
+  }
 }
 
 .ctaCard {
@@ -284,6 +336,10 @@ $color-hover: #c5a059;
   text-align: center;
   border: 1px solid rgba($color-accent, 0.3);
   background: #fff;
+
+  @media (max-width: 768px) {
+    padding: 40px 20px;
+  }
 }
 
 .ctaButton {
@@ -300,6 +356,13 @@ $color-hover: #c5a059;
   &:hover {
     background: $color-accent;
   }
+
+  @media (max-width: 768px) {
+    padding: 16px 28px;
+    font-size: 14px;
+    gap: 12px;
+    width: 100%;
+  }
 }
 
 .ctaTel {
@@ -309,5 +372,13 @@ $color-hover: #c5a059;
     display: block;
     font-size: 28px;
     font-weight: 900;
+
+    @media (max-width: 768px) {
+      font-size: 22px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 20px;
   }
 }

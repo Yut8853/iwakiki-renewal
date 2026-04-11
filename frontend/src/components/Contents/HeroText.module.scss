@@ -362,6 +362,11 @@ $duration-extra-slow: 1.8s;
       opacity: 1;
     }
   }
+
+  @media (max-width: 640px) {
+    padding: 16px 32px;
+    font-size: 14px;
+  }
 }
 
 .ctaText {
@@ -415,6 +420,11 @@ $duration-extra-slow: 1.8s;
     background: $color-hover;
     border-color: $color-hover;
     color: #fff;
+  }
+
+  @media (max-width: 640px) {
+    padding: 16px 32px;
+    font-size: 14px;
   }
 }
 
@@ -1360,6 +1370,11 @@ $duration-extra-slow: 1.8s;
   border-radius: 24px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.04);
+
+  @media (max-width: 640px) {
+    padding: 24px;
+    border-radius: 16px;
+  }
 }
 
 .quoteIcon {
@@ -1425,6 +1440,11 @@ $duration-extra-slow: 1.8s;
   justify-content: center;
   gap: 24px;
   margin-top: 48px;
+
+  @media (max-width: 640px) {
+    gap: 16px;
+    margin-top: 32px;
+  }
 }
 
 .sliderBtn {
@@ -1448,6 +1468,16 @@ $duration-extra-slow: 1.8s;
   &:hover {
     border-color: $color-hover;
     color: $color-hover;
+  }
+
+  @media (max-width: 640px) {
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 
@@ -1574,6 +1604,12 @@ $duration-extra-slow: 1.8s;
   gap: 16px;
   flex-wrap: wrap;
   margin-bottom: 48px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
 }
 
 .ctaPhone {
@@ -1592,6 +1628,13 @@ $duration-extra-slow: 1.8s;
     background: $color-hover;
     color: #fff;
     box-shadow: 0 20px 40px rgba($color-hover, 0.3);
+  }
+
+  @media (max-width: 640px) {
+    padding: 16px 28px;
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
   }
 }
 
@@ -1637,6 +1680,13 @@ $duration-extra-slow: 1.8s;
     svg {
       transform: translateX(4px);
     }
+  }
+
+  @media (max-width: 640px) {
+    padding: 16px 28px;
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
   }
 }
 

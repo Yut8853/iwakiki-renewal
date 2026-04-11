@@ -248,6 +248,11 @@ import Layout from '../../layouts/Layout.astro';
     color: #fff;
     overflow: hidden;
 
+    @media (max-width: 768px) {
+      height: 60vh;
+      min-height: 400px;
+    }
+
     .hero-bg {
       position: absolute;
       inset: 0;
@@ -274,11 +279,20 @@ import Layout from '../../layouts/Layout.astro';
         text-transform: uppercase;
         margin-bottom: 20px;
         display: block;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+          letter-spacing: 0.2em;
+        }
       }
       h1 {
         font-size: clamp(36px, 6vw, 60px);
         font-weight: 700;
         line-height: 1.2;
+
+        @media (max-width: 768px) {
+          font-size: clamp(28px, 8vw, 36px);
+        }
       }
     }
   }
@@ -318,6 +332,17 @@ import Layout from '../../layouts/Layout.astro';
           box-shadow: 0 10px 30px rgba(0,0,0,0.2);
           .en { font-family: $font-en; font-size: 12px; letter-spacing: 0.1em; opacity: 0.8; }
           .jp { font-size: 18px; font-weight: 600; margin-top: 5px; }
+
+          @media (max-width: 768px) {
+            bottom: -20px;
+            right: -10px;
+            padding: 15px 20px;
+            .jp { font-size: 14px; }
+          }
+        }
+
+        @media (max-width: 768px) {
+          width: 100%;
         }
       }
       .sub-img {
@@ -330,6 +355,10 @@ import Layout from '../../layouts/Layout.astro';
           width: 100%;
           border: 10px solid #fff;
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 968px) {
+          display: none;
         }
       }
     }
@@ -438,6 +467,10 @@ import Layout from '../../layouts/Layout.astro';
       position: relative;
       height: 300px;
       overflow: hidden;
+
+      @media (max-width: 768px) {
+        height: 200px;
+      }
       
       img {
         width: 100%;
@@ -462,6 +495,11 @@ import Layout from '../../layouts/Layout.astro';
 
         i { font-size: 48px; margin-bottom: 15px; }
         span { font-family: $font-en; letter-spacing: 0.1em; }
+
+        @media (max-width: 768px) {
+          font-size: 18px;
+          i { font-size: 36px; margin-bottom: 10px; }
+        }
       }
 
       &:hover {

@@ -6,6 +6,13 @@
   overflow: hidden;
   margin: -20px auto 20px;
   isolation: isolate;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: calc(100vh - 20px);
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto 10px;
+  }
 }
 
 .heroVideo {
@@ -33,6 +40,10 @@
   white-space: nowrap;
   z-index: 2;
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    bottom: -20%;
+  }
 }
 
 .heroTextInner {
@@ -51,6 +62,11 @@
   line-height: 1;
   margin: -3vw;
   opacity: 0.6;
+
+  @media (max-width: 768px) {
+    font-size: 40vw;
+    padding-right: 2rem;
+  }
 }
 
 .heroText01 {
@@ -79,9 +95,18 @@
   padding: 24px;
   border-radius: 12px;
   backdrop-filter: blur(25px);
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 16px;
+  }
 }
 
 .infomation {
   color: var(--color-secondary);
   font-size: 24px;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }

@@ -679,6 +679,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     color: #fff;
     overflow: hidden;
 
+    @media (max-width: 768px) {
+      height: 60vh;
+      min-height: 400px;
+    }
+
     .hero-bg {
       position: absolute;
       inset: 0;
@@ -728,8 +733,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   .service-nav {
     background: $color-dark;
     position: sticky;
-    top: 100px;
+    top: 70px;
     z-index: 100;
+
+    @media (max-width: 768px) {
+      top: 60px;
+    }
     
     ul {
       display: flex;
@@ -740,7 +749,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       padding: 0;
       
       @media (max-width: 640px) {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
       }
     }
     
@@ -749,6 +763,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       max-width: 250px;
       
       @media (max-width: 640px) {
+        flex: none;
         max-width: none;
       }
     }
@@ -762,11 +777,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       text-align: center;
       transition: all 0.3s ease;
       border-bottom: 3px solid transparent;
+      white-space: nowrap;
       
       &:hover {
         color: #fff;
         background: rgba(255,255,255,0.05);
         border-bottom-color: $color-hover;
+      }
+
+      @media (max-width: 640px) {
+        padding: 16px 24px;
+        font-size: 14px;
       }
     }
   }
@@ -774,6 +795,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   // Section Header
   .section-header {
     margin-bottom: 60px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 40px;
+    }
     
     .section-num {
       font-family: $font-en;
@@ -783,6 +808,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       line-height: 1;
       display: block;
       margin-bottom: -20px;
+
+      @media (max-width: 768px) {
+        font-size: 48px;
+        margin-bottom: -10px;
+      }
     }
     
     .sub-label {
@@ -851,6 +881,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     padding: 30px;
     background: $color-bg-light;
     border-radius: 8px;
+
+    @media (max-width: 768px) {
+      padding: 20px;
+      margin-top: 20px;
+    }
     
     h4 {
       font-size: 14px;
@@ -1165,6 +1200,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     background: linear-gradient(135deg, rgba($color-primary, 0.05) 0%, rgba($color-primary, 0.02) 100%);
     border-radius: 12px;
     border: 1px solid rgba($color-primary, 0.1);
+
+    @media (max-width: 768px) {
+      padding: 30px 20px;
+    }
     
     p {
       font-size: 16px;
@@ -1184,6 +1223,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     font-weight: 600;
     border-radius: 50px;
     transition: all 0.3s ease;
+
+    @media (max-width: 768px) {
+      padding: 14px 28px;
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
     
     svg {
       width: 20px;
@@ -1323,6 +1369,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       p {
         color: rgba(255,255,255,0.8);
         margin-bottom: 40px;
+
+        @media (max-width: 768px) {
+          margin-bottom: 30px;
+        }
       }
     }
     
@@ -1331,6 +1381,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
     }
     
     .cta-primary {
@@ -1353,6 +1409,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       &:hover {
         background: $color-hover;
         transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        padding: 16px 40px;
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
       }
     }
     
@@ -1377,6 +1440,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       &:hover {
         border-color: #fff;
         background: rgba(255,255,255,0.1);
+      }
+
+      @media (max-width: 768px) {
+        padding: 16px 40px;
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
       }
     }
   }
