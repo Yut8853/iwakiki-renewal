@@ -162,6 +162,7 @@ import Layout from '../../layouts/Layout.astro';
 <style lang="scss">
   // --- Variables & Mixins (Layout.astroにあれば不要ですが、ここで定義) ---
   $color-primary: #06756d; // 既存のグリーン
+  $color-hover: #c5a059; // ホバーカラー
   $color-dark: #1a1a1a;
   $color-text: #444;
   $color-bg-light: #fefcf8; // ベージュ系の軽い背景
@@ -360,7 +361,8 @@ import Layout from '../../layouts/Layout.astro';
       transition: all 0.3s ease;
       
       &:hover {
-        background: rgba(255,255,255,0.1);
+        background: rgba($color-hover, 0.2);
+        border-color: $color-hover;
         transform: translateY(-10px);
       }
 
@@ -464,7 +466,7 @@ import Layout from '../../layouts/Layout.astro';
 
       &:hover {
         img { transform: scale(1.1); }
-        .content { background: rgba(6, 117, 109, 0.8); } // primary color
+        .content { background: rgba(197, 160, 89, 0.9); } // hover color
       }
     }
   }

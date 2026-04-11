@@ -27,8 +27,9 @@
   font-size: 14px;
   color: #666;
   cursor: pointer;
+  transition: color 0.3s ease;
 
   &:hover {
-    color: #111;
+    color: #c5a059;
   }
 }

@@ -621,6 +621,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 <style lang="scss">
   @use "sass:color";
   $color-primary: #06756d;
+  $color-hover: #c5a059;
   $color-dark: #1a1a1a;
   $color-text: #444;
   $color-bg-light: #fefcf8;
@@ -765,7 +766,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       &:hover {
         color: #fff;
         background: rgba(255,255,255,0.05);
-        border-bottom-color: $color-primary;
+        border-bottom-color: $color-hover;
       }
     }
   }
@@ -1002,10 +1003,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
+    border: 2px solid transparent;
     
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 30px rgba($color-hover,0.2);
+      border-color: $color-hover;
     }
     
     .type-icon {
@@ -1189,9 +1192,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
     
     &:hover {
-      background: darken($color-primary, 5%);
+      background: $color-hover;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba($color-primary, 0.3);
+      box-shadow: 0 8px 20px rgba($color-hover, 0.3);
       
       svg {
         transform: translateX(5px);
@@ -1348,7 +1351,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       }
       
       &:hover {
-        background: color.adjust($color-primary, $lightness: 5%);
+        background: $color-hover;
         transform: translateY(-2px);
       }
     }

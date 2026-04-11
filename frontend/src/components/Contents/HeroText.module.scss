@@ -7,6 +7,7 @@
 $color-primary: #06756d;
 $color-primary-dark: #055a54;
 $color-primary-light: #0a9a8f;
+$color-hover: #c5a059;
 $color-dark: #1a1a1a;
 $color-text: #333333;
 $color-text-light: #666666;
@@ -345,11 +346,13 @@ $duration-extra-slow: 1.8s;
   overflow: hidden;
   transition:
     transform $duration-fast $ease-out-expo,
-    box-shadow $duration-fast $ease-out-expo;
+    box-shadow $duration-fast $ease-out-expo,
+    background $duration-fast $ease-out-expo;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba($color-primary, 0.3);
+    background: $color-hover;
+    box-shadow: 0 20px 40px rgba($color-hover, 0.3);
 
     .ctaIcon svg {
       transform: translateX(4px);
@@ -403,13 +406,14 @@ $duration-extra-slow: 1.8s;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  border: 2px solid $color-dark;
+  border: 2px solid $color-primary;
   border-radius: 100px;
   text-decoration: none;
   transition: all $duration-fast $ease-out-expo;
 
   &:hover {
-    background: $color-dark;
+    background: $color-hover;
+    border-color: $color-hover;
     color: #fff;
   }
 }
@@ -1026,7 +1030,7 @@ $duration-extra-slow: 1.8s;
   cursor: default;
 
   &:hover {
-    color: $color-primary;
+    color: $color-hover;
   }
 }
 
@@ -1068,7 +1072,7 @@ $duration-extra-slow: 1.8s;
     }
 
     .serviceLink {
-      color: $color-primary;
+      color: $color-hover;
 
       svg {
         transform: translateX(4px);
@@ -1442,8 +1446,8 @@ $duration-extra-slow: 1.8s;
   }
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
+    border-color: $color-hover;
+    color: $color-hover;
   }
 }
 
@@ -1462,7 +1466,7 @@ $duration-extra-slow: 1.8s;
   transition: all $duration-fast $ease-out-expo;
 
   &:hover {
-    background: rgba($color-primary, 0.5);
+    background: rgba($color-hover, 0.5);
   }
 
   &.active,
@@ -1585,7 +1589,9 @@ $duration-extra-slow: 1.8s;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    background: $color-hover;
+    color: #fff;
+    box-shadow: 0 20px 40px rgba($color-hover, 0.3);
   }
 }
 
@@ -1625,8 +1631,8 @@ $duration-extra-slow: 1.8s;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #fff;
+    background: $color-hover;
+    border-color: $color-hover;
 
     svg {
       transform: translateX(4px);

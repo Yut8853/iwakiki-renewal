@@ -70,7 +70,7 @@ export const BlogCard = ({
       <style>{`
         .bc-card { position: relative; background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; overflow: hidden; transition: 0.4s; opacity: 0; transform: translateY(20px); height: 100%; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .bc-card.vis { opacity: 1; transform: translateY(0); }
-        .bc-card:hover { transform: translateY(-5px); border-color: #06756d; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .bc-card:hover { transform: translateY(-5px); border-color: #c5a059; box-shadow: 0 10px 30px rgba(197,160,89,0.2); }
         .bc-glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: 0.4s; background: radial-gradient(400px circle at var(--x) var(--y), rgba(6,117,109,0.05), transparent 40%); }
         .bc-card:hover .bc-glow { opacity: 1; }
         .bc-img { aspect-ratio: 16/10; overflow: hidden; background: #eee; position: relative; }
