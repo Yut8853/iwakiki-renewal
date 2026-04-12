@@ -6,13 +6,7 @@ import {
   FileText, 
   Calendar, 
   Link as LinkIcon, 
-  Edit2, 
-  ChevronRight,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Eye,
-  ExternalLink
+  Edit2
 } from "lucide-react"
 
 export default async function BlogsPage() {
@@ -25,166 +19,113 @@ export default async function BlogsPage() {
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-[var(--destructive)]/20 bg-[var(--destructive)]/5 p-8 animate-fade-in">
-        <div className="flex items-center gap-4 text-[var(--destructive)]">
-          <div className="p-3 rounded-xl bg-[var(--destructive)]/10">
-            <span className="text-2xl">!</span>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg">エラーが発生しました</h3>
-            <p className="text-sm opacity-80">{error.message}</p>
-          </div>
-        </div>
+      <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-6">
+        <p className="text-red-500 font-medium">エラーが発生しました</p>
+        <p className="mt-1 text-sm text-red-500/80">{error.message}</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-8">
-      {/* ヘッダーセクション */}
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[var(--primary)]/10">
-              <FileText className="h-5 w-5 text-[var(--primary)]" />
-            </div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-              Content Management
-            </span>
-          </div>
-          <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-[var(--foreground)]">
+      {/* ヘッダー */}
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--foreground)] tracking-tight">
             ブログ管理
           </h1>
-          <p className="text-[var(--muted-foreground)] max-w-lg text-base leading-relaxed">
-            記事の作成・編集・公開設定をここから管理できます。
+          <p className="mt-2 text-[var(--muted-foreground)]">
+            記事の作成、編集、公開設定を管理します
           </p>
         </div>
         
-        <div className="flex flex-wrap items-center gap-3">
-          {/* 検索バー */}
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)] w-full sm:w-64">
-            <Search className="h-4 w-4 text-[var(--muted-foreground)]" />
-            <input
-              type="text"
-              placeholder="記事を検索..."
-              className="bg-transparent text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none flex-1"
-            />
-          </div>
-          
-          {/* フィルターボタン */}
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)] text-sm font-medium text-[var(--foreground)] hover:bg-[var(--card-hover)] hover:border-[var(--border-hover)] transition-all">
-            <Filter className="h-4 w-4" />
-            <span className="hidden sm:inline">フィルター</span>
-          </button>
-          
-          {/* 新規作成ボタン */}
-          <Link
-            href="/dashboard/blogs/new"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white text-sm font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Plus className="h-4 w-4" />
-            新規作成
-          </Link>
-        </div>
+        <Link
+          href="/dashboard/blogs/new"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          <Plus className="h-4 w-4" />
+          新規作成
+        </Link>
       </div>
 
       {blogs && blogs.length > 0 ? (
-        <>
-          {/* PC版：リッチなテーブル */}
-          <div className="hidden lg:block rounded-2xl bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+          {/* テーブル - PC */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/30">
-                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
-                    記事タイトル
+                <tr className="border-b border-[var(--border)] bg-[var(--secondary)]">
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
+                    タイトル
                   </th>
-                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
                     スラッグ
                   </th>
-                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
                     ステータス
                   </th>
-                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
                     作成日
                   </th>
-                  <th className="px-8 py-5 text-right text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
-                    アクション
+                  <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
+                    操作
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border)]">
-                {blogs.map((blog, index) => (
-                  <tr 
-                    key={blog.id} 
-                    className="group transition-colors hover:bg-[var(--secondary)]/30 animate-fade-in"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-5">
-                        <div className="p-3 rounded-xl bg-[var(--secondary)] group-hover:bg-[var(--primary)]/10 transition-all duration-300">
-                          <FileText className="h-5 w-5 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                {blogs.map((blog) => (
+                  <tr key={blog.id} className="hover:bg-[var(--secondary)]/50 transition-colors">
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="p-2 rounded-lg bg-[var(--secondary)]">
+                          <FileText className="h-4 w-4 text-[var(--muted-foreground)]" />
                         </div>
                         <div className="min-w-0">
                           <Link
                             href={`/dashboard/blogs/${blog.id}`}
-                            className="font-bold text-base text-[var(--foreground)] hover:text-[var(--primary)] transition-colors block truncate max-w-xs"
+                            className="font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
                           >
                             {blog.title}
                           </Link>
                           {blog.description && (
-                            <p className="text-sm text-[var(--muted-foreground)] truncate max-w-xs mt-1">
+                            <p className="mt-1 text-sm text-[var(--muted-foreground)] truncate max-w-xs">
                               {blog.description}
                             </p>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-5">
                       <div className="flex items-center gap-2">
-                        <LinkIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
-                        <code className="px-3 py-1.5 rounded-lg bg-[var(--secondary)] text-sm font-mono text-[var(--muted-foreground)]">
+                        <LinkIcon className="h-3.5 w-3.5 text-[var(--muted-foreground)]" />
+                        <code className="text-sm text-[var(--muted-foreground)] font-mono">
                           {blog.slug}
                         </code>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <span className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold ${
+                    <td className="px-6 py-5">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium ${
                         blog.published
-                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                          : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          ? "bg-emerald-500/10 text-emerald-500"
+                          : "bg-amber-500/10 text-amber-500"
                       }`}>
-                        <span className={`h-2 w-2 rounded-full ${
-                          blog.published ? "bg-emerald-400" : "bg-amber-400 animate-pulse"
+                        <span className={`h-1.5 w-1.5 rounded-full ${
+                          blog.published ? "bg-emerald-500" : "bg-amber-500"
                         }`} />
                         {blog.published ? "公開中" : "下書き"}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-5">
                       <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(blog.created_at).toLocaleDateString("ja-JP", { 
-                          year: 'numeric', 
-                          month: '2-digit', 
-                          day: '2-digit' 
-                        })}
+                        <Calendar className="h-3.5 w-3.5" />
+                        {new Date(blog.created_at).toLocaleDateString("ja-JP")}
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                        {blog.published && (
-                          <a
-                            href={`/blog/${blog.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-lg hover:bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                            title="プレビュー"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </a>
-                        )}
+                    <td className="px-6 py-5">
+                      <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/dashboard/blogs/${blog.id}`}
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--secondary)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[var(--foreground)] hover:bg-[var(--secondary)] transition-colors"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                           編集
@@ -198,99 +139,59 @@ export default async function BlogsPage() {
             </table>
           </div>
 
-          {/* タブレット・モバイル版：カード形式 */}
-          <div className="lg:hidden space-y-5">
-            {blogs.map((blog, index) => (
-              <div 
-                key={blog.id} 
-                className="rounded-2xl bg-[var(--card)] border border-[var(--border)] overflow-hidden transition-all duration-300 hover:border-[var(--border-hover)] animate-fade-in"
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-4 mb-5">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      blog.published
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                    }`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${blog.published ? "bg-emerald-400" : "bg-amber-400 animate-pulse"}`} />
-                      {blog.published ? "公開中" : "下書き"}
-                    </span>
-                    <button className="p-1.5 rounded-lg hover:bg-[var(--secondary)] text-[var(--muted-foreground)] transition-colors">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </button>
-                  </div>
-                  
-                  <Link href={`/dashboard/blogs/${blog.id}`}>
-                    <h3 className="font-bold text-lg text-[var(--foreground)] mb-2 line-clamp-2 hover:text-[var(--primary)] transition-colors">
+          {/* カード - モバイル */}
+          <div className="md:hidden divide-y divide-[var(--border)]">
+            {blogs.map((blog) => (
+              <div key={blog.id} className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      href={`/dashboard/blogs/${blog.id}`}
+                      className="font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
+                    >
                       {blog.title}
-                    </h3>
-                  </Link>
-                  
-                  {blog.description && (
-                    <p className="text-sm text-[var(--muted-foreground)] line-clamp-2 mb-4">
-                      {blog.description}
+                    </Link>
+                    <p className="mt-1.5 text-sm text-[var(--muted-foreground)]">
+                      {new Date(blog.created_at).toLocaleDateString("ja-JP")}
                     </p>
-                  )}
-                  
-                  <div className="flex items-center gap-3 text-xs text-[var(--muted-foreground)]">
-                    <div className="flex items-center gap-1.5">
-                      <LinkIcon className="h-3 w-3" />
-                      <span className="font-mono">{blog.slug}</span>
-                    </div>
-                    <span className="text-[var(--border)]">|</span>
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-3 w-3" />
-                      <span>{new Date(blog.created_at).toLocaleDateString("ja-JP")}</span>
-                    </div>
                   </div>
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    blog.published
+                      ? "bg-emerald-500/10 text-emerald-500"
+                      : "bg-amber-500/10 text-amber-500"
+                  }`}>
+                    {blog.published ? "公開" : "下書き"}
+                  </span>
                 </div>
-                
-                <div className="flex border-t border-[var(--border)] divide-x divide-[var(--border)]">
-                  <Link 
+                <div className="mt-4 flex items-center gap-3">
+                  <Link
                     href={`/dashboard/blogs/${blog.id}`}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold text-[var(--foreground)] hover:bg-[var(--secondary)] transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium bg-[var(--secondary)] text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    <Edit2 className="h-3.5 w-3.5" />
                     編集
                   </Link>
-                  {blog.published && (
-                    <a
-                      href={`/blog/${blog.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold text-[var(--muted-foreground)] hover:bg-[var(--secondary)] transition-colors"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      表示
-                    </a>
-                  )}
-                  <div className="flex-1 flex items-center justify-center">
-                    <DeleteButton blogId={blog.id} blogTitle={blog.title} />
-                  </div>
+                  <DeleteButton blogId={blog.id} blogTitle={blog.title} />
                 </div>
               </div>
             ))}
           </div>
-        </>
+        </div>
       ) : (
-        /* 空の状態 */
-        <div className="rounded-3xl border-2 border-dashed border-[var(--border)] bg-[var(--card)]/50 p-12 lg:p-20 text-center">
-          <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--gradient-start)]/10 to-[var(--gradient-end)]/10 flex items-center justify-center mb-6">
-            <FileText className="h-10 w-10 text-[var(--primary)]" />
-          </div>
-          <h3 className="text-2xl font-bold text-[var(--foreground)] mb-2">
+        <div className="rounded-xl border-2 border-dashed border-[var(--border)] p-12 text-center">
+          <FileText className="h-10 w-10 text-[var(--muted-foreground)] mx-auto" />
+          <h3 className="mt-4 font-medium text-[var(--foreground)]">
             記事がまだありません
           </h3>
-          <p className="text-[var(--muted-foreground)] mb-8 max-w-md mx-auto">
-            最初のブログ記事を作成して、コンテンツの発信を始めましょう。
+          <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+            最初の記事を作成して、コンテンツを発信しましょう
           </p>
           <Link
             href="/dashboard/blogs/new"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-bold shadow-xl shadow-[var(--primary)]/25 transition-all duration-300 hover:shadow-2xl hover:shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 mt-6 px-4 py-2.5 rounded-lg bg-[var(--primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
           >
-            <Plus className="h-5 w-5" />
-            最初の記事を作成
+            <Plus className="h-4 w-4" />
+            記事を作成
           </Link>
         </div>
       )}

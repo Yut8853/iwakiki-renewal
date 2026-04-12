@@ -6,21 +6,15 @@ import { createClient } from "@/lib/supabase/client"
 import { validateBlogInput } from "@/lib/validation"
 import { 
   Save, 
-  X, 
-  FileText, 
-  Link as LinkIcon, 
+  ArrowLeft, 
   Image as ImageIcon, 
-  Tag, 
   Eye, 
   EyeOff,
   Loader2,
   AlertCircle,
-  CheckCircle2,
-  Type,
-  AlignLeft,
-  Code,
-  Settings2
+  CheckCircle2
 } from "lucide-react"
+import Link from "next/link"
 
 interface Blog {
   id: string
@@ -145,255 +139,237 @@ export function BlogForm({ blog }: { blog?: Blog }) {
     }, 500)
   }
 
-  const inputBaseClass = "w-full rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-200"
+  const inputClass = "w-full rounded-lg border border-[var(--border)] bg-[var(--secondary)] px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-colors"
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="space-y-8">
+      {/* ヘッダー */}
+      <div className="flex items-center gap-4">
+        <Link
+          href="/dashboard/blogs"
+          className="p-2 -ml-2 rounded-lg hover:bg-[var(--secondary)] transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 text-[var(--muted-foreground)]" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--foreground)] tracking-tight">
+            {blog ? "記事を編集" : "新規記事を作成"}
+          </h1>
+          <p className="mt-1 text-[var(--muted-foreground)]">
+            {blog ? "記事の内容を更新します" : "新しいブログ記事を作成します"}
+          </p>
+        </div>
+      </div>
+
       {/* エラーメッセージ */}
       {error && (
-        <div className="flex items-start gap-4 rounded-2xl border border-[var(--destructive)]/30 bg-[var(--destructive)]/10 p-6 animate-fade-in">
-          <AlertCircle className="h-5 w-5 text-[var(--destructive)] flex-shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-[var(--destructive)]">エラー</p>
-            <p className="text-sm text-[var(--destructive)]/80 whitespace-pre-line mt-1">{error}</p>
+            <p className="font-medium text-red-500">エラー</p>
+            <p className="mt-1 text-sm text-red-500/80 whitespace-pre-line">{error}</p>
           </div>
         </div>
       )}
 
       {/* 成功メッセージ */}
       {success && (
-        <div className="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 animate-fade-in">
-          <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-          <p className="font-semibold text-emerald-400">保存しました。リダイレクト中...</p>
+        <div className="flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+          <p className="font-medium text-emerald-500">保存しました</p>
         </div>
       )}
 
-      <div className="grid gap-10 lg:grid-cols-3">
-        {/* メインコンテンツエリア */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* 基本情報カード */}
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-            <div className="flex items-center gap-4 px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="p-3 rounded-xl bg-[var(--primary)]/10">
-                <Type className="h-5 w-5 text-[var(--primary)]" />
-              </div>
-              <h3 className="font-bold text-lg text-[var(--foreground)]">基本情報</h3>
-            </div>
-            
-            <div className="p-8 space-y-8">
-              {/* タイトル */}
-              <div className="space-y-3">
-                <label htmlFor="title" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
-                  <FileText className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  タイトル
-                  <span className="text-[var(--destructive)]">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  value={formData.title}
-                  onChange={handleTitleChange}
-                  required
-                  className={`${inputBaseClass} text-lg font-semibold`}
-                  placeholder="魅力的な記事タイトルを入力"
-                />
-              </div>
-
-              {/* スラッグ */}
-              <div className="space-y-3">
-                <label htmlFor="slug" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
-                  <LinkIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  スラッグ
-                  <span className="text-[var(--destructive)]">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-sm text-[var(--muted-foreground)]">/blog/</span>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* メインエリア */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* 基本情報 */}
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+              <h2 className="font-medium text-[var(--foreground)] mb-5">基本情報</h2>
+              
+              <div className="space-y-5">
+                {/* タイトル */}
+                <div className="space-y-2">
+                  <label htmlFor="title" className="text-sm font-medium text-[var(--foreground)]">
+                    タイトル <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    id="slug"
-                    value={formData.slug}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
+                    id="title"
+                    value={formData.title}
+                    onChange={handleTitleChange}
                     required
-                    className={`${inputBaseClass} pl-16 font-mono text-sm`}
-                    placeholder="url-friendly-slug"
+                    className={inputClass}
+                    placeholder="記事のタイトルを入力"
                   />
                 </div>
-                <p className="text-sm text-[var(--muted-foreground)]">
-                  URLに使用される識別子です。英数字とハイフンのみ推奨。
-                </p>
-              </div>
 
-              {/* 説明文 */}
-              <div className="space-y-3">
-                <label htmlFor="description" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
-                  <AlignLeft className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  説明文
-                  <span className="text-[var(--destructive)]">*</span>
-                </label>
-                <textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                  required
-                  rows={4}
-                  className={inputBaseClass}
-                  placeholder="記事の概要を簡潔に記述（SEO対策にも重要）"
-                />
+                {/* スラッグ */}
+                <div className="space-y-2">
+                  <label htmlFor="slug" className="text-sm font-medium text-[var(--foreground)]">
+                    スラッグ <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-[var(--muted-foreground)]">/blog/</span>
+                    <input
+                      type="text"
+                      id="slug"
+                      value={formData.slug}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
+                      required
+                      className={`${inputClass} font-mono text-sm`}
+                      placeholder="url-slug"
+                    />
+                  </div>
+                </div>
+
+                {/* 説明文 */}
+                <div className="space-y-2">
+                  <label htmlFor="description" className="text-sm font-medium text-[var(--foreground)]">
+                    説明文 <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                    required
+                    rows={3}
+                    className={inputClass}
+                    placeholder="記事の概要を入力"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 本文エディター */}
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-            <div className="flex items-center justify-between px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-[var(--primary)]/10">
-                  <Code className="h-5 w-5 text-[var(--primary)]" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[var(--foreground)]">本文</h3>
-                  <p className="text-sm text-[var(--muted-foreground)]">Markdown形式で記述</p>
-                </div>
+            {/* 本文 */}
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-medium text-[var(--foreground)]">本文</h2>
+                <span className="text-xs text-[var(--muted-foreground)] px-2 py-1 rounded bg-[var(--secondary)]">
+                  Markdown
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
-                <span className="px-3 py-1.5 rounded-lg bg-[var(--secondary)] font-mono border border-[var(--border)]">Markdown</span>
-              </div>
-            </div>
-            
-            <div className="p-8">
               <textarea
                 id="content"
                 value={formData.content}
                 onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
                 required
-                rows={20}
-                className={`${inputBaseClass} font-mono text-sm leading-relaxed resize-none`}
-                placeholder="# 見出し&#10;&#10;本文をここに記述します...&#10;&#10;- リスト項目1&#10;- リスト項目2&#10;&#10;**太字** や *斜体* も使用できます。"
+                rows={16}
+                className={`${inputClass} font-mono text-sm leading-relaxed`}
+                placeholder="本文をMarkdown形式で入力..."
               />
             </div>
           </div>
-        </div>
 
-        {/* サイドバー */}
-        <div className="space-y-8">
-          {/* 公開設定カード */}
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden sticky top-28">
-            <div className="flex items-center gap-4 px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="p-3 rounded-xl bg-[var(--primary)]/10">
-                <Settings2 className="h-5 w-5 text-[var(--primary)]" />
-              </div>
-              <h3 className="font-bold text-lg text-[var(--foreground)]">公開設定</h3>
-            </div>
-            
-            <div className="p-8 space-y-6">
-              {/* 公開トグル */}
-              <div className="flex items-center justify-between p-5 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
-                <div className="flex items-center gap-4">
-                  {formData.published ? (
-                    <Eye className="h-5 w-5 text-emerald-400" />
-                  ) : (
-                    <EyeOff className="h-5 w-5 text-[var(--muted-foreground)]" />
-                  )}
-                  <div>
-                    <p className="font-semibold text-[var(--foreground)]">
+          {/* サイドバー */}
+          <div className="space-y-6">
+            {/* 公開設定 */}
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+              <h2 className="font-medium text-[var(--foreground)] mb-5">公開設定</h2>
+              
+              <div className="space-y-5">
+                {/* 公開トグル */}
+                <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--secondary)]">
+                  <div className="flex items-center gap-3">
+                    {formData.published ? (
+                      <Eye className="h-4 w-4 text-emerald-500" />
+                    ) : (
+                      <EyeOff className="h-4 w-4 text-[var(--muted-foreground)]" />
+                    )}
+                    <span className="text-sm font-medium text-[var(--foreground)]">
                       {formData.published ? "公開" : "下書き"}
-                    </p>
-                    <p className="text-sm text-[var(--muted-foreground)]">
-                      {formData.published ? "記事は公開されます" : "記事は非公開です"}
-                    </p>
+                    </span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData((prev) => ({ ...prev, published: !prev.published }))}
+                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                      formData.published ? "bg-emerald-500" : "bg-[var(--border)]"
+                    }`}
+                  >
+                    <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                      formData.published ? "translate-x-5" : "translate-x-0"
+                    }`} />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setFormData((prev) => ({ ...prev, published: !prev.published }))}
-                  className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
-                    formData.published 
-                      ? "bg-emerald-500" 
-                      : "bg-[var(--border)]"
-                  }`}
-                >
-                  <span className={`absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                    formData.published ? "translate-x-6" : "translate-x-0"
-                  }`} />
-                </button>
-              </div>
 
-              {/* カテゴリ */}
-              <div className="space-y-3">
-                <label htmlFor="category" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
-                  <Tag className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  カテゴリ
-                </label>
-                <input
-                  type="text"
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                  className={inputBaseClass}
-                  placeholder="テクノロジー"
-                />
-              </div>
+                {/* カテゴリ */}
+                <div className="space-y-2">
+                  <label htmlFor="category" className="text-sm font-medium text-[var(--foreground)]">
+                    カテゴリ
+                  </label>
+                  <input
+                    type="text"
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                    className={inputClass}
+                    placeholder="カテゴリを入力"
+                  />
+                </div>
 
-              {/* アイキャッチ */}
-              <div className="space-y-3">
-                <label htmlFor="featured_image" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
-                  <ImageIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  アイキャッチ画像
-                </label>
-                <input
-                  type="url"
-                  id="featured_image"
-                  value={formData.featured_image}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, featured_image: e.target.value }))}
-                  className={inputBaseClass}
-                  placeholder="https://example.com/image.jpg"
-                />
-                {formData.featured_image && (
-                  <div className="mt-4 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--secondary)]">
-                    <img
-                      src={formData.featured_image}
-                      alt="プレビュー"
-                      className="w-full h-40 object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none'
-                      }}
-                    />
-                  </div>
-                )}
+                {/* アイキャッチ画像 */}
+                <div className="space-y-2">
+                  <label htmlFor="featured_image" className="text-sm font-medium text-[var(--foreground)]">
+                    <div className="flex items-center gap-2">
+                      <ImageIcon className="h-4 w-4" />
+                      アイキャッチ画像
+                    </div>
+                  </label>
+                  <input
+                    type="url"
+                    id="featured_image"
+                    value={formData.featured_image}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, featured_image: e.target.value }))}
+                    className={inputClass}
+                    placeholder="画像URLを入力"
+                  />
+                  {formData.featured_image && (
+                    <div className="mt-3 rounded-lg overflow-hidden border border-[var(--border)]">
+                      <img
+                        src={formData.featured_image}
+                        alt="プレビュー"
+                        className="w-full h-32 object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none'
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* アクションボタン */}
-            <div className="p-6 border-t border-[var(--border)] bg-[var(--secondary)]/30 space-y-4">
+            {/* アクション */}
+            <div className="space-y-3">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-[var(--primary)] text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     保存中...
                   </>
                 ) : (
                   <>
-                    <Save className="h-5 w-5" />
-                    {blog ? "更新する" : "作成する"}
+                    <Save className="h-4 w-4" />
+                    {blog ? "更新" : "作成"}
                   </>
                 )}
               </button>
-              <button
-                type="button"
-                onClick={() => router.back()}
-                className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[var(--foreground)] font-semibold transition-all duration-200 hover:bg-[var(--card-hover)] hover:border-[var(--border-hover)]"
+              <Link
+                href="/dashboard/blogs"
+                className="flex items-center justify-center w-full py-3 rounded-lg border border-[var(--border)] text-[var(--foreground)] font-medium hover:bg-[var(--secondary)] transition-colors"
               >
-                <X className="h-5 w-5" />
                 キャンセル
-              </button>
+              </Link>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   )
 }
