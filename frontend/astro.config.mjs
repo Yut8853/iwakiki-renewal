@@ -1,5 +1,12 @@
+import { defineConfig } from 'astro/config' // ←これ絶対必要
+import react from '@astrojs/react'
+import sitemap from '@astrojs/sitemap'
+
 export default defineConfig({
-  site: 'https://iwakiki.co.jp',
+  site: 'https://iwakiki.jp',
+
+  // 👇 serverは削除済みでOK
+  // output: 'server',
 
   integrations: [
     react(),
@@ -30,4 +37,4 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
-});
+})
