@@ -20,16 +20,5 @@ export default async function EditBlogPage({
     notFound()
   }
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground">記事を編集</h2>
-        <p className="mt-1 text-muted-foreground">
-          ブログ記事の内容を編集します
-        </p>
-      </div>
-
-      <BlogForm blog={blog} />
-    </div>
-  )
+  return <BlogForm blog={blog} />
 }
