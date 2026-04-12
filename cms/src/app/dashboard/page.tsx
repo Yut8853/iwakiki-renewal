@@ -5,9 +5,8 @@ import {
   CheckCircle2, 
   FileEdit, 
   Plus, 
-  ArrowRight, 
-  LayoutDashboard,
-  BarChart3
+  ArrowRight,
+  Clock
 } from "lucide-react"
 
 export default async function DashboardPage() {
@@ -27,128 +26,157 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("published", false)
 
+  const { data: recentBlogs } = await supabase
+    .from("blogs")
+    .select("id, title, published, created_at")
+    .order("created_at", { ascending: false })
+    .limit(5)
+
   const stats = [
     { 
       label: "総記事数", 
       value: blogCount ?? 0, 
-      href: "/dashboard/blogs",
       icon: FileText,
       color: "text-blue-500",
-      bgColor: "bg-blue-500/10"
+      bg: "bg-blue-500/10"
     },
     { 
-      label: "公開中の記事", 
+      label: "公開中", 
       value: publishedCount ?? 0, 
-      href: "/dashboard/blogs", 
       icon: CheckCircle2,
       color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10"
+      bg: "bg-emerald-500/10"
     },
     { 
-      label: "下書き保存", 
+      label: "下書き", 
       value: draftCount ?? 0, 
-      href: "/dashboard/blogs", 
       icon: FileEdit,
       color: "text-amber-500",
-      bgColor: "bg-amber-500/10"
+      bg: "bg-amber-500/10"
     },
   ]
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10 py-6 animate-in fade-in duration-500">
-      {/* ヒーローセクション */}
-      <div className="relative overflow-hidden rounded-3xl bg-slate-900 p-8 text-white shadow-2xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-slate-400">
-              <LayoutDashboard className="h-4 w-4" />
-              <span className="text-xs font-bold uppercase tracking-wider">Overview</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-              おかえりなさい！
-            </h2>
-            <p className="mt-2 text-slate-400 max-w-md font-medium">
-              現在 {publishedCount ?? 0} 件の記事が公開されています。今日も新しいコンテンツを作成しましょう。
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/dashboard/blogs/new"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-900 transition-all hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Plus className="h-4 w-4" />
-              新規記事を書く
-            </Link>
-          </div>
-        </div>
-        {/* 背景の装飾用グラデーション */}
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+    <div className="space-y-10">
+      {/* ヘッダー */}
+      <div>
+        <h1 className="text-2xl font-semibold text-[var(--foreground)] tracking-tight">
+          ダッシュボード
+        </h1>
+        <p className="mt-2 text-[var(--muted-foreground)]">
+          コンテンツの概要と最近の更新を確認できます
+        </p>
       </div>
 
-      {/* 統計カードセクション */}
-      <div className="grid gap-6 sm:grid-cols-3">
+      {/* 統計カード */}
+      <div className="grid gap-5 sm:grid-cols-3">
         {stats.map((stat) => (
-          <Link
+          <div
             key={stat.label}
-            href={stat.href}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card p-1 transition-all hover:shadow-xl hover:shadow-muted/50"
+            className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6"
           >
-            <div className="p-6">
-              <div className="flex items-start justify-between">
-                <div className={`rounded-xl ${stat.bgColor} ${stat.color} p-3 transition-transform group-hover:scale-110`}>
-                  <stat.icon className="h-6 w-6" />
-                </div>
-                <BarChart3 className="h-4 w-4 text-muted/30" />
-              </div>
-              <div className="mt-4">
-                <p className="text-sm font-bold text-muted-foreground uppercase tracking-tight">
-                  {stat.label}
-                </p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-4xl font-black text-foreground tracking-tighter">
-                    {stat.value}
-                  </p>
-                  <span className="text-xs font-bold text-muted-foreground">件</span>
-                </div>
+            <div className="flex items-center justify-between">
+              <div className={`p-2.5 rounded-lg ${stat.bg}`}>
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
             </div>
-            {/* カード下部のアクセント線 */}
-            <div className={`h-1 w-full ${stat.color.replace('text', 'bg')} opacity-20`} />
-          </Link>
+            <div className="mt-5">
+              <p className="text-3xl font-semibold text-[var(--foreground)] tracking-tight">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+                {stat.label}
+              </p>
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* クイックアクション/ショートカット */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-border bg-card p-8 flex flex-col justify-between group">
-          <div>
-            <h3 className="text-xl font-bold mb-2">コンテンツ作成</h3>
-            <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-              エディタを開いて、新しいブログ記事の執筆を開始します。下書きはいつでも保存可能です。
-            </p>
+      {/* メインコンテンツ */}
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* 最近の記事 */}
+        <div className="lg:col-span-2">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border)]">
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 text-[var(--muted-foreground)]" />
+                <h2 className="font-medium text-[var(--foreground)]">最近の記事</h2>
+              </div>
+              <Link 
+                href="/dashboard/blogs"
+                className="text-sm text-[var(--primary)] hover:underline"
+              >
+                すべて表示
+              </Link>
+            </div>
+            
+            <div className="divide-y divide-[var(--border)]">
+              {recentBlogs && recentBlogs.length > 0 ? (
+                recentBlogs.map((blog) => (
+                  <Link
+                    key={blog.id}
+                    href={`/dashboard/blogs/${blog.id}`}
+                    className="flex items-center justify-between px-6 py-4 hover:bg-[var(--secondary)]/50 transition-colors"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-[var(--foreground)] truncate">
+                        {blog.title}
+                      </p>
+                      <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+                        {new Date(blog.created_at).toLocaleDateString("ja-JP", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric"
+                        })}
+                      </p>
+                    </div>
+                    <div className="ml-4 flex items-center gap-3">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        blog.published
+                          ? "bg-emerald-500/10 text-emerald-500"
+                          : "bg-amber-500/10 text-amber-500"
+                      }`}>
+                        {blog.published ? "公開" : "下書き"}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-[var(--muted-foreground)]" />
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="px-6 py-12 text-center">
+                  <FileText className="h-8 w-8 text-[var(--muted-foreground)] mx-auto" />
+                  <p className="mt-3 text-sm text-[var(--muted-foreground)]">
+                    記事がまだありません
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-          <Link
-            href="/dashboard/blogs/new"
-            className="flex items-center gap-2 text-sm font-black text-primary group-hover:gap-4 transition-all"
-          >
-            エディタを開く <ArrowRight className="h-4 w-4" />
-          </Link>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-8 flex flex-col justify-between group">
-          <div>
-            <h3 className="text-xl font-bold mb-2">記事の整理</h3>
-            <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-              過去の記事を編集したり、公開ステータスの変更、不要な記事の削除を一括で行えます。
+        {/* クイックアクション */}
+        <div className="space-y-5">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+            <h3 className="font-medium text-[var(--foreground)]">クイックアクション</h3>
+            <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+              新しい記事を作成するか、既存の記事を管理します
             </p>
+            <div className="mt-5 space-y-3">
+              <Link
+                href="/dashboard/blogs/new"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-[var(--primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                <Plus className="h-4 w-4" />
+                新規記事を作成
+              </Link>
+              <Link
+                href="/dashboard/blogs"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[var(--border)] text-[var(--foreground)] text-sm font-medium hover:bg-[var(--secondary)] transition-colors"
+              >
+                記事一覧を表示
+              </Link>
+            </div>
           </div>
-          <Link
-            href="/dashboard/blogs"
-            className="flex items-center gap-2 text-sm font-black text-foreground group-hover:gap-4 transition-all"
-          >
-            記事一覧へ移動 <ArrowRight className="h-4 w-4" />
-          </Link>
         </div>
       </div>
     </div>

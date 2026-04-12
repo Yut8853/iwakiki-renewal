@@ -3,14 +3,14 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { useState } from "react"
 import { 
   LayoutDashboard, 
   FileText, 
   LogOut, 
-  Settings, 
-  User,
-  ChevronRight,
-  Menu
+  Menu,
+  X,
+  Plus
 } from "lucide-react"
 
 export default function DashboardLayout({
@@ -20,8 +20,11 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
+    setIsLoggingOut(true)
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push("/login")
@@ -33,78 +36,144 @@ export default function DashboardLayout({
   ]
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex min-h-screen bg-[var(--background)]">
       {/* サイドバー - PC版 */}
-      <aside className="hidden md:flex w-72 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm">
-        <div className="flex h-20 items-center border-b border-slate-100 dark:border-slate-800 px-8">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-black">I</div>
-            <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">IWAKIKI <span className="text-primary text-[10px] tracking-normal align-top ml-1">CMS</span></h1>
-          </div>
+      <aside className="hidden lg:flex w-64 flex-col border-r border-[var(--border)] bg-[var(--card)]">
+        {/* ロゴエリア */}
+        <div className="flex h-16 items-center px-6 border-b border-[var(--border)]">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white font-bold text-sm">
+              I
+            </div>
+            <span className="text-base font-semibold text-[var(--foreground)]">
+              IWAKIKI CMS
+            </span>
+          </Link>
         </div>
 
-        <nav className="flex-1 space-y-2 p-6">
-          <p className="px-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Main Menu</p>
-          {navItems.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`group flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                    : "text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon className={`h-5 w-5 ${isActive ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"}`} />
+        {/* ナビゲーション */}
+        <nav className="flex-1 px-4 py-6">
+          <div className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[var(--primary)] text-white"
+                      : "text-[var(--muted-foreground)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
                   {item.label}
-                </div>
-                {isActive && <ChevronRight className="h-4 w-4 text-white/50" />}
-              </Link>
-            )
-          })}
+                </Link>
+              )
+            })}
+          </div>
         </nav>
 
-        <div className="border-t border-slate-100 dark:border-slate-800 p-6 space-y-4">
-          <div className="flex items-center gap-3 px-2 py-2">
-            <div className="h-9 w-9 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
-              <User className="h-5 w-5" />
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Administrator</p>
-              <p className="text-[10px] text-slate-400 truncate">admin@iwakiki.com</p>
-            </div>
-          </div>
+        {/* ログアウト */}
+        <div className="p-4 border-t border-[var(--border)]">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-rose-500 transition-colors hover:bg-rose-50 dark:hover:bg-rose-500/10"
+            disabled={isLoggingOut}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--muted-foreground)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
           >
-            <LogOut className="h-5 w-5" />
-            ログアウト
+            <LogOut className="h-4 w-4" />
+            {isLoggingOut ? "ログアウト中..." : "ログアウト"}
           </button>
         </div>
       </aside>
 
       {/* メインコンテンツエリア */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* モバイル用ヘッダー */}
-        <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 dark:border-slate-800 dark:bg-slate-900 md:hidden">
-          <h1 className="text-lg font-black tracking-tighter">IWAKIKI CMS</h1>
-          <button className="rounded-lg p-2 hover:bg-slate-100">
-            <Menu className="h-6 w-6" />
+        {/* ヘッダー */}
+        <header className="flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--card)] px-6">
+          {/* モバイルメニュー */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[var(--secondary)] transition-colors"
+          >
+            <Menu className="h-5 w-5 text-[var(--foreground)]" />
           </button>
+          
+          {/* PC: 空白 */}
+          <div className="hidden lg:block" />
+
+          {/* 新規作成ボタン */}
+          <Link
+            href="/dashboard/blogs/new"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">新規作成</span>
+          </Link>
         </header>
 
-        {/* ページの中身 */}
-        <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 md:p-10">
-          {/* コンテンツを中央寄せにするコンテナ */}
-          <div className="mx-auto max-w-6xl">
+        {/* ページコンテンツ */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto px-6 py-8 lg:px-8 lg:py-10">
             {children}
           </div>
         </main>
       </div>
+
+      {/* モバイルメニュー */}
+      {isMobileMenuOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <aside className="fixed top-0 left-0 bottom-0 w-64 bg-[var(--card)] border-r border-[var(--border)] z-50 lg:hidden animate-slide-in">
+            <div className="flex h-16 items-center justify-between px-6 border-b border-[var(--border)]">
+              <span className="text-base font-semibold text-[var(--foreground)]">IWAKIKI CMS</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 -mr-2 rounded-lg hover:bg-[var(--secondary)] transition-colors"
+              >
+                <X className="h-5 w-5 text-[var(--foreground)]" />
+              </button>
+            </div>
+            
+            <nav className="p-4">
+              <div className="space-y-1">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                        isActive
+                          ? "bg-[var(--primary)] text-white"
+                          : "text-[var(--muted-foreground)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)]"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            </nav>
+
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[var(--border)]">
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--muted-foreground)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
+              >
+                <LogOut className="h-4 w-4" />
+                {isLoggingOut ? "ログアウト中..." : "ログアウト"}
+              </button>
+            </div>
+          </aside>
+        </>
+      )}
     </div>
   )
 }
