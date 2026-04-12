@@ -1,69 +1,109 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { login } from "./actions";
+import { useState } from "react"
+import { login } from "./actions"
+import { Mail, Lock, ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
 
 export function LoginForm() {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(formData: FormData) {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
     
-    const result = await login(formData);
+    const result = await login(formData)
     
     if (result?.error) {
-      setError(result.error);
-      setIsLoading(false);
+      setError(result.error)
+      setIsLoading(false)
     }
   }
 
   return (
-    <form action={handleSubmit} className="space-y-6">
+    <form action={handleSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700 border border-red-200">
-          {error}
+        <div className="flex items-center gap-3 rounded-xl border border-[var(--destructive)]/30 bg-[var(--destructive)]/10 p-4 animate-fade-in">
+          <AlertCircle className="h-5 w-5 text-[var(--destructive)] flex-shrink-0" />
+          <p className="text-sm font-medium text-[var(--destructive)]">{error}</p>
         </div>
       )}
       
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[var(--foreground)]">
+      {/* メールアドレス */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-semibold text-[var(--foreground)]">
           メールアドレス
         </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          className="mt-2 block w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/20 transition-colors"
-          placeholder="admin@example.com"
-        />
+        <div className="relative group">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] transition-colors group-focus-within:text-[var(--primary)]">
+            <Mail className="h-5 w-5" />
+          </div>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--secondary)] pl-12 pr-4 py-3.5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-200"
+            placeholder="admin@example.com"
+          />
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-[var(--foreground)]">
+      {/* パスワード */}
+      <div className="space-y-2">
+        <label htmlFor="password" className="block text-sm font-semibold text-[var(--foreground)]">
           パスワード
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className="mt-2 block w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/20 transition-colors"
-          placeholder="••••••••"
-        />
+        <div className="relative group">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] transition-colors group-focus-within:text-[var(--primary)]">
+            <Lock className="h-5 w-5" />
+          </div>
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            autoComplete="current-password"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--secondary)] pl-12 pr-12 py-3.5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-200"
+            placeholder="••••••••"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
+        </div>
       </div>
 
+      {/* ログインボタン */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full rounded-lg bg-[var(--primary)] px-4 py-3 text-sm font-semibold text-[var(--primary-foreground)] hover:bg-[var(--primary)]/90 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="relative w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold shadow-lg shadow-[var(--primary)]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
       >
-        {isLoading ? "ログイン中..." : "ログイン"}
+        {/* ホバー時のシマー効果 */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer pointer-events-none" />
+        
+        {isLoading ? (
+          <>
+            <Loader2 className="h-5 w-5 animate-spin" />
+            ログイン中...
+          </>
+        ) : (
+          <>
+            ログイン
+            <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </>
+        )}
       </button>
     </form>
-  );
+  )
 }
