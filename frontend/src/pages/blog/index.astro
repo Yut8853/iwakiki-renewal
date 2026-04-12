@@ -5,7 +5,7 @@ import BlogSidebar from '../../components/Blog/BlogSidebar';
 import Footer from '~/components/Footer/Footer.astro';
 import { supabase } from '../../libs/supabase';
 
-export const prerender = false; // 🔥これ必須
+export const prerender = true;
 
 // 🔥 Supabaseから取得
 const { data: allPosts, error } = await supabase
