@@ -21,7 +21,12 @@ jobs:
           node-version: 20
 
       - run: pnpm install
+
+      # 🔥 ここ追加
       - run: pnpm build
+        env:
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
   cms:
     runs-on: ubuntu-latest
@@ -39,4 +44,9 @@ jobs:
           node-version: 20
 
       - run: pnpm install
+
+      # 🔥 ここ追加
       - run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
