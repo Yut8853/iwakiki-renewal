@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { validateBlogInput, isValidSlug } from "@/lib/validation"
 
 interface Blog {
   id: string
@@ -32,12 +33,17 @@ export function BlogForm({ blog }: { blog?: Blog }) {
   })
 
   const generateSlug = (title: string) => {
-    return title
+    // 日本語などの非ASCII文字を除去し、英数字とハイフンのみに
+    const slug = title
       .toLowerCase()
       .replace(/[^\w\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") // 先頭・末尾のハイフンを除去
       .trim()
+      .slice(0, 200) // 最大200文字
+    
+    return slug || `post-${Date.now()}` // 空の場合はタイムスタンプベースのスラッグ
   }
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +60,39 @@ export function BlogForm({ blog }: { blog?: Blog }) {
     setIsSubmitting(true)
     setError(null)
 
+    // クライアント側バリデーション
+    const validation = validateBlogInput({
+      title: formData.title,
+      slug: formData.slug,
+      description: formData.description,
+      content: formData.content,
+      featured_image: formData.featured_image || null,
+      category: formData.category || null,
+      published: formData.published,
+    })
+
+    if (!validation.isValid) {
+      setError(validation.errors.join("\n"))
+      setIsSubmitting(false)
+      return
+    }
+
     const supabase = createClient()
+
+    // スラッグの重複チェック（新規作成時または変更時）
+    if (!blog || blog.slug !== formData.slug) {
+      const { data: existingBlog } = await supabase
+        .from("blogs")
+        .select("id")
+        .eq("slug", formData.slug)
+        .single()
+
+      if (existingBlog) {
+        setError("このスラッグは既に使用されています")
+        setIsSubmitting(false)
+        return
+      }
+    }
 
     const data = {
       ...formData,
@@ -70,7 +108,7 @@ export function BlogForm({ blog }: { blog?: Blog }) {
         .eq("id", blog.id)
 
       if (updateError) {
-        setError("更新に失敗しました: " + updateError.message)
+        setError("更新に失敗しました")
         setIsSubmitting(false)
         return
       }
@@ -78,7 +116,7 @@ export function BlogForm({ blog }: { blog?: Blog }) {
       const { error: insertError } = await supabase.from("blogs").insert(data)
 
       if (insertError) {
-        setError("作成に失敗しました: " + insertError.message)
+        setError("作成に失敗しました")
         setIsSubmitting(false)
         return
       }
