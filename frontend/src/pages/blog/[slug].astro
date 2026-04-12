@@ -1,59 +1,86 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Footer from '~/components/Footer/Footer.astro';
+import { supabase } from '../../libs/supabase';
+import { marked } from 'marked';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const { data: posts, error } = await supabase
+    .from('blogs')
+    .select('slug')
+    .eq('published', true);
 
-  return posts.map((post) => ({
+  if (error) {
+    console.error('getStaticPaths error:', error);
+    return [];
+  }
+
+  return (posts ?? []).map((post) => ({
     params: { slug: post.slug },
-    props: { post },
   }));
 }
 
-const { post } = Astro.props;
-const { Content } = await post.render();
+const slug = Astro.params.slug;
 
-const allPosts = await getCollection('blog');
+const { data: post, error: postError } = await supabase
+  .from('blogs')
+  .select('*')
+  .eq('slug', slug)
+  .eq('published', true)
+  .single();
 
-const relatedPosts = allPosts
-  .filter((p) => p.slug !== post.slug)
-  .slice(0, 3);
+if (postError || !post) {
+  throw Astro.redirect('/404');
+}
+
+const { data: allPosts } = await supabase
+  .from('blogs')
+  .select('id, slug, title, description, featured_image, category, published_at')
+  .eq('published', true)
+  .neq('slug', post.slug)
+  .order('published_at', { ascending: false })
+  .limit(3);
+
+const relatedPosts = allPosts ?? [];
 
 const articleUrl = `/blog/${post.slug}`;
-const articleImage = post.data.image || '/blog/default.jpg';
-const authorName = post.data.author?.name || '福縁西不動産';
-const authorRole = post.data.author?.role || '地域密着の不動産サポート';
-const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
+const articleImage = post.featured_image || '/blog/default.jpg';
+const authorName = '福縁西不動産';
+const authorRole = '地域密着の不動産サポート';
+const authorAvatar = '/blog/default.jpg';
+
+const publishedDate = post.published_at
+  ? new Date(post.published_at)
+  : new Date();
+
+const contentHtml = marked.parse(post.content ?? '');
 ---
 
-<Layout title={post.data.title}>
+<Layout title={post.title}>
   <div class="progress" id="progress"></div>
 
   <section class="hero">
     <div class="hero-visual">
-      <img src={articleImage} alt={post.data.title} />
+      <img src={articleImage} alt={post.title} />
       <div class="hero-overlay"></div>
     </div>
 
     <div class="hero-inner">
       <div class="hero-meta">
-        <span class="category">{post.data.category}</span>
-        <time datetime={post.data.publishedAt.toISOString()}>
-          {post.data.publishedAt.toLocaleDateString('ja-JP', {
+        <span class="category">{post.category || 'ブログ'}</span>
+        <time datetime={publishedDate.toISOString()}>
+          {publishedDate.toLocaleDateString('ja-JP', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
           })}
         </time>
-        <span class="reading-time">{post.data.readingTime} min read</span>
       </div>
 
-      <h1 class="hero-title">{post.data.title}</h1>
+      <h1 class="hero-title">{post.title}</h1>
 
-      {post.data.excerpt && (
-        <p class="hero-excerpt">{post.data.excerpt}</p>
+      {post.description && (
+        <p class="hero-excerpt">{post.description}</p>
       )}
     </div>
   </section>
@@ -61,17 +88,7 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
   <div class="page-wrap">
     <main class="article-column">
       <article class="article-card">
-        <article class="prose">
-          <Content />
-        </article>
-
-        {post.data.tags?.length > 0 && (
-          <nav class="tags" aria-label="記事タグ">
-            {post.data.tags.map((tag) => (
-              <span class="tag">#{tag}</span>
-            ))}
-          </nav>
-        )}
+        <article class="prose" set:html={contentHtml} />
 
         <section class="article-cta">
           <div class="article-cta-inner">
@@ -97,13 +114,13 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
             <a href={`/blog/${p.slug}`} class="related-card">
               <div class="related-image">
                 <img
-                  src={p.data.image || '/blog/default.jpg'}
-                  alt={p.data.title}
+                  src={p.featured_image || '/blog/default.jpg'}
+                  alt={p.title}
                 />
               </div>
               <div class="related-body">
-                <span class="related-category">{p.data.category}</span>
-                <p class="related-title">{p.data.title}</p>
+                <span class="related-category">{p.category || 'ブログ'}</span>
+                <p class="related-title">{p.title}</p>
               </div>
             </a>
           ))}
@@ -180,9 +197,6 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
       document.querySelectorAll('.prose h2, .prose h3')
     );
 
-    // =========================
-    // progress bar
-    // =========================
     const updateProgress = () => {
       if (!progressEl) return;
 
@@ -196,11 +210,8 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
     updateProgress();
     window.addEventListener('scroll', updateProgress, { passive: true });
 
-    // =========================
-    // TOC（修正済）
-    // =========================
     if (tocEl && headings.length > 0) {
-      const links: HTMLAnchorElement[] = [];
+      const links = [];
 
       headings.forEach((heading, index) => {
         const el = heading;
@@ -210,7 +221,6 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
         }
 
         const link = document.createElement('a');
-
         link.href = `#${el.id}`;
         link.textContent = el.textContent || '';
 
@@ -242,13 +252,9 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
       window.addEventListener('scroll', updateActiveToc, { passive: true });
     }
 
-    // =========================
-    // copy
-    // =========================
     if (copyButton) {
       copyButton.addEventListener('click', async () => {
         const url = copyButton.dataset.copyUrl || window.location.href;
-
         await navigator.clipboard.writeText(url);
 
         if (copyFeedback) {
@@ -536,91 +542,6 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
   }
   .related-card:hover .related-image img { transform: scale(1.04); }
 
-  /* --- CONTACT CTA SECTION --- */
-  .cta {
-    position: relative;
-    padding: 120px 0;
-    background-color: #06756d; 
-    color: #fff;
-    overflow: hidden;
-    margin-top: 100px;
-
-    .cta-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .cta-title {
-      font-size: clamp(24px, 4vw, 40px);
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 24px;
-    }
-
-    .cta-lead {
-      font-size: 18px;
-      opacity: 0.9;
-      margin-bottom: 48px;
-    }
-
-    .cta-actions {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 60px;
-    }
-
-    .cta-phone, .cta-form {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 20px 40px;
-      border-radius: 100px;
-      text-decoration: none;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      min-width: 280px;
-    }
-
-    .cta-phone {
-      background: #fff;
-      color: #06756d;
-      .phone-number { font-size: 20px; }
-      svg { width: 20px; height: 20px; }
-    }
-
-    .cta-form {
-      background: transparent;
-      border: 2px solid #fff;
-      color: #fff;
-      svg { width: 20px; height: 20px; }
-      &:hover { background: #fff; color: #06756d; }
-    }
-
-    .cta-info {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      font-size: 14px;
-      opacity: 0.8;
-      .info-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        svg { width: 18px; height: 18px; flex-shrink: 0; }
-      }
-    }
-
-    .cta-bg {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-    }
-  }
-
-  /* --- RESPONSIVE --- */
   @media (max-width: 1024px) {
     .page-wrap {
       flex-direction: column;
@@ -640,21 +561,112 @@ const authorAvatar = post.data.author?.avatar || '/blog/default.jpg';
   @media (max-width: 768px) {
     .hero-title { font-size: clamp(1.9rem, 7vw, 2.8rem); }
     .page-wrap { margin-top: 48px; padding: 0 20px; }
-    
-    .cta {
-      padding: 80px 0;
-      .cta-actions { flex-direction: column; align-items: center; }
-      .cta-info { flex-direction: column; gap: 16px; align-items: center; }
-    }
-
     .related-grid { grid-template-columns: 1fr; }
   }
 
-  /* GLOBAL PROSE */
   :global(.prose) {
-    color: var(--text-main); font-size: 17px; line-height: 2;
+    color: var(--text-main);
+    font-size: 17px;
+    line-height: 2;
+
     p { margin-bottom: 28px; }
     h2 { margin: 88px 0 22px; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; }
+    h3 { margin: 48px 0 16px; font-size: 1.25rem; font-weight: 700; }
+    ul, ol { margin: 0 0 28px 1.5em; }
+    li { margin-bottom: 8px; }
     img { width: 100%; border-radius: 16px; margin: 52px 0; }
+    blockquote {
+      margin: 32px 0;
+      padding: 20px 24px;
+      border-left: 4px solid var(--accent);
+      background: var(--bg-soft);
+      border-radius: 0 12px 12px 0;
+    }
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  .article-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .article-cta {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+
+  .article-cta-label {
+    margin: 0 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-sub);
+  }
+
+  .article-cta-text {
+    margin: 12px 0 20px;
+    line-height: 1.9;
+    color: var(--text-sub);
+  }
+
+  .article-cta-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: var(--transition);
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 24px;
+  }
+
+  .section-label {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-sub);
+  }
+
+  .related-body {
+    padding: 14px 4px 0;
+  }
+
+  .related-category {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+
+  .related-title {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  @media (max-width: 768px) {
+    .article-card {
+      padding: 24px 20px;
+    }
   }
 </style>

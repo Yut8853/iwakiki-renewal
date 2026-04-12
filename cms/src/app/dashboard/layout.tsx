@@ -113,9 +113,11 @@ export default function DashboardLayout({
         </header>
 
         {/* ページコンテンツ */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="max-w-6xl mx-auto px-6 py-8 lg:px-8 lg:py-10">
-            {children}
+        <main className="flex-1 overflow-y-auto bg-[var(--background)]">
+          <div className="max-w-5xl mx-auto px-6 py-10">
+            <div className="space-y-6">
+              {children}
+            </div>
           </div>
         </main>
       </div>

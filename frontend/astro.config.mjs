@@ -1,9 +1,13 @@
-import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import sitemap from '@astrojs/sitemap';
+import { defineConfig } from 'astro/config' // ←これ絶対必要
+import react from '@astrojs/react'
+import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
-  site: 'https://iwakiki.jp', // 本番URLに変更してください
+  site: 'https://iwakiki.jp',
+
+  // 👇 serverは削除済みでOK
+  // output: 'server',
+
   integrations: [
     react(),
     sitemap({
@@ -19,6 +23,7 @@ export default defineConfig({
       filter: (page) => !page.includes('/api/'),
     }),
   ],
+
   vite: {
     resolve: {
       alias: {
@@ -27,8 +32,9 @@ export default defineConfig({
       },
     },
   },
+
   compressHTML: true,
   build: {
     inlineStylesheets: 'auto',
   },
-});
+})

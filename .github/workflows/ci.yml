@@ -21,6 +21,13 @@ jobs:
           node-version: 20
 
       - run: pnpm install
+
+      # 🔥 Astro用
+      - name: Create env file
+        run: |
+          echo "PUBLIC_SUPABASE_URL=${{ secrets.PUBLIC_SUPABASE_URL }}" >> .env
+          echo "PUBLIC_SUPABASE_ANON_KEY=${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+
       - run: pnpm build
 
   cms:
@@ -39,4 +46,11 @@ jobs:
           node-version: 20
 
       - run: pnpm install
+
+      # 🔥 Next用
+      - name: Create env file
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.PUBLIC_SUPABASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+
       - run: pnpm build

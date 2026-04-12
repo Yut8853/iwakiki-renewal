@@ -11,7 +11,7 @@ export interface BlogPost {
   category: 'news' | 'column' | 'property' | 'lifestyle';
   image?: string;
   excerpt?: string;
-  author: { name: string };
+  author?: { name?: string }
   readingTime?: number;
 }
 
@@ -147,7 +147,9 @@ export const BlogCard = ({
               <h3 className="bc-title">{post.title}</h3>
               <p className="bc-exc">{post.excerpt}</p>
               <div className="bc-foot">
-                <span style={{ color: '#888' }}>{post.author.name}</span>
+                <span style={{ color: '#888' }}>
+  {post.author?.name ?? 'iwakiki'}
+</span>
                 <span>READ MORE →</span>
               </div>
             </div>
