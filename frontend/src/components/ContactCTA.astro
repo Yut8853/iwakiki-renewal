@@ -1,0 +1,83 @@
+---
+// 必要に応じてpropsを定義してください
+interface Props {
+  phoneNumber?: string;
+  displayPhone?: string;
+}
+
+const { 
+  phoneNumber = "0246-00-0000", 
+  displayPhone = "0246-00-0000" 
+} = Astro.props;
+---
+
+<section class="cta" data-scroll-section id="contact">
+  <div class="ctaBg">
+    <div class="ctaPattern"></div>
+    <div class="ctaGlow"></div>
+  </div>
+  
+  <div class="container">
+    <div class="ctaContent js-fade-up">
+      <h2 class="ctaTitle">
+        住まい探しのパートナーとして、<br />
+        あなたの夢を叶えます。
+      </h2>
+      <p class="ctaLead">
+        ご相談・お問い合わせはお気軽にどうぞ。<br />
+        専門スタッフが丁寧に対応いたします。
+      </p>
+      
+      <div class="ctaActions">
+        <a href={`tel:${phoneNumber.replace(/-/g, '')}`} class="ctaPhone" data-magnetic>
+          <span class="phoneIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+            </svg>
+          </span>
+          <span class="phoneNumber">{displayPhone}</span>
+        </a>
+        <a href="#contact-form" class="ctaForm" data-magnetic>
+          <span>お問い合わせフォーム</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div class="ctaInfo">
+        <div class="infoItem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+          <span>営業時間: 9:00 - 18:00（水曜定休）</span>
+        </div>
+        <div class="infoItem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <span>〒970-0000 福島県いわき市○○町1-2-3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ここにCSSを記述、または既存のCSSモジュールを読み込みます */
+  /* class={styles.cta} の形式にする場合は、CSSモジュールをご使用ください */
+  .cta {
+    position: relative;
+    padding: 100px 0;
+    overflow: hidden;
+    /* スタイル詳細は既存のSCSS/CSSを適用してください */
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  /* ...以下、デザインに合わせたスタイル... */
+</style>

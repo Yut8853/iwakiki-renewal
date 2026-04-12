@@ -1,0 +1,130 @@
+---
+type Props = {
+  logoUrl: string;
+}
+const { logoUrl } = Astro.props;
+---
+
+<div id="loader-container" class="loader-overlay">
+  <div class="loader-content">
+    <div class="logo-wrapper">
+      <img src={logoUrl} alt="Logo" class="loader-logo" />
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar-wrapper">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <div class="percentage-wrapper">
+        <span id="progress-text">0</span><span class="unit">%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ローダー全体の重なり */
+  .loader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 1.0); /* 背後を少し透かす */
+    backdrop-filter: blur(20px); /* 最初のブラー強度 */
+    transition: backdrop-filter 0.8s ease-out, opacity 0.8s ease-out;
+    /* 操作を完全にロック */
+    pointer-events: auto;
+    touch-action: none;
+  }
+
+  .loader-content {
+    text-align: center;
+    width: 100vw;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ロゴの浮遊感 */
+  .loader-logo {
+    width: 80px;
+    margin-bottom: 2rem;
+  }
+
+  .progress-bar-wrapper {
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), #fff);
+    transition: width 0.3s ease-out;
+  }
+
+  /* 数値のデザイン */
+  .percentage-wrapper {
+    font-family: sans-serif;
+    font-weight: 200;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+  }
+
+  /* 完了時のクラス */
+  .loader-hidden {
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(0px);
+  }
+</style>
+
+<script>
+function startLoader() {
+    const loader = document.getElementById('loader-container');
+    const content = document.getElementById('loader-content');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+
+    if (!loader || !progressFill || !progressText) return;
+
+    // 読み込み中はスクロールを禁止
+    document.body.style.overflow = 'hidden';
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      // 進行速度にランダム性を持たせ、自然な印象に
+      const increment = Math.floor(Math.random() * 8) + 2;
+      progress = Math.min(progress + increment, 100);
+      
+      progressFill.style.width = `${progress}%`;
+      progressText.innerText = progress.toString();
+
+      const blurVal = 40 - (progress * 0.4);
+      const saturateVal = progress;
+      loader.style.backdropFilter = `blur(${blurVal}px) saturate(${saturateVal}%)`;
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        
+        setTimeout(() => {
+          loader.classList.add('loader-hidden');
+          document.body.style.overflow = '';
+        }, 800);
+      }
+    }, 150);
+  }
+
+  // 実行
+  startLoader();
+</script>

@@ -1,0 +1,192 @@
+---
+import "../styles/global.scss";
+import Header from "../components/Header/Header.astro";
+import SidePanel from "../components/SidePanel.astro";
+
+// SEO Props
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  section?: string;
+}
+
+const {
+  title = "株式会社iwakiki | いわき市の不動産パートナー - 売買・賃貸・管理",
+  description = "福島県いわき市の不動産会社「株式会社iwakiki」。マイホーム購入、土地売却、賃貸物件、物件管理まで、お客様のニーズに寄り添ったサービスを提供。地域密着型の丁寧なサポートで、あなたの暮らしをサポートします。",
+  keywords = "いわき市,不動産,売買,賃貸,物件管理,マイホーム,土地,福島県,iwakiki,イワキキ",
+  ogImage = "/images/og-image.jpg",
+  ogType = "website",
+  canonicalUrl,
+  noIndex = false,
+  publishedTime,
+  modifiedTime,
+  author = "株式会社iwakiki",
+  section,
+} = Astro.props;
+
+// サイト情報
+const siteName = "株式会社iwakiki";
+const siteUrl = "https://iwakiki.jp"; // 本番URLに変更してください
+const currentUrl = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
+const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+// 構造化データ (JSON-LD)
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": siteName,
+  "description": "福島県いわき市の不動産会社。売買仲介、賃貸仲介、物件管理サービスを提供。",
+  "url": siteUrl,
+  "logo": `${siteUrl}/images/logo.png`,
+  "image": fullOgImage,
+  "telephone": "0246-00-0000",
+  "email": "info@iwakiki.jp",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "〇〇町1-2-3",
+    "addressLocality": "いわき市",
+    "addressRegion": "福島県",
+    "postalCode": "970-0000",
+    "addressCountry": "JP"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "37.0505",
+    "longitude": "140.8878"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "priceRange": "$$",
+  "areaServed": {
+    "@type": "City",
+    "name": "いわき市"
+  },
+  "sameAs": [
+    "https://www.instagram.com/iwakiki_official/"
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": siteUrl
+    }
+  ]
+};
+
+// ページに応じたパンくず追加
+if (Astro.url.pathname !== '/') {
+  const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
+  const pageNames: Record<string, string> = {
+    'about': '私たちについて',
+    'services': 'サービス内容',
+    'blog': 'ブログ',
+    'contact': 'お問い合わせ'
+  };
+  
+  pathSegments.forEach((segment, index) => {
+    const pageName = pageNames[segment] || segment;
+    breadcrumbSchema.itemListElement.push({
+      "@type": "ListItem",
+      "position": index + 2,
+      "name": pageName,
+      "item": `${siteUrl}/${pathSegments.slice(0, index + 1).join('/')}`
+    });
+  });
+}
+---
+
+<html lang="ja">
+  <head>
+    <!-- 基本メタタグ -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- SEO メタタグ -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={author} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    {!noIndex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+    
+    <!-- カノニカルURL -->
+    <link rel="canonical" href={currentUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={currentUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="ja_JP" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {section && <meta property="article:section" content={section} />}
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={currentUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+    
+    <!-- ファビコン -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#06756d" />
+    <meta name="theme-color" content="#06756d" />
+    
+    <!-- 追加のSEOメタタグ -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="geo.region" content="JP-07" />
+    <meta name="geo.placename" content="いわき市" />
+    <meta name="geo.position" content="37.0505;140.8878" />
+    <meta name="ICBM" content="37.0505, 140.8878" />
+    
+    <!-- Google Fonts プリコネクト -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- 構造化データ (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <slot />
+    </main>
+
+    <SidePanel />
+  </body>
+</html>

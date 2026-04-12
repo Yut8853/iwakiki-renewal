@@ -1,0 +1,121 @@
+---
+import styles from './SidePanel.module.scss';
+import SilkNetwork from './WebGL/StringNetwork.astro';
+---
+
+<div class={styles.panelWrapper} id="side-panel-wrapper">
+  <button class={styles.triggerTab} id="panel-trigger" aria-label="不動産売却の相談パネルを開く">
+    <div class={styles.triggerInner}>
+      <span class={styles.tabArrow}>◀</span>
+      <span class={styles.tabTextJa}>不動産売却のご相談</span>
+    </div>
+  </button>
+
+  <div class={styles.contentOverlay} id="panel-overlay">
+    <div class={styles.visualBackground}>
+      <SilkNetwork />
+    </div>
+
+    <button class={styles.closeButton} id="panel-close" aria-label="閉じる">
+      <span class={styles.closeLine}></span>
+      <span class={styles.closeLine}></span>
+    </button>
+    
+    <div class={styles.inner}>
+      <div class={styles.scrollArea}>
+        <div class={styles.header}>
+          <h2 class={styles.panelTitle}>Management / Support</h2>
+        </div>
+
+                <div class={styles.ctaArea}>
+          <div class={styles.ctaCard}>
+            <p class={styles.ctaNotice}>最短24時間以内に査定結果を回答</p>
+            <a href="/contact" class={styles.ctaButton}>
+              <span>無料で査定・相談を申し込む</span>
+              <span class={styles.buttonArrow}>→</span>
+            </a>
+            <div class={styles.ctaTel}>
+              お電話でも受付中
+              <span>0246-60-8875</span>
+            </div>
+          </div>
+        </div>
+
+        <div class={styles.leadText}>
+          <p>いくらで売れる？
+            <br>住み替えのタイミングは？<br>
+          不動産売却の不安を、プロの知見で安心に変えます。</p>
+        </div>
+
+        <div class={styles.featureList}>
+          <div class={styles.featureItem}>
+            <span class={styles.number}>01</span>
+            <h3>根拠に基づいた「無料査定」</h3>
+            <p>地域密着のデータと最新の市場動向を掛け合わせ、あなたの物件の「真の価値」を算出します。宅地建物取引士が秘密厳守で対応。まずは資産価値を知ることから始めませんか？</p>
+          </div>
+
+          <div class={styles.featureItem}>
+            <span class={styles.number}>02</span>
+            <h3>戦略的な売却シミュレーション</h3>
+            <p>「早く現金化したい」「時間はかかっても高く売りたい」など、ご要望は様々です。税金や諸経費を差し引いた「手残り額」を算出し、納得のいくスケジュールをご提案します。</p>
+          </div>
+
+          <div class={styles.featureItem}>
+            <span class={styles.number}>03</span>
+            <h3>独自のネットワークで早期成約</h3>
+            <p>大手ポータルサイトへの掲載はもちろん、自社顧客リストへの先行紹介やSNS活用など、多彩なチャネルを駆使。物件の魅力を引き出す写真撮影にもこだわり、購入意欲を高めます。</p>
+          </div>
+
+          <div class={styles.featureItem}>
+            <span class={styles.number}>04</span>
+            <h3>「高く売る」ための交渉力</h3>
+            <p>ただ待つだけではありません。買い手側との条件交渉において、プロの視点で物件の付加価値を主張し、売主様の利益を最大化するための粘り強いアドバイスと交渉を行います。</p>
+          </div>
+
+          <div class={styles.featureItem}>
+            <span class={styles.number}>05</span>
+            <h3>ワンストップの法的・税務サポート</h3>
+            <p>相続、離婚、任意売却など、複雑な事情もお任せください。提携する税理士や弁護士、司法書士と連携し、登記手続きから節税対策まで、窓口ひとつでトータルに解決します。</p>
+          </div>
+
+          <div class={styles.featureItem}>
+            <span class={styles.number}>06</span>
+            <h3>売却後も続く安心의 パートナーシップ</h3>
+            <p>お引き渡し後の確定申告のアドバイスや、新生活のサポートなど、関係は売却完了で終わりではありません。地域の住まいの相談役として、末長くサポートし続けます。</p>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ isOpenClass: styles.isOpen }}>
+  const setupPanel = () => {
+    console.log('setupPanel動いた'); // ←確認用
+
+    const wrapper = document.getElementById('side-panel-wrapper');
+    const trigger = document.getElementById('panel-trigger');
+    const close = document.getElementById('panel-close');
+
+    if (!wrapper || !trigger || !close) {
+      console.log('要素取れてない');
+      return;
+    }
+
+    trigger.addEventListener('click', () => {
+      console.log('開くクリック');
+      wrapper.classList.add(isOpenClass);
+      document.body.style.overflow = 'hidden';
+    });
+
+    close.addEventListener('click', () => {
+      console.log('閉じるクリック');
+      wrapper.classList.remove(isOpenClass);
+      document.body.style.overflow = '';
+    });
+  };
+
+  window.addEventListener('load', setupPanel);
+</script>

@@ -1,0 +1,27 @@
+---
+import styles from './Hero.module.scss';
+import HeroVideo from './HeroVideo';
+---
+
+<section class={styles.hero}>
+  <HeroVideo client:load />
+  <div class={styles.blurLayer} />
+</section>
+
+<div class={styles.heroTextContainer}>
+  <p class={styles.heroText01}>幸せを感じる不動産との縁結び
+<br>
+福島県いわき市を中心に、<br>皆さまの夢の実現をお手伝いします。</p>
+  <div class={styles.heroTextInner}>
+
+    <p class={styles.heroText}>Real Estate </p>
+    <p class={styles.heroText} aria-hidden="true">Real Estate </p>
+  </div>
+</div>
+
+<div class="l-container--news">
+  <div class={styles.newsWrapper}>
+    <p class={styles.infomation}>information</p>
+
+  </div>
+</div>

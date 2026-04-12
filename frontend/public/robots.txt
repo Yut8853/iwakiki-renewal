@@ -1,0 +1,14 @@
+# robots.txt for iwakiki.jp
+
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas (if any)
+Disallow: /api/
+Disallow: /_astro/
+
+# Sitemap location
+Sitemap: https://iwakiki.jp/sitemap-index.xml
+
+# Crawl delay (optional, for polite crawling)
+Crawl-delay: 1

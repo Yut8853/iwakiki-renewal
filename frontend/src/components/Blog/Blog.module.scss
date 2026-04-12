@@ -1,0 +1,240 @@
+.latestPosts {
+  padding: 100px 0;
+  background: #f8f9fa;
+  overflow: visible;
+
+  @media (max-width: 768px) {
+    padding: 60px 0;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.blogLayout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 40px;
+  align-items: start;
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.postsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 120px;
+
+  @media (max-width: 968px) {
+    position: static;
+    display: none;
+  }
+}
+
+.filterBar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    gap: 8px;
+    margin: 20px 0;
+  }
+}
+
+.filterBtn {
+  padding: 8px 18px;
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #c5a059;
+    color: #c5a059;
+  }
+
+  @media (max-width: 640px) {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+}
+
+.active {
+  background: #06756d;
+  color: #fff;
+  border-color: #06756d;
+}
+
+.sidebarBlock {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.calendarNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.calendarNav button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendarDay {
+  font-size: 11px;
+  text-align: center;
+  color: #999;
+}
+
+.calendarDate {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* 投稿あり */
+.hasPost {
+  background: rgba(6, 117, 109, 0.15);
+  color: #06756d;
+  font-weight: bold;
+}
+
+/* 選択中 */
+.activeDate {
+  background: #06756d;
+  color: #fff;
+}
+
+/* 今日 */
+.today {
+  border: 1px solid #06756d;
+}
+
+.resetBtn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.blogCard {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  transition: 0.3s;
+}
+
+.blogCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(197,160,89,0.15);
+  border-color: #c5a059;
+}
+
+.cardImage {
+  aspect-ratio: 16 / 9;
+  background: #f3f3f3;
+}
+
+.cardBody {
+  padding: 16px;
+
+  @media (max-width: 640px) {
+    padding: 14px;
+  }
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.cardCategory {
+  color: #06756d;
+  font-weight: 600;
+}
+
+.cardDate {
+  color: #999;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 6px 0;
+
+  @media (max-width: 640px) {
+    font-size: 15px;
+  }
+}
+
+.cardExcerpt {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #06756d;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #c5a059;
+  }
+}
+
+.readMore svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.readMore:hover svg {
+  transform: translateX(4px);
+}
