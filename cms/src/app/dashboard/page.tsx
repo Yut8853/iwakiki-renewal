@@ -70,9 +70,9 @@ export default async function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* ウェルカムヒーロー */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--card)] to-[var(--secondary)] border border-[var(--border)] p-8 lg:p-10">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--card)] to-[var(--secondary)] border border-[var(--border)] p-8 lg:p-12">
         {/* 背景装飾 */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[var(--primary)]/20 to-purple-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-emerald-500/10 to-cyan-500/10 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
@@ -121,20 +121,20 @@ export default async function DashboardPage() {
       </div>
 
       {/* 統計カード */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-3">
         {stats.map((stat, index) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className={`group relative overflow-hidden rounded-2xl bg-[var(--card)] border border-[var(--border)] p-6 transition-all duration-500 hover:border-[var(--border-hover)] hover:shadow-xl ${stat.glow} animate-fade-in`}
+            className={`group relative overflow-hidden rounded-2xl bg-[var(--card)] border border-[var(--border)] p-8 transition-all duration-500 hover:border-[var(--border-hover)] hover:shadow-xl ${stat.glow} animate-fade-in`}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             {/* グラデーション背景ホバー */}
             <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
             
             {/* アイコンとトレンド */}
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl ${stat.bgIcon} transition-transform duration-300 group-hover:scale-110`}>
+            <div className="flex items-start justify-between mb-6">
+              <div className={`p-3.5 rounded-xl ${stat.bgIcon} transition-transform duration-300 group-hover:scale-110`}>
                 <stat.icon className={`h-6 w-6 ${stat.textIcon}`} />
               </div>
               <div className="flex items-center gap-1 text-xs text-emerald-400">
@@ -160,17 +160,17 @@ export default async function DashboardPage() {
       </div>
 
       {/* 2カラムレイアウト */}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-8">
         {/* 最近の記事 */}
         <div className="lg:col-span-2 rounded-2xl bg-[var(--card)] border border-[var(--border)] overflow-hidden">
-          <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+          <div className="flex items-center justify-between px-8 py-6 border-b border-[var(--border)]">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-[var(--primary)]/10">
                 <Clock className="h-5 w-5 text-[var(--primary)]" />
               </div>
               <div>
-                <h2 className="font-bold text-[var(--foreground)]">最近の記事</h2>
-                <p className="text-xs text-[var(--muted-foreground)]">直近5件の記事</p>
+                <h2 className="font-bold text-lg text-[var(--foreground)]">最近の記事</h2>
+                <p className="text-sm text-[var(--muted-foreground)]">直近5件の記事</p>
               </div>
             </div>
             <Link 
@@ -187,18 +187,18 @@ export default async function DashboardPage() {
                 <Link
                   key={blog.id}
                   href={`/dashboard/blogs/${blog.id}`}
-                  className="flex items-center justify-between p-4 hover:bg-[var(--secondary)]/50 transition-colors group animate-fade-in"
+                  className="flex items-center justify-between px-8 py-5 hover:bg-[var(--secondary)]/50 transition-colors group animate-fade-in"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="p-2 rounded-lg bg-[var(--secondary)] group-hover:bg-[var(--primary)]/10 transition-colors">
-                      <FileText className="h-4 w-4 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                  <div className="flex items-center gap-5 min-w-0">
+                    <div className="p-2.5 rounded-xl bg-[var(--secondary)] group-hover:bg-[var(--primary)]/10 transition-colors">
+                      <FileText className="h-5 w-5 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-[var(--foreground)] truncate group-hover:text-[var(--primary)] transition-colors">
+                      <p className="font-semibold text-base text-[var(--foreground)] truncate group-hover:text-[var(--primary)] transition-colors">
                         {blog.title}
                       </p>
-                      <p className="text-xs text-[var(--muted-foreground)]">
+                      <p className="text-sm text-[var(--muted-foreground)] mt-1">
                         {new Date(blog.created_at).toLocaleDateString("ja-JP", {
                           month: "short",
                           day: "numeric",
@@ -232,39 +232,39 @@ export default async function DashboardPage() {
         </div>
 
         {/* クイックアクション */}
-        <div className="space-y-4">
-          <div className="rounded-2xl bg-gradient-to-br from-[var(--card)] to-[var(--secondary)] border border-[var(--border)] p-6 group hover:border-[var(--primary)]/30 transition-all duration-300">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-end)] shadow-lg shadow-[var(--primary)]/20">
+        <div className="space-y-6">
+          <div className="rounded-2xl bg-gradient-to-br from-[var(--card)] to-[var(--secondary)] border border-[var(--border)] p-8 group hover:border-[var(--primary)]/30 transition-all duration-300">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-end)] shadow-lg shadow-[var(--primary)]/20">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
-              <h3 className="font-bold text-[var(--foreground)]">新規作成</h3>
+              <h3 className="font-bold text-lg text-[var(--foreground)]">新規作成</h3>
             </div>
-            <p className="text-sm text-[var(--muted-foreground)] mb-5 leading-relaxed">
+            <p className="text-sm text-[var(--muted-foreground)] mb-6 leading-relaxed">
               新しいブログ記事の執筆を開始します。下書きはいつでも保存可能です。
             </p>
             <Link
               href="/dashboard/blogs/new"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold text-sm shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30"
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold text-sm shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30"
             >
               <Plus className="h-4 w-4" />
               エディタを開く
             </Link>
           </div>
 
-          <div className="rounded-2xl bg-[var(--card)] border border-[var(--border)] p-6 group hover:border-[var(--border-hover)] transition-all duration-300">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 rounded-xl bg-[var(--secondary)]">
+          <div className="rounded-2xl bg-[var(--card)] border border-[var(--border)] p-8 group hover:border-[var(--border-hover)] transition-all duration-300">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="p-3 rounded-xl bg-[var(--secondary)]">
                 <FileText className="h-5 w-5 text-[var(--muted-foreground)]" />
               </div>
-              <h3 className="font-bold text-[var(--foreground)]">記事の管理</h3>
+              <h3 className="font-bold text-lg text-[var(--foreground)]">記事の管理</h3>
             </div>
-            <p className="text-sm text-[var(--muted-foreground)] mb-5 leading-relaxed">
+            <p className="text-sm text-[var(--muted-foreground)] mb-6 leading-relaxed">
               既存の記事を編集・削除したり、公開設定を変更できます。
             </p>
             <Link
               href="/dashboard/blogs"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[var(--secondary)] text-[var(--foreground)] font-semibold text-sm border border-[var(--border)] transition-all duration-300 hover:bg-[var(--card-hover)] group-hover:border-[var(--border-hover)]"
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--secondary)] text-[var(--foreground)] font-semibold text-sm border border-[var(--border)] transition-all duration-300 hover:bg-[var(--card-hover)] group-hover:border-[var(--border-hover)]"
             >
               記事一覧へ
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

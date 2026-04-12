@@ -161,7 +161,7 @@ export default function DashboardLayout({
         </header>
 
         {/* ページコンテンツ */}
-        <main className="flex-1 overflow-y-auto bg-[var(--background)] p-4 lg:p-8">
+        <main className="flex-1 overflow-y-auto bg-[var(--background)] p-6 lg:p-10 xl:p-12">
           <div className="mx-auto max-w-7xl animate-fade-in">
             {children}
           </div>

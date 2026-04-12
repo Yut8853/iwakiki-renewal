@@ -145,44 +145,44 @@ export function BlogForm({ blog }: { blog?: Blog }) {
     }, 500)
   }
 
-  const inputBaseClass = "w-full rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-200"
+  const inputBaseClass = "w-full rounded-xl border border-[var(--border)] bg-[var(--secondary)] px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-200"
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {/* エラーメッセージ */}
       {error && (
-        <div className="flex items-start gap-3 rounded-xl border border-[var(--destructive)]/30 bg-[var(--destructive)]/10 p-4 animate-fade-in">
+        <div className="flex items-start gap-4 rounded-2xl border border-[var(--destructive)]/30 bg-[var(--destructive)]/10 p-6 animate-fade-in">
           <AlertCircle className="h-5 w-5 text-[var(--destructive)] flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-[var(--destructive)]">エラー</p>
-            <p className="text-sm text-[var(--destructive)]/80 whitespace-pre-line">{error}</p>
+            <p className="text-sm text-[var(--destructive)]/80 whitespace-pre-line mt-1">{error}</p>
           </div>
         </div>
       )}
 
       {/* 成功メッセージ */}
       {success && (
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 animate-fade-in">
+        <div className="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 animate-fade-in">
           <CheckCircle2 className="h-5 w-5 text-emerald-400" />
           <p className="font-semibold text-emerald-400">保存しました。リダイレクト中...</p>
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-10 lg:grid-cols-3">
         {/* メインコンテンツエリア */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
           {/* 基本情報カード */}
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-            <div className="flex items-center gap-3 p-5 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                <Type className="h-4 w-4 text-[var(--primary)]" />
+            <div className="flex items-center gap-4 px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
+              <div className="p-3 rounded-xl bg-[var(--primary)]/10">
+                <Type className="h-5 w-5 text-[var(--primary)]" />
               </div>
-              <h3 className="font-bold text-[var(--foreground)]">基本情報</h3>
+              <h3 className="font-bold text-lg text-[var(--foreground)]">基本情報</h3>
             </div>
             
-            <div className="p-6 space-y-5">
+            <div className="p-8 space-y-8">
               {/* タイトル */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label htmlFor="title" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
                   <FileText className="h-4 w-4 text-[var(--muted-foreground)]" />
                   タイトル
@@ -200,31 +200,31 @@ export function BlogForm({ blog }: { blog?: Blog }) {
               </div>
 
               {/* スラッグ */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label htmlFor="slug" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
                   <LinkIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
                   スラッグ
                   <span className="text-[var(--destructive)]">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[var(--muted-foreground)]">/blog/</span>
+                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-sm text-[var(--muted-foreground)]">/blog/</span>
                   <input
                     type="text"
                     id="slug"
                     value={formData.slug}
                     onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
                     required
-                    className={`${inputBaseClass} pl-14 font-mono text-sm`}
+                    className={`${inputBaseClass} pl-16 font-mono text-sm`}
                     placeholder="url-friendly-slug"
                   />
                 </div>
-                <p className="text-xs text-[var(--muted-foreground)]">
+                <p className="text-sm text-[var(--muted-foreground)]">
                   URLに使用される識別子です。英数字とハイフンのみ推奨。
                 </p>
               </div>
 
               {/* 説明文 */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label htmlFor="description" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
                   <AlignLeft className="h-4 w-4 text-[var(--muted-foreground)]" />
                   説明文
@@ -235,7 +235,7 @@ export function BlogForm({ blog }: { blog?: Blog }) {
                   value={formData.description}
                   onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   required
-                  rows={3}
+                  rows={4}
                   className={inputBaseClass}
                   placeholder="記事の概要を簡潔に記述（SEO対策にも重要）"
                 />
@@ -245,22 +245,22 @@ export function BlogForm({ blog }: { blog?: Blog }) {
 
           {/* 本文エディター */}
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                  <Code className="h-4 w-4 text-[var(--primary)]" />
+            <div className="flex items-center justify-between px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-[var(--primary)]/10">
+                  <Code className="h-5 w-5 text-[var(--primary)]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[var(--foreground)]">本文</h3>
-                  <p className="text-xs text-[var(--muted-foreground)]">Markdown形式で記述</p>
+                  <h3 className="font-bold text-lg text-[var(--foreground)]">本文</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">Markdown形式で記述</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
-                <span className="px-2 py-1 rounded-md bg-[var(--secondary)] font-mono">Markdown</span>
+                <span className="px-3 py-1.5 rounded-lg bg-[var(--secondary)] font-mono border border-[var(--border)]">Markdown</span>
               </div>
             </div>
             
-            <div className="p-6">
+            <div className="p-8">
               <textarea
                 id="content"
                 value={formData.content}
@@ -275,20 +275,20 @@ export function BlogForm({ blog }: { blog?: Blog }) {
         </div>
 
         {/* サイドバー */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* 公開設定カード */}
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden sticky top-24">
-            <div className="flex items-center gap-3 p-5 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                <Settings2 className="h-4 w-4 text-[var(--primary)]" />
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden sticky top-28">
+            <div className="flex items-center gap-4 px-8 py-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
+              <div className="p-3 rounded-xl bg-[var(--primary)]/10">
+                <Settings2 className="h-5 w-5 text-[var(--primary)]" />
               </div>
-              <h3 className="font-bold text-[var(--foreground)]">公開設定</h3>
+              <h3 className="font-bold text-lg text-[var(--foreground)]">公開設定</h3>
             </div>
             
-            <div className="p-6 space-y-5">
+            <div className="p-8 space-y-6">
               {/* 公開トグル */}
-              <div className="flex items-center justify-between p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between p-5 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+                <div className="flex items-center gap-4">
                   {formData.published ? (
                     <Eye className="h-5 w-5 text-emerald-400" />
                   ) : (
@@ -298,7 +298,7 @@ export function BlogForm({ blog }: { blog?: Blog }) {
                     <p className="font-semibold text-[var(--foreground)]">
                       {formData.published ? "公開" : "下書き"}
                     </p>
-                    <p className="text-xs text-[var(--muted-foreground)]">
+                    <p className="text-sm text-[var(--muted-foreground)]">
                       {formData.published ? "記事は公開されます" : "記事は非公開です"}
                     </p>
                   </div>
@@ -306,20 +306,20 @@ export function BlogForm({ blog }: { blog?: Blog }) {
                 <button
                   type="button"
                   onClick={() => setFormData((prev) => ({ ...prev, published: !prev.published }))}
-                  className={`relative w-12 h-7 rounded-full transition-colors duration-300 ${
+                  className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
                     formData.published 
                       ? "bg-emerald-500" 
                       : "bg-[var(--border)]"
                   }`}
                 >
-                  <span className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                    formData.published ? "translate-x-5" : "translate-x-0"
+                  <span className={`absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                    formData.published ? "translate-x-6" : "translate-x-0"
                   }`} />
                 </button>
               </div>
 
               {/* カテゴリ */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label htmlFor="category" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
                   <Tag className="h-4 w-4 text-[var(--muted-foreground)]" />
                   カテゴリ
@@ -335,7 +335,7 @@ export function BlogForm({ blog }: { blog?: Blog }) {
               </div>
 
               {/* アイキャッチ */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label htmlFor="featured_image" className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
                   <ImageIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
                   アイキャッチ画像
@@ -349,11 +349,11 @@ export function BlogForm({ blog }: { blog?: Blog }) {
                   placeholder="https://example.com/image.jpg"
                 />
                 {formData.featured_image && (
-                  <div className="mt-3 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--secondary)]">
+                  <div className="mt-4 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--secondary)]">
                     <img
                       src={formData.featured_image}
                       alt="プレビュー"
-                      className="w-full h-32 object-cover"
+                      className="w-full h-40 object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none'
                       }}
@@ -364,20 +364,20 @@ export function BlogForm({ blog }: { blog?: Blog }) {
             </div>
 
             {/* アクションボタン */}
-            <div className="p-5 border-t border-[var(--border)] bg-[var(--secondary)]/30 space-y-3">
+            <div className="p-6 border-t border-[var(--border)] bg-[var(--secondary)]/30 space-y-4">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--primary)]/30 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                     保存中...
                   </>
                 ) : (
                   <>
-                    <Save className="h-4 w-4" />
+                    <Save className="h-5 w-5" />
                     {blog ? "更新する" : "作成する"}
                   </>
                 )}
@@ -385,9 +385,9 @@ export function BlogForm({ blog }: { blog?: Blog }) {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[var(--foreground)] font-semibold transition-all duration-200 hover:bg-[var(--card-hover)] hover:border-[var(--border-hover)]"
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[var(--foreground)] font-semibold transition-all duration-200 hover:bg-[var(--card-hover)] hover:border-[var(--border-hover)]"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
                 キャンセル
               </button>
             </div>

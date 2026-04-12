@@ -40,22 +40,22 @@ export default async function BlogsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* ヘッダーセクション */}
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-[var(--primary)]/10">
               <FileText className="h-5 w-5 text-[var(--primary)]" />
             </div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
               Content Management
             </span>
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-[var(--foreground)]">
+          <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-[var(--foreground)]">
             ブログ管理
           </h1>
-          <p className="text-[var(--muted-foreground)] max-w-md">
+          <p className="text-[var(--muted-foreground)] max-w-lg text-base leading-relaxed">
             記事の作成・編集・公開設定をここから管理できます。
           </p>
         </div>
@@ -95,19 +95,19 @@ export default async function BlogsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/30">
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     記事タイトル
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     スラッグ
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     ステータス
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-8 py-5 text-left text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     作成日
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  <th className="px-8 py-5 text-right text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     アクション
                   </th>
                 </tr>
@@ -119,47 +119,47 @@ export default async function BlogsPage() {
                     className="group transition-colors hover:bg-[var(--secondary)]/30 animate-fade-in"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-4">
-                        <div className="p-2.5 rounded-xl bg-[var(--secondary)] group-hover:bg-[var(--primary)]/10 transition-all duration-300">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-5">
+                        <div className="p-3 rounded-xl bg-[var(--secondary)] group-hover:bg-[var(--primary)]/10 transition-all duration-300">
                           <FileText className="h-5 w-5 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
                         </div>
                         <div className="min-w-0">
                           <Link
                             href={`/dashboard/blogs/${blog.id}`}
-                            className="font-bold text-[var(--foreground)] hover:text-[var(--primary)] transition-colors block truncate max-w-xs"
+                            className="font-bold text-base text-[var(--foreground)] hover:text-[var(--primary)] transition-colors block truncate max-w-xs"
                           >
                             {blog.title}
                           </Link>
                           {blog.description && (
-                            <p className="text-xs text-[var(--muted-foreground)] truncate max-w-xs mt-0.5">
+                            <p className="text-sm text-[var(--muted-foreground)] truncate max-w-xs mt-1">
                               {blog.description}
                             </p>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
-                        <LinkIcon className="h-3.5 w-3.5 text-[var(--muted-foreground)]" />
-                        <code className="px-2.5 py-1 rounded-lg bg-[var(--secondary)] text-xs font-mono text-[var(--muted-foreground)]">
+                        <LinkIcon className="h-4 w-4 text-[var(--muted-foreground)]" />
+                        <code className="px-3 py-1.5 rounded-lg bg-[var(--secondary)] text-sm font-mono text-[var(--muted-foreground)]">
                           {blog.slug}
                         </code>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${
+                    <td className="px-8 py-6">
+                      <span className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold ${
                         blog.published
                           ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                           : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                       }`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${
+                        <span className={`h-2 w-2 rounded-full ${
                           blog.published ? "bg-emerald-400" : "bg-amber-400 animate-pulse"
                         }`} />
                         {blog.published ? "公開中" : "下書き"}
                       </span>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
                         <Calendar className="h-4 w-4" />
                         {new Date(blog.created_at).toLocaleDateString("ja-JP", { 
@@ -169,7 +169,7 @@ export default async function BlogsPage() {
                         })}
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
                         {blog.published && (
                           <a
@@ -199,15 +199,15 @@ export default async function BlogsPage() {
           </div>
 
           {/* タブレット・モバイル版：カード形式 */}
-          <div className="lg:hidden space-y-3">
+          <div className="lg:hidden space-y-5">
             {blogs.map((blog, index) => (
               <div 
                 key={blog.id} 
                 className="rounded-2xl bg-[var(--card)] border border-[var(--border)] overflow-hidden transition-all duration-300 hover:border-[var(--border-hover)] animate-fade-in"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="p-5">
-                  <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-4 mb-5">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       blog.published
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
