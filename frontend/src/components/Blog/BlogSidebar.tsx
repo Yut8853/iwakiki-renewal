@@ -5,7 +5,7 @@ const shuffle = (array: any[]) => {
   return [...array].sort(() => 0.5 - Math.random());
 };
 
-export default function BlogSidebar({ posts, categories }: any) {
+export default function BlogSidebar({ posts = [], categories }: any) {
   const randomPosts = useMemo(() => shuffle(posts).slice(0, 3), [posts]);
 
   const handleCategoryClick = (category: string) => {
@@ -41,12 +41,23 @@ export default function BlogSidebar({ posts, categories }: any) {
 
       <div className={styles.sidebarCard}>
         <h3>人気記事</h3>
-        {randomPosts.map((p: any) => (
-          <a key={p.slug} href={`/blog/${p.slug}`} className={styles.popular}>
-            <img src={p.data.image || '/blog/default.jpg'} alt={p.data.title} />
-            <p>{p.data.title}</p>
-          </a>
-        ))}
+
+        {randomPosts
+          ?.filter(Boolean) // 🔥安全対策
+          .map((p: any) => (
+            <a key={p.slug} href={`/blog/${p.slug}`} className={styles.popular}>
+              
+              {/* 🔥ここ修正 */}
+              <img
+                src={p?.featured_image ?? '/blog/default.jpg'}
+                alt={p?.title ?? ''}
+              />
+
+              {/* 🔥ここ修正 */}
+              <p>{p?.title ?? 'タイトルなし'}</p>
+
+            </a>
+          ))}
       </div>
 
       <div className={styles.sidebarCard}>

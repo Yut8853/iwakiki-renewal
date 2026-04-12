@@ -1,24 +1,35 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import BlogCard from '../../components/Blog/BlogCard';
 import BlogSidebar from '../../components/Blog/BlogSidebar';
 import Footer from '~/components/Footer/Footer.astro';
+import { supabase } from '../../libs/supabase';
 
+export const prerender = false; // 🔥これ必須
 
-const allPosts = await getCollection('blog');
+// 🔥 Supabaseから取得
+const { data: allPosts, error } = await supabase
+  .from('blogs')
+  .select('*')
+  .eq('published', true)
+  .order('published_at', { ascending: false });
+
+if (error) {
+  console.error(error);
+}
+
 const phoneNumber = '0246-00-0000';
 const telLink = 'tel:0246-00-0000';
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
-);
+
+// null対策
+const sortedPosts = allPosts ?? [];
 
 const blogCategories = {
   news: { label: 'お知らせ', color: '#06756d' },
   column: { label: 'コラム', color: '#e67e22' },
   property: { label: '物件情報', color: '#3498db' },
   lifestyle: { label: '暮らし', color: '#9b59b6' },
-} as const;
+};
 ---
 
 <Layout 
@@ -61,10 +72,10 @@ const blogCategories = {
           <div class="main">
             <div class="blog-grid" id="blog-grid">
               {sortedPosts.map((post, index) => (
-                <div class="grid-item" data-category={post.data.category}>
+                <div class="grid-item" data-category={post?.category ?? 'uncategorized'}>
                   <BlogCard
                     client:load
-                    post={{ ...post.data, slug: post.slug }}
+                    post={post}
                     index={index}
                   />
                 </div>
