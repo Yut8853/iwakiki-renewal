@@ -6,12 +6,21 @@ import { ProjectionGridCanvas } from '../components/WebGL/ProjectionGridCanvas';
 import HeroText from '../components/Contents/HeroText.astro';
 import { BlogCard } from '../components/Blog/BlogCard';
 import styles from '../components/Blog/Blog.module.scss';
+import { supabase } from '../libs/supabase';
 
 // 1. Markdown記事を取得し、日付順にソートして最新6件を抽出
-const allPosts = await getCollection('blog');
-const posts = allPosts
-  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
-  .slice(0, 3);
+const { data: allPosts, error } = await supabase
+  .from('blogs')
+  .select('*')
+  .eq('published', true)
+  .order('published_at', { ascending: false });
+
+if (error) {
+  console.error(error);
+}
+
+// 最新3件だけ
+const posts = (allPosts ?? []).slice(0, 3);
 ---
 
 <Layout 
