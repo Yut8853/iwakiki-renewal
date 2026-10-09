@@ -1,0 +1,28 @@
+[
+  {
+    "id": "938143df-189e-47f6-96c9-f2d3991e0531",
+    "title": "っっs",
+    "slug": "-2",
+    "description": "ああああ",
+    "content": "ああああ",
+    "featured_image": null,
+    "category": "property",
+    "published": true,
+    "published_at": "2026-04-12T11:21:43.089+00:00",
+    "created_at": "2026-04-12T10:03:23.020719+00:00",
+    "updated_at": "2026-04-12T10:03:23.020719+00:00"
+  },
+  {
+    "id": "a983ab78-7b77-4e95-97df-210d33e878e5",
+    "title": "",
+    "slug": "post-1776555427739",
+    "description": "あああ",
+    "content": "ああああ",
+    "featured_image": null,
+    "category": "column",
+    "published": true,
+    "published_at": "2026-04-18T23:37:07.738+00:00",
+    "created_at": "2026-04-18T23:37:08.115337+00:00",
+    "updated_at": "2026-04-18T23:37:08.115337+00:00"
+  }
+]

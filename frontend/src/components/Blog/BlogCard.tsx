@@ -1,3 +1,4 @@
+import { formatDate, articleHref } from '../../libs/blog';
 import React, { useRef, useEffect, useState } from 'react';
 
 /** * Single-file condensed version of BlogCard.
@@ -8,26 +9,23 @@ export interface BlogPost {
   slug: string;
   title: string;
   publishedAt: Date | string;
-  category: 'news' | 'column' | 'property' | 'lifestyle';
+  category: string;
   image?: string;
   excerpt?: string;
   author?: { name?: string }
   readingTime?: number;
+  draft?: boolean;
 }
 
-const CATS = {
+const CATS: Record<string, { l: string; c: string }> = {
   news: { l: 'お知らせ', c: '#06756d' },
   column: { l: 'コラム', c: '#e67e22' },
-  property: { l: '物件情報', c: '#3498db' },
-  lifestyle: { l: '暮らし', c: '#9b59b6' },
+  property: { l: '売買・成約', c: '#3498db' },
+  rental: { l: '賃貸', c: '#3498db' },
+  vacation: { l: '貸別荘', c: '#9b59b6' },
+  lifestyle: { l: '地域の活動', c: '#9b59b6' },
 };
 
-const fmt = (d: Date | string) =>
-  new Date(d).toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
 
 export const BlogCard = ({
   post,
@@ -62,7 +60,7 @@ export const BlogCard = ({
   };
 
   const info = CATS[post.category] || { l: 'その他', c: '#666' };
-  const date = fmt(post.publishedAt);
+  const date = formatDate(post.publishedAt instanceof Date ? post.publishedAt.toISOString() : post.publishedAt);
   const img = post.image || '/blog/default.jpg';
 
   return (
@@ -94,7 +92,7 @@ export const BlogCard = ({
           className={`bc-card bc-comp ${vis ? 'vis' : ''}`}
         >
           <a
-            href={`/blog/${post.slug}`}
+            href={articleHref(post.slug)}
             style={{
               display: 'flex',
               width: '100%',
@@ -114,7 +112,7 @@ export const BlogCard = ({
                   display: 'block',
                 }}
               >
-                {info.l}
+                {info.l}{post.draft ? ' · 加筆案' : ''}
               </span>
               <h4 style={{ margin: '2px 0', fontSize: '15px' }}>
                 {post.title}
@@ -131,7 +129,7 @@ export const BlogCard = ({
           style={{ '--x': `${m.x}px`, '--y': `${m.y}px` } as any}
         >
           <div className="bc-glow" />
-          <a href={`/blog/${post.slug}`} style={{ display: 'contents' }}>
+          <a href={articleHref(post.slug)} style={{ display: 'contents' }}>
             <div className="bc-img">
               <img
                 src={img}
@@ -139,7 +137,7 @@ export const BlogCard = ({
                 onError={e => (e.currentTarget.src = '/blog/default.jpg')}
               />
               <span className="bc-tag" style={{ background: info.c }}>
-                {info.l}
+                {info.l}{post.draft ? ' · 加筆案' : ''}
               </span>
             </div>
             <div className="bc-body">
@@ -150,7 +148,7 @@ export const BlogCard = ({
                 <span style={{ color: '#888' }}>
   {post.author?.name ?? 'iwakiki'}
 </span>
-                <span>READ MORE →</span>
+                <span>記事を読む →</span>
               </div>
             </div>
           </a>

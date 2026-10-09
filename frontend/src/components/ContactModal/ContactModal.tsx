@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ContactModal.module.scss';
 import type { ContactModalProps } from './ContactModal.types';
@@ -38,33 +38,15 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
           お問い合わせ
         </h2>
 
-        <form
-          className={styles.form}
-          onSubmit={e => {
-            e.preventDefault();
-            alert('送信処理はこれから実装！');
-            onClose();
-          }}
-        >
-          <label className={styles.field}>
-            <span>お名前</span>
-            <input name="name" type="text" required />
-          </label>
-
-          <label className={styles.field}>
-            <span>メールアドレス</span>
-            <input name="email" type="email" required />
-          </label>
-
-          <label className={styles.field}>
-            <span>お問い合わせ内容</span>
-            <textarea name="message" rows={4} required />
-          </label>
-
-          <button type="submit" className={styles.submit}>
-            送信する
-          </button>
-        </form>
+        <div className={styles.form}>
+          <p>住まい探しや売却、空き家・相続のことなど、お気軽にご相談ください。</p>
+          <a href="tel:0246608875">0246-60-8875</a>
+          <p>営業時間：9:00〜18:00<br />定休日：毎週水曜日、他週1日</p>
+          <a href="mailto:osawa@iwakiki.co.jp">osawa@iwakiki.co.jp</a>
+          <a href="/contact/" className={styles.submit}>
+            お問い合わせページへ
+          </a>
+        </div>
       </div>
     </div>,
     document.body

@@ -1,7 +1,8 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { imageMarkdown, insertBodyImage } from "@/lib/article-images"
 import { createClient } from "@/lib/supabase/client"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -10,14 +11,26 @@ import Link from "next/link"
 const categories = [
   { value: "news", label: "お知らせ" },
   { value: "column", label: "コラム" },
-  { value: "property", label: "物件情報" },
-  { value: "lifestyle", label: "暮らし" },
+  { value: "property", label: "売買・成約" },
+  { value: "lifestyle", label: "地域の活動" },
+  { value: "rental", label: "賃貸" },
+  { value: "vacation", label: "貸別荘" },
 ]
 
 export function BlogForm({ blog }: { blog?: any }) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const bodyRef = useRef<HTMLTextAreaElement>(null)
+  const [imagePanelOpen, setImagePanelOpen] = useState(false)
+  const [bodyImageUrl, setBodyImageUrl] = useState("")
+  const [bodyImageDescription, setBodyImageDescription] = useState("")
+  const [imageError, setImageError] = useState<string | null>(null)
+  const [imageNotice, setImageNotice] = useState("")
+  const [previewUrl, setPreviewUrl] = useState("")
+  const [previewFailed, setPreviewFailed] = useState(false)
+  const insertionRange = useRef<{start: number; end: number} | null>(null)
 
   const supabase = createClient()
 
@@ -59,6 +72,42 @@ export function BlogForm({ blog }: { blog?: any }) {
     category: blog?.category ?? "",
     published: blog?.published ?? false,
   })
+
+  const openImagePanel = () => {
+    const body = bodyRef.current
+    insertionRange.current = { start: body?.selectionStart ?? formData.content.length, end: body?.selectionEnd ?? formData.content.length }
+    setImagePanelOpen(true)
+    setImageError(null)
+    setImageNotice("")
+  }
+
+  const previewImage = () => {
+    try {
+      imageMarkdown(bodyImageUrl, bodyImageDescription)
+      setPreviewUrl(new URL(bodyImageUrl.trim()).href)
+      setPreviewFailed(false)
+      setImageError(null)
+    } catch (err) { setImageError(err instanceof Error ? err.message : "画像URLを確認してください。") }
+  }
+
+  const insertImage = () => {
+    try {
+      const markdown = imageMarkdown(bodyImageUrl, bodyImageDescription)
+      const range = insertionRange.current ?? { start: formData.content.length, end: formData.content.length }
+      const result = insertBodyImage(formData.content, range.start, range.end, markdown)
+      setFormData(previous => ({ ...previous, content: result.content }))
+      setImagePanelOpen(false)
+      setBodyImageUrl("")
+      setBodyImageDescription("")
+      setPreviewUrl("")
+      setImageError(null)
+      setImageNotice("本文に画像を挿入しました。記事を保存すると反映されます。")
+      requestAnimationFrame(() => {
+        bodyRef.current?.focus()
+        bodyRef.current?.setSelectionRange(result.cursor, result.cursor)
+      })
+    } catch (err) { setImageError(err instanceof Error ? err.message : "画像を挿入できませんでした。") }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,15 +210,46 @@ export function BlogForm({ blog }: { blog?: any }) {
               className={inputClass}
             />
 
-            <textarea
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              rows={20}
-              placeholder="本文"
-              className={inputClass}
-            />
+            <section className="space-y-3" aria-labelledby="body-label">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <label id="body-label" htmlFor="article-body" className="font-semibold">本文</label>
+                <button type="button" onClick={openImagePanel} aria-expanded={imagePanelOpen} aria-controls="body-image-panel" className="rounded-lg border px-4 py-2 text-sm" disabled={isSubmitting}>
+                  ＋ 本文に画像を追加
+                </button>
+              </div>
+              <p className="text-sm text-[var(--muted-foreground)]">画像を入れたい位置をクリックしてから追加してください。複数枚を文章の間に挿入できます。</p>
+              <textarea
+                id="article-body"
+                ref={bodyRef}
+                value={formData.content}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                onSelect={(e) => { insertionRange.current = { start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd } }}
+                rows={20}
+                placeholder="本文（Markdown形式）"
+                className={inputClass}
+                disabled={isSubmitting}
+              />
+              {imagePanelOpen && <div id="body-image-panel" className="space-y-4 rounded-xl border bg-[var(--card)] p-5">
+                <h2 className="font-semibold">本文に挿入する画像</h2>
+                <p className="text-sm text-[var(--muted-foreground)]">公開画像のURLを指定してください。アイキャッチ画像とは別に保存されます。</p>
+                <label className="block space-y-2"><span className="text-sm">画像URL</span>
+                  <input type="url" value={bodyImageUrl} onChange={e => { setBodyImageUrl(e.target.value); setPreviewUrl(""); setImageError(null) }} placeholder="https://example.com/photo.jpg" className={inputClass} />
+                </label>
+                <label className="block space-y-2"><span className="text-sm">画像の説明（代替テキスト）</span>
+                  <input value={bodyImageDescription} onChange={e => setBodyImageDescription(e.target.value)} placeholder="例：明るいリビングと庭の様子" className={inputClass} />
+                </label>
+                {imageError && <p role="alert" className="text-sm text-red-600">{imageError}</p>}
+                {previewUrl && !previewFailed && <img src={previewUrl} alt={bodyImageDescription || "挿入する画像のプレビュー"} className="max-h-64 max-w-full rounded-lg object-contain" onError={() => setPreviewFailed(true)} />}
+                {previewUrl && previewFailed && <p role="status" className="text-sm text-red-600">画像を表示できません。URLと公開設定を確認してください。</p>}
+                <div className="flex flex-wrap gap-3">
+                  <button type="button" onClick={previewImage} disabled={!bodyImageUrl.trim() || isSubmitting} className="rounded-lg border px-4 py-2 disabled:opacity-50">画像を確認</button>
+                  <button type="button" onClick={insertImage} disabled={!bodyImageUrl.trim() || isSubmitting} className="rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50">本文に挿入</button>
+                  <button type="button" onClick={() => setImagePanelOpen(false)} className="rounded-lg border px-4 py-2">キャンセル</button>
+                </div>
+              </div>}
+              <p role="status" className="text-sm text-[var(--muted-foreground)]">{imageNotice}</p>
+              <p className="text-xs text-[var(--muted-foreground)]">画像は ![説明](画像URL) の形式で入ります。この行を移動・削除すると、画像の位置変更・削除ができます。</p>
+            </section>
           </div>
 
           <div className="space-y-6">
@@ -206,14 +286,16 @@ export function BlogForm({ blog }: { blog?: any }) {
                 ))}
               </select>
 
+              <label className="block space-y-2"><span className="text-sm">アイキャッチ画像（一覧・記事上部）</span>
               <input
                 value={formData.featured_image}
                 onChange={(e) =>
                   setFormData({ ...formData, featured_image: e.target.value })
                 }
-                placeholder="画像URL"
+                placeholder="アイキャッチ画像のURL"
                 className={inputClass}
               />
+              </label>
             </div>
 
             <button

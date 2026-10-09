@@ -1,0 +1,11 @@
+---
+import BlogArchive from '../../../components/Blog/BlogArchive.astro';
+import { getPublishedArticles } from '../../../libs/blog-server';
+export async function getStaticPaths() {
+  const { posts, unavailable } = await getPublishedArticles();
+  return Array.from({length: Math.max(0, Math.ceil(posts.length / 6) - 1)}, (_, index) => ({
+    params: {page: String(index + 2)}, props: {posts, unavailable, page: index + 2},
+  }));
+}
+---
+<BlogArchive {...Astro.props} />

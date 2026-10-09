@@ -175,6 +175,7 @@ $color-hover: #c5a059;
 .inner {
   height: 100%;
   width: 35%;
+  min-width: min(480px, 100%);
   margin-left: auto;
   display: flex;
   flex-direction: column;
@@ -325,7 +326,7 @@ $color-hover: #c5a059;
 
 .ctaArea {
   margin: 120px 0 80px;
-  padding: 0 40px;
+  padding: 0;
 
   @media (max-width: 768px) {
     margin: 60px 0 40px;
@@ -335,13 +336,13 @@ $color-hover: #c5a059;
 
 .ctaCard {
   position: relative;
-  padding: 60px 40px;
+  padding: 60px 16px;
   text-align: center;
   border: 1px solid rgba($color-accent, 0.3);
   background: #fff;
 
   @media (max-width: 768px) {
-    padding: 40px 20px;
+    padding: 40px 16px;
   }
 }
 
@@ -349,10 +350,14 @@ $color-hover: #c5a059;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  font-size: 14px;
   background: var(--color-primary);
   color: #fff;
-  padding: 20px 40px;
+  padding: 20px 12px;
   text-decoration: none;
   font-weight: 800;
   transition: all 0.3s ease;
@@ -361,10 +366,8 @@ $color-hover: #c5a059;
   }
 
   @media (max-width: 768px) {
-    padding: 16px 28px;
-    font-size: 14px;
-    gap: 12px;
-    width: 100%;
+    padding: 16px 12px;
+    font-size: clamp(12px, 3.5vw, 14px);
   }
 }
 

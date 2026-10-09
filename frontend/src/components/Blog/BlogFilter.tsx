@@ -3,7 +3,7 @@ export default function BlogFilter({ categories }: any) {
   return (
     <div className="filter-bar">
       <button className="filter-btn active" data-filter="all">
-        All posts
+        すべての記事
       </button>
 
       {Object.entries(categories).map(([key, value]: any) => (

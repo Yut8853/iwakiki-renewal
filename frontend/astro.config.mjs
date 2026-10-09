@@ -3,7 +3,8 @@ import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
-  site: 'https://iwakiki.jp',
+  site: 'https://iwakiki.co.jp',
+  trailingSlash: 'always',
 
   // 👇 serverは削除済みでOK
   // output: 'server',
@@ -11,16 +12,7 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date(),
-      i18n: {
-        defaultLocale: 'ja',
-        locales: {
-          ja: 'ja-JP',
-        },
-      },
-      filter: (page) => !page.includes('/api/'),
+      filter: (page) => !page.includes('/api/') && !page.includes('/404') && !/\.(xml|txt|md)$/.test(page),
     }),
   ],
 

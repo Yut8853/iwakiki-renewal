@@ -1,26 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero/Hero.astro';
 import { ProjectionGridCanvas } from '../components/WebGL/ProjectionGridCanvas';
 import HeroText from '../components/Contents/HeroText.astro';
 import { BlogCard } from '../components/Blog/BlogCard';
 import styles from '../components/Blog/Blog.module.scss';
-import { supabase } from '../libs/supabase';
+import { getPublishedArticles } from '../libs/blog-server';
 
-// 1. Markdown記事を取得し、日付順にソートして最新6件を抽出
-const { data: allPosts, error } = await supabase
-  .from('blogs')
-  .select('*')
-  .eq('published', true)
-  .order('published_at', { ascending: false });
-
-if (error) {
-  console.error(error);
-}
-
-// 最新3件だけ
-const posts = (allPosts ?? []).slice(0, 3);
+const { posts: allPosts } = await getPublishedArticles();
+const posts = allPosts.slice(0, 3);
 ---
 
 <Layout 
@@ -29,6 +17,7 @@ const posts = (allPosts ?? []).slice(0, 3);
   keywords="いわき市,不動産,売買,賃貸,物件管理,マイホーム,土地,福島県,iwakiki,不動産会社"
   ogType="website"
 >
+  <main>
   <section class="webgl-section">
     <ProjectionGridCanvas client:load />
     <Hero />
@@ -41,14 +30,14 @@ const posts = (allPosts ?? []).slice(0, 3);
           <span class="label">Update</span>
           <h2>iwakikiからのお知らせ</h2>
         </div>
-        <a href="/blog" class="view-all">View All posts</a>
+        <a href="/blog" class="view-all">お知らせ一覧を見る</a>
       </div>
 
       <div class="posts-grid">
         {posts.map((post, i) => (
           <BlogCard 
             client:load 
-            post={{...post.data, slug: post.slug}} 
+            post={{...post, excerpt: post.description}} 
             index={i} 
           />
         ))}
@@ -57,6 +46,7 @@ const posts = (allPosts ?? []).slice(0, 3);
   </section>
 
   <HeroText />
+  </main>
 </Layout>
 
 <style lang="scss">

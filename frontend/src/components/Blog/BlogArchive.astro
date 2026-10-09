@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogExplorer from './BlogExplorer';
+import { articleHref, blogPageHref, type Article } from '../../libs/blog';
+import Footer from '../../components/Footer/Footer.astro';
+interface Props { posts: Article[]; unavailable: boolean; page?: number }
+const { posts, unavailable, page = 1 } = Astro.props;
+const pageTitle = page > 1 ? `お知らせ一覧（${page}ページ目） | 株式会社iwakiki` : 'iwakikiからのお知らせ | 株式会社iwakiki';
+const description = `物件のご案内、地域での活動、暮らしのヒント。iwakikiからのお知らせ${page > 1 ? `・${page}ページ目` : ''}をカテゴリやキーワードで探せます。`;
+const breadcrumbs = [{name:'ホーム',path:'/'},{name:'お知らせ',path:'/blog/'},...(page > 1 ? [{name:`${page}ページ目`,path:blogPageHref(page)}] : [])];
+// Article bodies are searched locally, but never inserted as HTML by the explorer.
+---
+<Layout title={pageTitle} description={description} breadcrumbs={breadcrumbs} articleItems={posts.slice((page - 1) * 6, page * 6).map(p => ({title:p.title,url:articleHref(p.slug)}))}>
+  <main>
+    <header class="blog-header">
+      <nav aria-label="パンくず"><a href="/">ホーム</a><span aria-hidden="true"> / </span><span>お知らせ</span></nav>
+      <span class="eyebrow">News &amp; Journal</span>
+      <h1>iwakikiからのお知らせ{page > 1 && <small> — {page}ページ目</small>}</h1>
+      <p>住まいの情報から、地域の小さなできごとまで。<br />いわきと暮らしをつなぐ、私たちの日々をお届けします。</p>
+    </header>
+    <BlogExplorer client:load posts={posts} unavailable={unavailable} initialPage={page} />
+  </main>
+  <Footer />
+</Layout>
+<style>
+  .blog-header { max-width: 1200px; margin: 0 auto; padding: 136px 24px 48px; color: #243c38; }
+  nav { font-size: 12px; margin-bottom: 48px; color: #66736b; } nav a { color: inherit; }
+  .eyebrow { color: #06756d; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+  h1 { font-size: clamp(28px, 4.5vw, 52px); margin: 16px 0 24px; line-height: 1.4; }
+  p { color: #66736b; line-height: 1.9; font-size: 15px; }
+  @media(max-width:600px) { .blog-header { padding: 110px 20px 32px; } nav { margin-bottom: 32px; } }
+</style>
