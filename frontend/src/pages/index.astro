@@ -7,7 +7,7 @@ import { BlogCard } from '../components/Blog/BlogCard';
 import styles from '../components/Blog/Blog.module.scss';
 import { getPublishedArticles } from '../libs/blog-server';
 
-const { posts: allPosts } = await getPublishedArticles();
+const { posts: allPosts, unavailable } = await getPublishedArticles();
 const posts = allPosts.slice(0, 3);
 ---
 
@@ -30,17 +30,21 @@ const posts = allPosts.slice(0, 3);
           <span class="label">Update</span>
           <h2>iwakikiからのお知らせ</h2>
         </div>
-        <a href="/blog" class="view-all">お知らせ一覧を見る</a>
+        <nav class="section-links" aria-label="お知らせ・物件情報">
+          <a href="/blog/" class="view-all">お知らせ一覧</a>
+          <a href="/properties/" class="view-all">新着物件</a>
+          <a href="/properties/sold/" class="view-all">成約物件</a>
+        </nav>
       </div>
 
       <div class="posts-grid">
         {posts.map((post, i) => (
           <BlogCard 
-            client:load 
             post={{...post, excerpt: post.description}} 
             index={i} 
           />
         ))}
+        {posts.length === 0 && <p>{unavailable ? 'お知らせを読み込めませんでした。時間をおいて再度お試しください。' : 'お知らせは準備中です。'}</p>}
       </div>
     </div>
   </section>
@@ -50,6 +54,12 @@ const posts = allPosts.slice(0, 3);
 </Layout>
 
 <style lang="scss">
+  .section-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+
   .webgl-section {
     position: relative;
     width: 100%;

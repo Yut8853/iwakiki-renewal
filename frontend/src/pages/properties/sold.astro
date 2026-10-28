@@ -1,0 +1,8 @@
+---
+import PropertyArchive from '../../components/Properties/PropertyArchive.astro';
+import { getPublishedArticles } from '../../libs/blog-server';
+
+const { posts, unavailable } = await getPublishedArticles();
+---
+
+<PropertyArchive posts={posts} status="sold" unavailable={unavailable} />

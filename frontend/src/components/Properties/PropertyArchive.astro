@@ -1,0 +1,187 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../Footer/Footer.astro';
+import type { Article, PropertyStatus } from '../../libs/blog';
+import { articleHref, formatDate, selectPropertyArticles } from '../../libs/blog';
+
+interface Props {
+  posts: Article[];
+  status: PropertyStatus;
+  unavailable: boolean;
+}
+
+const { posts, status, unavailable } = Astro.props;
+const sold = status === 'sold';
+const entries = selectPropertyArticles(posts, status);
+const pageTitle = sold ? '成約物件' : '新着物件';
+const description = sold
+  ? 'iwakikiがご紹介し、ご成約となった物件をご覧いただけます。'
+  : 'iwakikiからのお知らせと連動した新着物件情報。販売開始のお知らせや物件の詳細をご覧いただけます。';
+---
+
+<Layout
+  title={`${pageTitle} | 株式会社iwakiki`}
+  description={description}
+  breadcrumbs={[{ name: 'ホーム', path: '/' }, { name: '物件情報', path: '/properties/' }, { name: pageTitle, path: sold ? '/properties/sold/' : '/properties/' }]}
+>
+  <main class="property-page">
+    <section class="property-hero">
+      <div class="property-hero__inner">
+        <div class="property-hero__copy">
+          <p class="property-eyebrow">IWAKIKI PROPERTY JOURNAL</p>
+          <h1>{pageTitle}<span>物件との、新しいご縁を。</span></h1>
+          <p class="property-hero__lead">{sold ? 'たくさんのご縁をいただいた成約物件をご紹介します。' : '販売を開始した物件を、お知らせとあわせてご紹介します。'}</p>
+          <nav class="property-tabs" aria-label="物件情報の種類">
+            <a href="/properties/" aria-current={!sold ? 'page' : undefined}>新着物件</a>
+            <a href="/properties/sold/" aria-current={sold ? 'page' : undefined}>成約物件</a>
+          </nav>
+        </div>
+        <div class="property-hero__art" aria-hidden="true">
+          <span class="property-hero__number">{sold ? '02' : '01'}</span>
+          <span class="property-hero__caption">暮らしと街をつなぐ</span>
+          <span class="property-hero__rule"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="property-listing" aria-labelledby="property-list-title">
+      <div class="property-listing__top">
+        <div>
+          <p class="property-eyebrow">{sold ? 'OUR TRACK RECORD' : 'LATEST LISTINGS'}</p>
+          <h2 id="property-list-title">{pageTitle}<span class="property-count">{entries.length}件</span></h2>
+        </div>
+        <label class="property-sort">並び順
+          <select data-property-sort aria-label="物件の並び順">
+            <option value="newest">掲載日が新しい順</option>
+            <option value="oldest">掲載日が古い順</option>
+          </select>
+        </label>
+      </div>
+
+      {unavailable ? <div class="property-empty"><h3>物件情報を読み込めませんでした</h3><p>時間をおいて、もう一度お試しください。</p><a href="/blog/">お知らせを見る</a></div>
+      : entries.length ? <div class="property-grid" data-property-grid>
+        {entries.map((post, index) => <article class="property-card" data-property-card data-published={post.publishedAt || ''} style={`--card-index:${index}`}>
+          <a class="property-card__link" href={articleHref(post.slug)} aria-label={`${post.title}のお知らせを見る`}>
+            <div class:list={['property-card__image', { 'property-card__image--sold': sold }]}>
+              <img src={post.image} alt="" loading={index < 3 ? 'eager' : 'lazy'} />
+              <span class="property-card__status">{sold ? 'ご成約' : '新着情報'}</span>
+              <span class="property-card__image-index">{String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <div class="property-card__body">
+              <div class="property-card__meta"><span>IWAKIKI PROPERTY</span><time datetime={post.publishedAt || undefined}>{formatDate(post.publishedAt)}</time></div>
+              <h3>{post.title}</h3>
+              <p>{post.description}</p>
+              <span class="property-card__more">お知らせで詳細を見る <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+        </article>)}
+      </div>
+      : <div class="property-empty">
+        <h3>{sold ? '成約物件は準備中です' : '新着物件は準備中です'}</h3>
+        <p>物件情報は、お知らせの公開にあわせてこちらに掲載します。</p>
+        <a href="/blog/">お知らせ一覧を見る</a>
+      </div>}
+      <p class="property-note">掲載情報は記事公開時点のものです。価格・販売状況などの最新情報はお問い合わせください。</p>
+    </section>
+
+    <section class="property-contact">
+      <div><p class="property-eyebrow">LET'S TALK ABOUT YOUR NEXT STEP</p><h2>気になる物件や、<br />不動産のご相談はこちら。</h2></div>
+      <a href="/contact/">お問い合わせ <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-property-sort]').forEach((select) => {
+    const grid = select.closest('.property-listing')?.querySelector<HTMLElement>('[data-property-grid]');
+    if (!grid) return;
+    select.addEventListener('change', () => {
+      const cards = [...grid.querySelectorAll<HTMLElement>('[data-property-card]')];
+      cards.sort((a, b) => {
+        const left = a.dataset.published || '';
+        const right = b.dataset.published || '';
+        if (!left) return right ? 1 : 0;
+        if (!right) return -1;
+        return (select.value === 'oldest' ? left.localeCompare(right) : right.localeCompare(left));
+      }).forEach(card => grid.append(card));
+    });
+  });
+</script>
+
+<style>
+  .property-page { --ink: #202a28; --muted: #68716d; --green: #176f65; --line: #d7dfd9; color: var(--ink); }
+  .property-hero { position: relative; overflow: hidden; background: #e8eee8; padding: clamp(150px, 18vw, 220px) 7vw 70px; }
+  .property-hero::before { position: absolute; inset: 0 0 0 48%; content: ''; background: linear-gradient(135deg, transparent 0 48%, rgba(255,255,255,.62) 48% 49%, transparent 49%), repeating-linear-gradient(135deg, transparent 0 34px, rgba(23,111,101,.075) 35px 36px); }
+  .property-hero__inner { position: relative; display: flex; justify-content: space-between; align-items: flex-end; max-width: 1280px; margin: 0 auto; }
+  .property-hero__copy { max-width: 760px; }
+  .property-eyebrow { margin: 0 0 18px; color: var(--green); font-size: 11px; font-weight: 700; }
+  .property-hero h1 { margin: 0; font-family: 'Yu Mincho', 'Hiragino Mincho ProN', serif; font-size: 72px; font-weight: 500; line-height: 1.14; }
+  .property-hero h1 span { display: block; margin-top: 16px; font-family: sans-serif; font-size: 15px; font-weight: 500; }
+  .property-hero__lead { max-width: 460px; margin: 24px 0 30px; color: #4b5853; line-height: 1.9; }
+  .property-tabs { display: flex; gap: 28px; border-bottom: 1px solid rgba(32,42,40,.22); width: fit-content; }
+  .property-tabs a { position: relative; padding: 0 0 14px; color: #58625d; text-decoration: none; font-size: 14px; }
+  .property-tabs a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+  .property-tabs a[aria-current="page"]::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; content: ''; background: var(--green); }
+  .property-hero__art { display: flex; flex-direction: column; align-items: flex-end; padding: 0 0 12px 30px; }
+  .property-hero__number { color: rgba(23,111,101,.17); font-family: Georgia, serif; font-size: 180px; line-height: .8; }
+  .property-hero__caption { margin-top: 20px; color: var(--green); font-size: 11px; writing-mode: vertical-rl; }
+  .property-hero__rule { width: 1px; height: 62px; margin-top: 18px; background: var(--green); }
+  .property-listing { max-width: 1280px; margin: 0 auto; padding: 88px 7vw 70px; }
+  .property-listing__top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 30px; }
+  .property-listing__top .property-eyebrow { margin-bottom: 8px; }
+  .property-listing h2 { display: flex; align-items: baseline; gap: 14px; margin: 0; font-size: 30px; font-weight: 600; }
+  .property-count { color: var(--muted); font-size: 13px; font-weight: 400; }
+  .property-sort { display: grid; gap: 7px; color: var(--muted); font-size: 12px; }
+  .property-sort select { min-width: 190px; padding: 11px 36px 11px 12px; border: 1px solid var(--line); border-radius: 2px; background: white; color: var(--ink); font: inherit; font-size: 13px; }
+  .property-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
+  .property-card { min-width: 0; border-bottom: 1px solid var(--line); animation: property-arrive .55s both; animation-delay: calc(var(--card-index) * 70ms); }
+  .property-card__link { display: block; color: inherit; text-decoration: none; }
+  .property-card__image { position: relative; overflow: hidden; aspect-ratio: 1.42; background: #e5e9e3; }
+  .property-card__image::after { position: absolute; inset: 50% 0 0; content: ''; background: linear-gradient(transparent, rgba(20,30,27,.24)); pointer-events: none; }
+  .property-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+  .property-card__link:hover img { transform: scale(1.035); }
+  .property-card__image--sold img { filter: saturate(.68); }
+  .property-card__status { position: absolute; z-index: 1; top: 14px; left: 14px; padding: 8px 11px; background: var(--green); color: white; font-size: 11px; }
+  .property-card__image--sold .property-card__status { background: #46534e; }
+  .property-card__image-index { position: absolute; z-index: 1; right: 14px; bottom: 10px; color: white; font-family: Georgia, serif; font-size: 34px; }
+  .property-card__body { padding: 17px 2px 22px; }
+  .property-card__meta { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
+  .property-card__meta span { letter-spacing: 0; }
+  .property-card h3 { margin: 13px 0 9px; font-size: 18px; font-weight: 600; line-height: 1.55; }
+  .property-card__body p { display: -webkit-box; overflow: hidden; min-height: 3.2em; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .property-card__more { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; color: var(--green); font-size: 12px; font-weight: 600; }
+  .property-card__more span, .property-contact a span { font-size: 17px; }
+  .property-empty { padding: 60px 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: center; }
+  .property-empty h3 { margin: 0 0 10px; font-size: 20px; }
+  .property-empty p { color: var(--muted); font-size: 14px; }
+  .property-empty a { display: inline-block; margin-top: 12px; color: var(--green); font-size: 13px; }
+  .property-note { margin: 24px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+  .property-contact { display: flex; justify-content: space-between; align-items: center; gap: 30px; padding: 58px 7vw; background: #176f65; color: white; }
+  .property-contact .property-eyebrow { color: #b8d8ca; }
+  .property-contact h2 { margin: 0; font-family: 'Yu Mincho', 'Hiragino Mincho ProN', serif; font-size: 36px; font-weight: 500; line-height: 1.5; }
+  .property-contact a { display: flex; align-items: center; justify-content: space-between; gap: 36px; min-width: 220px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.65); color: white; text-decoration: none; font-size: 14px; }
+  @keyframes property-arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 900px) { .property-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .property-hero__art { opacity: .7; } }
+  @media (max-width: 600px) {
+    .property-hero { padding: 130px 22px 48px; }
+    .property-hero__inner { min-height: 310px; }
+    .property-hero__art { position: absolute; right: 0; bottom: 5px; padding: 0; opacity: .48; }
+    .property-hero__number { font-size: 118px; }
+    .property-hero h1 { font-size: 45px; }
+    .property-hero h1 span { max-width: 220px; font-size: 13px; line-height: 1.8; }
+    .property-hero__lead { position: relative; max-width: 270px; font-size: 13px; }
+    .property-tabs { position: relative; gap: 22px; }
+    .property-listing { padding: 58px 22px 48px; }
+    .property-listing__top { align-items: flex-start; flex-direction: column; margin-bottom: 22px; }
+    .property-listing h2 { font-size: 26px; }
+    .property-sort { width: 100%; }
+    .property-sort select { width: 100%; }
+    .property-grid { grid-template-columns: 1fr; gap: 24px; }
+    .property-card__image { aspect-ratio: 1.5; }
+    .property-card h3 { font-size: 17px; }
+    .property-contact { align-items: flex-start; flex-direction: column; padding: 44px 22px; }
+    .property-contact a { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .property-card { animation: none; } .property-card__image img { transition: none; } }
+</style>

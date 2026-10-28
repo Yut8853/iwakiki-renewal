@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   site: 'https://iwakiki.co.jp',
-  trailingSlash: 'always',
+  trailingSlash: 'ignore',
 
   // 👇 serverは削除済みでOK
   // output: 'server',

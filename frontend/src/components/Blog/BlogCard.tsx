@@ -1,5 +1,5 @@
 import { formatDate, articleHref } from '../../libs/blog';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 /** * Single-file condensed version of BlogCard.
  * Styles are injected directly to fix the resolution error and follow the single-file mandate.
@@ -37,22 +37,7 @@ export const BlogCard = ({
   variant?: string;
 }) => {
   const ref = useRef<HTMLElement>(null);
-  const [vis, setVis] = useState(false);
   const [m, setM] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const ob = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setTimeout(() => setVis(true), index * 50);
-          ob.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) ob.observe(ref.current);
-    return () => ob.disconnect();
-  }, [index]);
 
   const onM = (e: React.MouseEvent) => {
     const r = ref.current?.getBoundingClientRect();
@@ -66,8 +51,7 @@ export const BlogCard = ({
   return (
     <>
       <style>{`
-        .bc-card { position: relative; background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; overflow: hidden; transition: 0.4s; opacity: 0; transform: translateY(20px); height: 100%; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
-        .bc-card.vis { opacity: 1; transform: translateY(0); }
+        .bc-card { position: relative; background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; overflow: hidden; transition: 0.4s; opacity: 1; height: 100%; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .bc-card:hover { transform: translateY(-5px); border-color: #c5a059; box-shadow: 0 10px 30px rgba(197,160,89,0.2); }
         .bc-glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: 0.4s; background: radial-gradient(400px circle at var(--x) var(--y), rgba(6,117,109,0.05), transparent 40%); }
         .bc-card:hover .bc-glow { opacity: 1; }
@@ -82,14 +66,13 @@ export const BlogCard = ({
         .bc-foot { margin-top: auto; padding-top: 15px; border-top: 1px solid #f8f8f8; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #ccc; }
         .bc-feat { display: flex; flex-direction: column; min-height: 350px; border-radius: 24px; }
         @media (min-width: 768px) { .bc-feat { flex-direction: row; } .bc-feat .bc-img { width: 50%; aspect-ratio: auto; } .bc-feat .bc-body { width: 50%; padding: 40px; } }
-        .bc-comp { padding: 15px 0; border-bottom: 1px solid #f0f0f0; flex-direction: row; align-items: center; opacity: 0; transform: translateX(-10px); }
-        .bc-comp.vis { opacity: 1; transform: translateX(0); }
+        .bc-comp { padding: 15px 0; border-bottom: 1px solid #f0f0f0; flex-direction: row; align-items: center; opacity: 1; }
       `}</style>
 
       {variant === 'compact' ? (
         <article
           ref={ref as any}
-          className={`bc-card bc-comp ${vis ? 'vis' : ''}`}
+          className={`bc-card bc-comp `}
         >
           <a
             href={articleHref(post.slug)}
@@ -124,7 +107,7 @@ export const BlogCard = ({
       ) : (
         <article
           ref={ref as any}
-          className={`bc-card ${variant === 'featured' ? 'bc-feat' : ''} ${vis ? 'vis' : ''}`}
+          className={`bc-card ${variant === 'featured' ? 'bc-feat' : ''} `}
           onMouseMove={onM}
           style={{ '--x': `${m.x}px`, '--y': `${m.y}px` } as any}
         >

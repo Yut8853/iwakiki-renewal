@@ -17,12 +17,15 @@ const breadcrumbs = [{name:'ホーム',path:'/'},{name:'お知らせ',path:'/blo
       <span class="eyebrow">News &amp; Journal</span>
       <h1>iwakikiからのお知らせ{page > 1 && <small> — {page}ページ目</small>}</h1>
       <p>住まいの情報から、地域の小さなできごとまで。<br />いわきと暮らしをつなぐ、私たちの日々をお届けします。</p>
+      <div class="property-links"><a href="/properties/">新着物件を見る →</a><a href="/properties/sold/">成約物件を見る →</a></div>
     </header>
     <BlogExplorer client:load posts={posts} unavailable={unavailable} initialPage={page} />
   </main>
   <Footer />
 </Layout>
 <style>
+  .property-links { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 24px; font-size: 14px; }
+  .property-links a { color: #06756d; text-underline-offset: 5px; }
   .blog-header { max-width: 1200px; margin: 0 auto; padding: 136px 24px 48px; color: #243c38; }
   nav { font-size: 12px; margin-bottom: 48px; color: #66736b; } nav a { color: inherit; }
   .eyebrow { color: #06756d; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
